@@ -16,7 +16,9 @@ next_version=$(git cliff --bumped-version)
 # Updating the CHANGELOG.md
 git cliff --bump -o CHANGELOG.md
 git add CHANGELOG.md
-git commit -m "[Release] Glossia $next_version
+git commit -m "[Release] Glossia $next_version"
+git tag "$next_version"
+git push origin "$next_version"
 
 release_notes=$(git cliff --latest)
 
