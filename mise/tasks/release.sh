@@ -22,16 +22,19 @@ git push origin "$next_version"
 
 release_notes=$(git cliff --latest)
 
-PAYLOAD=$(cat <<EOF
-{
-  "tag_name": "$next_version",
-  "name": "$next_version",
-  "body": "$release_notes",
-  "draft": false,
-  "prerelease": false
-}
-EOF
-)
+PAYLOAD=$(jq -n \
+  --arg tag_name "$next_version" \
+  --arg name "$next_version" \
+  --arg body "$release_notes" \
+  --argjson draft false \
+  --argjson prerelease false \
+  '{
+    tag_name: $tag_name,
+    name: $name,
+    body: $body,
+    draft: $draft,
+    prerelease: $prerelease
+  }')
 
 # Make API request to create the release
 RESPONSE=$(curl -s -X POST "https://codeberg.org/api/v1/repos/glossia/glossia/releases" \
