@@ -1,0 +1,22 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+
+env:
+  MISE_EXPERIMENTAL: "1"
+  MISE_GITHUB_TOKEN: ${{ secrets.GLOSSIA_GITHUB_TOKEN }}
+  MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
+
+jobs:
+  glossia:
+    name: Glossia
+    runs-on: docker
+    steps:
+      - uses: actions/checkout@v3
+      - uses: https://github.com/jdx/mise-action@v2
+        with:
+          cache: true
+      - run: apt-get update && apt-get -y install podman
+      - run: mise run release
