@@ -38,3 +38,10 @@ RESPONSE=$(curl -s -X POST "https://codeberg.org/api/v1/repos/glossia/glossia/re
   -H "Authorization: token $GLOSSIA_CODEBERG_WORKFLOWS_TOKEN" \
   -H "Content-Type: application/json" \
   -d "$PAYLOAD")
+
+if echo "$RESPONSE" | grep -q '"id":'; then
+    echo "Release created successfully!"
+else
+    echo "Failed to create release. Response:"
+    echo "$RESPONSE"
+fi
