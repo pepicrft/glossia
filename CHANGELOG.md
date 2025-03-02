@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add release script
 - Add Git cliff and generate a CHANGELOG.md
 
 ### Changed
@@ -22,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update the runs-on
 - Adjust the pipelines for Forgejo Actions
 - Create project
+
+### Fixed
+
+- Release
+- Release
 
 ### Removed
 
