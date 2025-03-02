@@ -17,3 +17,7 @@
 1. Clone the project: `git clone git@codefreude.org:glossia/glossia.git`.
 2. Install dependencies: `mise install`
 3. Run the web app locally: `mise run dev`
+
+## Usage
+
+Check out [our documentation](https://docs.glossia.org) to learn more about how to use Glossia's hosted version, or how to self-host it.
