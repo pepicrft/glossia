@@ -35,11 +35,11 @@ footer = """
     {% if release.version -%}
         {% if release.previous.version -%}
             [{{ release.version | trim_start_matches(pat="v") }}]: \
-                https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}\
+                https://codeberg.org/{{ remote.gitea.owner }}/{{ remote.gitea.repo }}\
                     /compare/{{ release.previous.version }}..{{ release.version }}
         {% endif -%}
     {% else -%}
-        [unreleased]: https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}\
+        [unreleased]: https://codeberg.org/{{ remote.gitea.owner }}/{{ remote.gitea.repo }}\
             /compare/{{ release.previous.version }}..HEAD
     {% endif -%}
 {% endfor %}

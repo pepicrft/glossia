@@ -13,6 +13,25 @@ fi
 
 next_version=$(git cliff --bumped-version)
 
+# Build image
+if command -v podman &> /dev/null
+then
+    container_cmd="podman"
+elif command -v docker &> /dev/null
+then
+    # Fallback to docker if podman is not available
+    container_cmd="docker"
+else
+    echo "Neither podman nor docker is installed on this system."
+    exit 1
+fi
+
+image_tag="codeberg.org/glossia/glossia:$next_version"
+$container_cmd build -t $image_tag .
+
+# Push image
+$container_cmd push $image_tag --creds pepicrft:$GLOSSIA_CODEBERG_WORKFLOWS_TOKEN
+
 # Updating the CHANGELOG.md
 git cliff --bump -o CHANGELOG.md
 git add CHANGELOG.md
