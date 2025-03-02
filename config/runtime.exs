@@ -20,6 +20,10 @@ if System.get_env("PHX_SERVER") do
   config :glossia, GlossiaWeb.Endpoint, server: true
 end
 
+if not is_nil(System.get_env("DATABASE_HOSTNAME")) do
+  config :glossia, Glossia.Repo, hostname: System.get_env("DATABASE_HOSTNAME")
+end
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||
