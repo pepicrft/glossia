@@ -30,7 +30,7 @@ image_tag="codeberg.org/glossia/glossia:$next_version"
 $container_cmd build -t $image_tag .
 
 # Push image
-$container_cmd push $image_tag --creds pepicrft:$GLOSSIA_CODEBERG_WORKFLOWS_TOKEN
+# $container_cmd push $image_tag --creds pepicrft:$GLOSSIA_CODEBERG_WORKFLOWS_TOKEN
 
 # Updating the CHANGELOG.md
 git cliff --bump -o CHANGELOG.md
