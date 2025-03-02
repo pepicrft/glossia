@@ -6,21 +6,16 @@ on:
 
 env:
   MISE_EXPERIMENTAL: "1"
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
-
-concurrency: production
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
 jobs:
   production:
     name: Production
     runs-on: ubuntu-latest
-    environment: production
     steps:
       - uses: actions/checkout@v3
       - uses: jdx/mise-action@v2
         with:
           cache: true
       - run: flyctl deploy --remote-only
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
