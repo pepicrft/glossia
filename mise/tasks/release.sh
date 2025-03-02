@@ -29,9 +29,6 @@ fi
 image_tag="codeberg.org/glossia/glossia:$next_version"
 $container_cmd build -t $image_tag .
 
-# Push image
-# $container_cmd push $image_tag --creds pepicrft:$GLOSSIA_CODEBERG_WORKFLOWS_TOKEN
-
 # Updating the CHANGELOG.md
 git cliff --bump -o CHANGELOG.md
 git add CHANGELOG.md
@@ -67,3 +64,6 @@ else
     echo "Failed to create release. Response:"
     echo "$RESPONSE"
 fi
+
+# Push image
+$container_cmd push $image_tag --creds pepicrft:$GLOSSIA_CODEBERG_WORKFLOWS_TOKEN
