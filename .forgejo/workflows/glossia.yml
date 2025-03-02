@@ -50,7 +50,7 @@ jobs:
     runs-on: docker
     env:
       MIX_ENV: test
-      DATABASE_HOSTNAME: psql
+      DATABASE_HOSTNAME: db
     services:
       db:
         image: postgres:17
