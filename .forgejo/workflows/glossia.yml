@@ -7,17 +7,13 @@ on:
 
 env:
   MISE_EXPERIMENTAL: "1"
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  MISE_GITHUB_TOKEN: ${{ secrets.GLOSSIA_GITHUB_TOKEN }}
   MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
-
-concurrency:
-  group: glossia-${{ github.head_ref }}
-  cancel-in-progress: true
 
 jobs:
   check:
     name: Static checks
-    runs-on: ubuntu-latest
+    runs-on: docker
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache@v4
@@ -28,13 +24,13 @@ jobs:
           key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-mix-
-      - uses: jdx/mise-action@v2
+      - uses: https://github.com/jdx/mise-action@v2
         with:
           cache: true
       - run: mise run check
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: docker
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache@v4
@@ -45,21 +41,23 @@ jobs:
           key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-mix-
-      - uses: jdx/mise-action@v2
+      - uses: https://github.com/jdx/mise-action@v2
         with:
           cache: true
       - run: mise run build
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: docker
     env:
       MIX_ENV: test
-      DATABASE_HOSTNAME: psql
+      DATABASE_HOSTNAME: db
     services:
       db:
         image: postgres:17
         ports: ["5432:5432"]
         env:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: test
           POSTGRES_PASSWORD: postgres
         options: >-
           --health-cmd pg_isready
@@ -76,7 +74,7 @@ jobs:
           key: ${{ runner.os }}-mix-test-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-mix-test
-      - uses: jdx/mise-action@v2
+      - uses: https://github.com/jdx/mise-action@v2
         with:
           cache: true
       - run: mise run test
