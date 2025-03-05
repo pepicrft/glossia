@@ -6,7 +6,7 @@
     <!-- Badges -->
 </div>
 <p align="center">
-    A modern community-driven open-source localization toolchain.
+    A modern community-driven open-source language hub for your organization.
     It's MPL-2.0 licensed.
 </p>
 
