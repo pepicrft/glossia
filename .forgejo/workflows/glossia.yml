@@ -13,7 +13,7 @@ env:
 jobs:
   check:
     name: Static checks
-    runs-on: docker
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache@v4
@@ -30,7 +30,7 @@ jobs:
       - run: mise run check
   build:
     name: Build
-    runs-on: docker
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache@v4
@@ -47,7 +47,7 @@ jobs:
       - run: mise run build
   test:
     name: Test
-    runs-on: docker
+    runs-on: ubuntu-latest
     env:
       MIX_ENV: test
       DATABASE_HOSTNAME: db
