@@ -13,7 +13,9 @@ config :esbuild,
   glossia: [
     args: ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
     cd: Path.expand("../assets", __DIR__),
-    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+    # When :glossia is used as a dependency, it's part of a /deps directory, therefore we need
+    # to include the directory that contains :glossia in NODE_PATH.
+    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__) <> ":" <> Path.expand("../..", __DIR__)}
   ]
 
 # Configures the mailer
