@@ -26,18 +26,24 @@ else
     exit 1
 fi
 
+echo "Building image..."
 image_tag="codeberg.org/glossia/glossia:$next_version"
 $container_cmd build -t $image_tag .
 
 # Updating the CHANGELOG.md
+echo "Updating CHANGELOG.md..."
 git cliff --bump -o CHANGELOG.md
+
+echo "Committing and tagging..."
 git add CHANGELOG.md
 git commit -m "[Release] Glossia $next_version"
 git tag "$next_version"
 git push origin "$next_version"
 
+echo "Generating release notes..."
 release_notes=$(git cliff --latest)
 
+echo "Creating release..."
 PAYLOAD=$(jq -n \
   --arg tag_name "$next_version" \
   --arg name "$next_version" \
@@ -53,6 +59,7 @@ PAYLOAD=$(jq -n \
   }')
 
 # Make API request to create the release
+echo "Creating release..."
 RESPONSE=$(curl -s -X POST "https://codeberg.org/api/v1/repos/glossia/glossia/releases" \
   -H "Authorization: token $GLOSSIA_CODEBERG_WORKFLOWS_TOKEN" \
   -H "Content-Type: application/json" \
@@ -66,4 +73,5 @@ else
 fi
 
 # Push image
+echo "Pushing image..."
 $container_cmd push $image_tag --creds pepicrft:$GLOSSIA_CODEBERG_WORKFLOWS_TOKEN
