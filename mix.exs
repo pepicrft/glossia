@@ -52,7 +52,8 @@ defmodule Glossia.MixProject do
       {:bandit, "~> 1.5"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:styler, "~> 1.4", only: [:dev, :test], runtime: false},
-      {:hackney, "~> 1.23"}
+      {:hackney, "~> 1.23"},
+      {:gen_smtp, "~> 1.1"}
     ]
   end
 

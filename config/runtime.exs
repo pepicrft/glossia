@@ -25,6 +25,23 @@ if not is_nil(System.get_env("DATABASE_HOSTNAME")) do
 end
 
 if config_env() == :prod do
+  Glossia.Environment.raise_when_required_absent()
+
+  # Email
+  if Glossia.Environment.email_adapter() == :smtp do
+    config :glossia, Glossia.Mailer,
+      adapter: Swoosh.Adapters.SMTP,
+      relay: Glossia.Environment.email_smtp_relay(),
+      username: Glossia.Environment.email_smtp_username(),
+      password: Glossia.Environment.email_smtp_password(),
+      port: Glossia.Environment.email_smtp_port(),
+      retries: Glossia.Environment.email_smtp_retries(),
+      no_mx_lookups: Glossia.Environment.email_smtp_no_mx_lookups(),
+      auth: Glossia.Environment.email_smtp_auth(),
+      ssl: Glossia.Environment.email_smtp_ssl(),
+      tls: Glossia.Environment.email_smtp_tls()
+  end
+
   database_url =
     System.get_env("DATABASE_URL") ||
       raise """
