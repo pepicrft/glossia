@@ -3,4 +3,7 @@
 set -eo pipefail
 
 mix deps.get
-mix ecto.setup
+
+if [ "$GITHUB_ACTIONS" = "true" ]; then
+    mix ecto.setup
+fi
