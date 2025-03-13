@@ -13,10 +13,11 @@ jobs:
   glossia:
     name: Glossia
     runs-on: ubuntu-latest
-    container:
-      image: docker:dind
     steps:
       - uses: actions/checkout@v3
-      - run: curl https://mise.run | sh
-      - run: ~/.local/bin/mise install
-      - run: ~/.local/bin/mise run release
+      - uses: https://github.com/jdx/mise-action@v2
+        with:
+          cache: true
+      - name: Set up Docker Buildx
+        uses: https://github.com/docker/setup-buildx-action@v3
+      - run: mise run release
