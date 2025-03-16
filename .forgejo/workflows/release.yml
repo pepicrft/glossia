@@ -14,10 +14,14 @@ jobs:
   glossia:
     name: Glossia
     runs-on: debian-latest
+    container:
+      image: node:20-bookworm
+      volumes:
+        - "/certs/client"
     services:
       docker:
         image: docker:dind
-        options: --privileged
+        options: --volume /certs/client
         ports:
           - 2375:2375
     env:
