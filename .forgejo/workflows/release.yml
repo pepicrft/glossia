@@ -17,11 +17,11 @@ jobs:
     container:
       image: node:20-bookworm
       volumes:
-        - "/var/run/docker.sock:/var/run/docker.sock:ro"
+        - "/runner/services/docker/docker.sock:/runner/services/docker/docker.sock:ro"
     services:
       docker:
         image: docker:dind
-        options: "--volume /var/run/docker.sock:/var/run/docker.sock:ro"
+        options: "--volume /runner/services/docker/docker.sock:/runner/services/docker/docker.sock:ro"
     steps:
       - uses: actions/checkout@v3
       - run: |
