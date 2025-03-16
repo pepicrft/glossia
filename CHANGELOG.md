@@ -14,19 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.6] - 2025-03-16
 
-### Changed
-
-- [Release] Glossia 0.2.6
-
 ### Fixed
 
 - Release
 
 ## [0.2.5] - 2025-03-16
-
-### Changed
-
-- [Release] Glossia 0.2.5
 
 ### Fixed
 
@@ -35,41 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.4] - 2025-03-16
 
-### Added
-
-- Add support for SMTP configuration
-- Add Hackney's dependency explicitly
-
 ### Changed
 
-- [Release] Glossia 0.2.4
 - Release
-- Eliminating waiting for Docker to be ready
-- Fix (again)
-- Fix volume
-- Use a socket
-- Fix (again)
-- Fix (again)
-- Fix release (again)
-- Fix release script
-- Configure dind to communicate via TLS
-- Run the daemon as a service
-- Fix the pipeline
-- Install Docker
-- Fix release
-- Force re-run
-- Fix release
-- Use buildx
-- Fix release
-- Merge pull request 'Add support for configuring the SMTP server at runtime.' (#6) from environment into main
-- Fix runs-on
-- Fix the loading of the assets
-- Fix esbuild when Glossia is consumed as a dependency
-- Install esbuild for any environment
-- Make phoenix_live_reload also installable when added as a dependency of other projects
-- Update README.md
 - Automate release using Codeberg workflows
-- Update docs
 
 ### Fixed
 
@@ -78,29 +39,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.3] - 2025-03-02
 
-### Changed
-
-- [Release] Glossia 0.2.3
-
 ### Fixed
 
 - Push the image after releasing
 
 ## [0.2.2] - 2025-03-02
 
-### Changed
-
-- [Release] Glossia 0.2.2
-
 ### Fixed
 
 - Not push the image
 
 ## [0.2.1] - 2025-03-02
-
-### Changed
-
-- [Release] Glossia 0.2.1
 
 ### Fixed
 
@@ -110,14 +59,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [Release] Glossia 0.2.0
 - Include OCI images with releases
 
 ## [0.1.2] - 2025-03-02
-
-### Changed
-
-- [Release] Glossia 0.1.2
 
 ### Fixed
 
@@ -125,42 +69,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.1] - 2025-03-02
 
-### Changed
-
-- [Release] Glossia 0.1.1
-
 ### Fixed
 
 - Release
 
 ## [0.1.0] - 2025-03-02
 
-### Added
-
-- Add release script
-- Add Git cliff and generate a CHANGELOG.md
-
-### Changed
-
-- [Release] Glossia 0.1.0
-- Merge pull request 'Set up continuous integration' (#1) from ci into main
-- Fix the hostname of the database
-- Fix tests
-- Change the env. variable name
-- Set a GitHub token
-- Fix pipeline
-- Update the runs-on
-- Adjust the pipelines for Forgejo Actions
-- Create project
-
 ### Fixed
 
 - Release
 - Release
-
-### Removed
-
-- Remove some GitHub references
 
 [0.2.7]: https://codeberg.org/glossia/glossia/compare/0.2.6..0.2.7
 [0.2.6]: https://codeberg.org/glossia/glossia/compare/0.2.5..0.2.6

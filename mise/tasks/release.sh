@@ -3,8 +3,17 @@
 
 set -eo pipefail
 
-bumped_changelog_hash=$(echo -n "$(git cliff --bump)" | shasum -a 256 | awk '{print $1}')
-current_changelog_hash=$(echo -n "$(cat CHANGELOG.md)" | shasum -a 256 | awk '{print $1}')
+bumped_changelog=$(git cliff --bump)
+current_changelog=$(cat CHANGELOG.md)
+
+echo "Current changelog:"
+echo "$current_changelog"
+
+echo "Bumped changelog:"
+echo "$bumped_changelog"
+
+bumped_changelog_hash=$(echo -n "$bumped_changelog" | shasum -a 256 | awk '{print $1}')
+current_changelog_hash=$(echo -n "$current_changelog" | shasum -a 256 | awk '{print $1}')
 
 if [ "$bumped_changelog_hash" == "$current_changelog_hash" ]; then
     echo "No releasable changes detected. Exiting earlier..."

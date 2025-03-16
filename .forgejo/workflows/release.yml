@@ -18,6 +18,10 @@ jobs:
       volumes:
         - "/run/docker.sock:/var/run/docker.sock"
     steps:
+      - name: Set Git config
+        run: |
+          git config --global user.email "release@glossia.org"
+          git config --global user.name "Glossia Releaser"
       - name: Check out repository
         uses: actions/checkout@v3
         with:
@@ -42,8 +46,4 @@ jobs:
         uses: https://github.com/jdx/mise-action@v2
         with:
           cache: true
-      - name: Set Git config
-        run: |
-          git config --global user.email "release@glossia.org"
-          git config --global user.name "Glossia Releaser"
       - run: mise run release
