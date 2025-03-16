@@ -18,8 +18,10 @@ jobs:
       volumes:
         - "/run/docker.sock:/var/run/docker.sock"
     steps:
-      - uses: actions/checkout@v3
-      - run: |
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Install Docker
+        run: |
           apt-get update
           apt-get install -y ca-certificates curl
           install -m 0755 -d /etc/apt/keyrings
@@ -33,7 +35,8 @@ jobs:
             tee /etc/apt/sources.list.d/docker.list > /dev/null
           apt-get update
           apt-get install -y docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-      - uses: https://github.com/jdx/mise-action@v2
+      - name: Provision environment with Mise
+        uses: https://github.com/jdx/mise-action@v2
         with:
           cache: true
       - name: Set Git config
