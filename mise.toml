@@ -5,6 +5,7 @@ erlang = "27.1.2"
 "sops" = "3.9.3"
 "age" = "1.2.1"
 "ubi:orhun/git-cliff" = "2.8.0"
+"jq" = "1.7.1"
 
 [hooks]
 postinstall = "mise run install"
