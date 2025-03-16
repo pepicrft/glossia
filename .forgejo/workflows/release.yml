@@ -8,8 +8,7 @@ env:
   MISE_EXPERIMENTAL: "1"
   MISE_GITHUB_TOKEN: ${{ secrets.GLOSSIA_GITHUB_TOKEN }}
   MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
-  DOCKER_HOST: "unix:///runner/services/docker/docker.sock"
-
+  DOCKER_HOST: "unix:///var/run/docker.sock"
 jobs:
   glossia:
     name: Glossia
@@ -17,11 +16,7 @@ jobs:
     container:
       image: node:20-bookworm
       volumes:
-        - "/runner/services/docker/docker.sock:/runner/services/docker/docker.sock:ro"
-    services:
-      docker:
-        image: docker:dind
-        options: "--volume /runner/services/docker/docker.sock:/runner/services/docker/docker.sock:ro"
+        - "/run/docker.sock:/var/run/docker.sock"
     steps:
       - uses: actions/checkout@v3
       - run: |
@@ -37,7 +32,7 @@ jobs:
             $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
             tee /etc/apt/sources.list.d/docker.list > /dev/null
           apt-get update
-          apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+          apt-get install -y docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
       - uses: https://github.com/jdx/mise-action@v2
         with:
           cache: true
