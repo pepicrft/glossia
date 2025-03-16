@@ -48,8 +48,6 @@ PAYLOAD=$(jq -n \
   --arg tag_name "$next_version" \
   --arg name "$next_version" \
   --arg body "$release_notes" \
-  --argjson draft false \
-  --argjson prerelease false \
   '{
     tag_name: $tag_name,
     name: $name,
