@@ -8,15 +8,25 @@ env:
   MISE_EXPERIMENTAL: "1"
   MISE_GITHUB_TOKEN: ${{ secrets.GLOSSIA_GITHUB_TOKEN }}
   MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
-  DOCKER_HOST: "unix:///var/run/docker.sock"
+
 jobs:
   glossia:
     name: Glossia
     runs-on: debian-latest
     container:
       image: node:20-bookworm
-      volumes:
-        - "/run/docker.sock:/var/run/docker.sock"
+      options: >-
+        --privileged
+      env:
+        DOCKER_HOST: "tcp://docker:2375"
+        DOCKER_TLS_CERTDIR: ""
+    services:
+      docker:
+        image: docker:24.0.5-dind
+        options: >-
+          --privileged
+        env:
+          DOCKER_TLS_CERTDIR: ""
     steps:
       - name: Set Git config
         run: |

@@ -11,6 +11,42 @@ env:
   MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
 
 jobs:
+  build-image:
+    name: Build image
+    runs-on: debian-latest
+    container:
+      image: node:20-bookworm
+      options: >-
+        --privileged
+      env:
+        DOCKER_HOST: "tcp://docker:2375"
+        DOCKER_TLS_CERTDIR: ""
+    services:
+      docker:
+        image: docker:24.0.5-dind
+        options: >-
+          --privileged
+        env:
+          DOCKER_TLS_CERTDIR: ""
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Docker
+        run: |
+          apt-get update
+          apt-get install -y ca-certificates curl gnupg
+          install -m 0755 -d /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+          chmod a+r /etc/apt/keyrings/docker.asc
+          # Add the repository to Apt sources:
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+            $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+            tee /etc/apt/sources.list.d/docker.list > /dev/null
+          apt-get update
+          apt-get install -y docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+      - name: Build image
+        run: |
+          docker build -t glossia .
   check:
     name: Static checks
     runs-on: debian-latest
