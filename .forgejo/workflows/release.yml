@@ -17,6 +17,9 @@ jobs:
     services:
       docker:
         image: docker:dind
+        options: --privileged
+        ports:
+          - 2375:2375
     env:
       DOCKER_HOST: "docker"
     steps:
