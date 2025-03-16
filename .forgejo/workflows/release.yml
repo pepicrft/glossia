@@ -8,7 +8,6 @@ env:
   MISE_EXPERIMENTAL: "1"
   MISE_GITHUB_TOKEN: ${{ secrets.GLOSSIA_GITHUB_TOKEN }}
   MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
-  DOCKER_TLS_CERTDIR: "/certs"
 
 jobs:
   glossia:
@@ -17,15 +16,15 @@ jobs:
     container:
       image: node:20-bookworm
       volumes:
-        - "/certs/client"
+        - "/certs:/certs"
     services:
       docker:
+        privileged: true
         image: docker:dind
         options: --volume /certs/client
-        ports:
-          - 2375:2375
     env:
-      DOCKER_HOST: "docker"
+      DOCKER_HOST: tcp://docker:2375
+      DOCKER_TLS_CERTDIR: "/certs"
     steps:
       - uses: actions/checkout@v3
       - run: |
@@ -45,4 +44,6 @@ jobs:
       - uses: https://github.com/jdx/mise-action@v2
         with:
           cache: true
+      - name: Verify Docker connection
+        run: docker info
       - run: mise run release
