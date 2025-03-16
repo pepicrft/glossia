@@ -5,7 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.7] - 2025-03-16
+
+### Fixed
+
+- Release
+- Release
+
 ## [0.2.6] - 2025-03-16
+
+### Changed
+
+- [Release] Glossia 0.2.6
 
 ### Fixed
 
@@ -151,6 +162,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove some GitHub references
 
+[0.2.7]: https://codeberg.org/glossia/glossia/compare/0.2.6..0.2.7
 [0.2.6]: https://codeberg.org/glossia/glossia/compare/0.2.5..0.2.6
 [0.2.5]: https://codeberg.org/glossia/glossia/compare/0.2.4..0.2.5
 [0.2.4]: https://codeberg.org/glossia/glossia/compare/0.2.3..0.2.4

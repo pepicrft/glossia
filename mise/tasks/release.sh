@@ -3,7 +3,7 @@
 
 set -eo pipefail
 
-bumped_changelog_hash=$(echo -n "$(git cliff --bump --unreleased)" | shasum -a 256 | awk '{print $1}')
+bumped_changelog_hash=$(echo -n "$(git cliff --bump)" | shasum -a 256 | awk '{print $1}')
 current_changelog_hash=$(echo -n "$(cat CHANGELOG.md)" | shasum -a 256 | awk '{print $1}')
 
 if [ "$bumped_changelog_hash" == "$current_changelog_hash" ]; then
