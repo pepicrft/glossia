@@ -5,7 +5,53 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.4] - 2025-03-16
+
+### Added
+
+- Add support for SMTP configuration
+- Add Hackney's dependency explicitly
+
+### Changed
+
+- Release
+- Eliminating waiting for Docker to be ready
+- Fix (again)
+- Fix volume
+- Use a socket
+- Fix (again)
+- Fix (again)
+- Fix release (again)
+- Fix release script
+- Configure dind to communicate via TLS
+- Run the daemon as a service
+- Fix the pipeline
+- Install Docker
+- Fix release
+- Force re-run
+- Fix release
+- Use buildx
+- Fix release
+- Merge pull request 'Add support for configuring the SMTP server at runtime.' (#6) from environment into main
+- Fix runs-on
+- Fix the loading of the assets
+- Fix esbuild when Glossia is consumed as a dependency
+- Install esbuild for any environment
+- Make phoenix_live_reload also installable when added as a dependency of other projects
+- Update README.md
+- Automate release using Codeberg workflows
+- Update docs
+
+### Fixed
+
+- Releases
+- Release
+
 ## [0.2.3] - 2025-03-02
+
+### Changed
+
+- [Release] Glossia 0.2.3
 
 ### Fixed
 
@@ -87,6 +133,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove some GitHub references
 
+[0.2.4]: https://codeberg.org/glossia/glossia/compare/0.2.3..0.2.4
 [0.2.3]: https://codeberg.org/glossia/glossia/compare/0.2.2..0.2.3
 [0.2.2]: https://codeberg.org/glossia/glossia/compare/0.2.1..0.2.2
 [0.2.1]: https://codeberg.org/glossia/glossia/compare/0.2.0..0.2.1
