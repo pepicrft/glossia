@@ -19,12 +19,15 @@ jobs:
         - "/certs:/certs"
     services:
       docker:
-        privileged: true
         image: docker:dind
-        options: --volume /certs/client
+        privileged: true
+        options: >-
+          --privileged
+        env:
+          DOCKER_TLS_CERTDIR: ""
     env:
       DOCKER_HOST: tcp://docker:2375
-      DOCKER_TLS_CERTDIR: "/certs"
+      DOCKER_TLS_CERTDIR: ""
     steps:
       - uses: actions/checkout@v3
       - run: |
@@ -45,5 +48,17 @@ jobs:
         with:
           cache: true
       - name: Verify Docker connection
-        run: docker info
+        run: |
+          # Wait for Docker daemon to be ready
+          timeout=30
+          while ! docker info &>/dev/null && [ $timeout -gt 0 ]; do
+            echo "Waiting for Docker daemon to be ready... ($timeout seconds left)"
+            sleep 1
+            timeout=$((timeout-1))
+          done
+          if [ $timeout -eq 0 ]; then
+            echo "Timed out waiting for Docker daemon"
+            exit 1
+          fi
+          docker info
       - run: mise run release
