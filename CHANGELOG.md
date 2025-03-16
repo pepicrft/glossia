@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.5] - 2025-03-16
+
+### Fixed
+
+- Release
+- Automated release
+
 ## [0.2.4] - 2025-03-16
 
 ### Added
@@ -14,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [Release] Glossia 0.2.4
 - Release
 - Eliminating waiting for Docker to be ready
 - Fix (again)
@@ -133,6 +141,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove some GitHub references
 
+[0.2.5]: https://codeberg.org/glossia/glossia/compare/0.2.4..0.2.5
 [0.2.4]: https://codeberg.org/glossia/glossia/compare/0.2.3..0.2.4
 [0.2.3]: https://codeberg.org/glossia/glossia/compare/0.2.2..0.2.3
 [0.2.2]: https://codeberg.org/glossia/glossia/compare/0.2.1..0.2.2
