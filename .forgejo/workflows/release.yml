@@ -8,6 +8,7 @@ env:
   MISE_EXPERIMENTAL: "1"
   MISE_GITHUB_TOKEN: ${{ secrets.GLOSSIA_GITHUB_TOKEN }}
   MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
+  DOCKER_HOST: "unix:///runner/services/docker/docker.sock"
 
 jobs:
   glossia:
@@ -16,18 +17,11 @@ jobs:
     container:
       image: node:20-bookworm
       volumes:
-        - "/certs:/certs"
+        - "/var/run/docker.sock:/var/run/docker.sock:ro"
     services:
       docker:
         image: docker:dind
-        privileged: true
-        options: >-
-          --privileged
-        env:
-          DOCKER_TLS_CERTDIR: ""
-    env:
-      DOCKER_HOST: tcp://docker:2375
-      DOCKER_TLS_CERTDIR: ""
+        options: "--volume /var/run/docker.sock:/var/run/docker.sock:ro"
     steps:
       - uses: actions/checkout@v3
       - run: |
