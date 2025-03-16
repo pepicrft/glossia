@@ -36,18 +36,4 @@ jobs:
       - uses: https://github.com/jdx/mise-action@v2
         with:
           cache: true
-      - name: Verify Docker connection
-        run: |
-          # Wait for Docker daemon to be ready
-          timeout=30
-          while ! docker info &>/dev/null && [ $timeout -gt 0 ]; do
-            echo "Waiting for Docker daemon to be ready... ($timeout seconds left)"
-            sleep 1
-            timeout=$((timeout-1))
-          done
-          if [ $timeout -eq 0 ]; then
-            echo "Timed out waiting for Docker daemon"
-            exit 1
-          fi
-          docker info
       - run: mise run release
