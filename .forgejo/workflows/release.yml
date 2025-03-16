@@ -8,6 +8,7 @@ env:
   MISE_EXPERIMENTAL: "1"
   MISE_GITHUB_TOKEN: ${{ secrets.GLOSSIA_GITHUB_TOKEN }}
   MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
+  DOCKER_TLS_CERTDIR: "/certs"
 
 jobs:
   glossia:
@@ -16,9 +17,8 @@ jobs:
     services:
       docker:
         image: docker:dind
-        options: --privileged --shm-size=2g
-        volumes:
-          - /var/run/docker.sock:/var/run/docker.sock:ro
+    env:
+      DOCKER_HOST: "docker"
     steps:
       - uses: actions/checkout@v3
       - run: |
