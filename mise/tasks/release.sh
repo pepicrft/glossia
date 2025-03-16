@@ -51,9 +51,7 @@ PAYLOAD=$(jq -n \
   '{
     tag_name: $tag_name,
     name: $name,
-    body: $body,
-    draft: $draft,
-    prerelease: $prerelease
+    body: $body
   }')
 
 # Make API request to create the release
