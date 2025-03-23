@@ -1,7 +1,7 @@
 # git-cliff ~ configuration file
 # https://git-cliff.org/docs/configuration
 
-[remote.gitea]
+[remote.github]
 owner = "glossia"
 repo = "glossia"
 
@@ -35,11 +35,11 @@ footer = """
     {% if release.version -%}
         {% if release.previous.version -%}
             [{{ release.version | trim_start_matches(pat="v") }}]: \
-                https://codeberg.org/{{ remote.gitea.owner }}/{{ remote.gitea.repo }}\
+                https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}\
                     /compare/{{ release.previous.version }}..{{ release.version }}
         {% endif -%}
     {% else -%}
-        [unreleased]: https://codeberg.org/{{ remote.gitea.owner }}/{{ remote.gitea.repo }}\
+        [unreleased]: https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}\
             /compare/{{ release.previous.version }}..HEAD
     {% endif -%}
 {% endfor %}

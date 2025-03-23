@@ -53,7 +53,7 @@ jobs:
           apt-get update
           apt-get install -y docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
       - name: Provision environment with Mise
-        uses: https://github.com/jdx/mise-action@v2
+        uses: jdx/mise-action@v2
         with:
           cache: true
       - run: mise run release

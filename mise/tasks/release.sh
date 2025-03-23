@@ -36,7 +36,7 @@ else
 fi
 
 echo "Building image..."
-image_tag="codeberg.org/glossia/glossia:$next_version"
+image_tag="github.com/glossia/glossia:$next_version"
 $container_cmd build -t $image_tag .
 
 # Updating the CHANGELOG.md
