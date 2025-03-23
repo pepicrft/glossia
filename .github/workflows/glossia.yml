@@ -62,14 +62,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MIX_ENV: test
-      DATABASE_HOSTNAME: db
     services:
       db:
         image: postgres:17
         ports: ["5432:5432"]
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: test
           POSTGRES_PASSWORD: postgres
         options: >-
           --health-cmd pg_isready
