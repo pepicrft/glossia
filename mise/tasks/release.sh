@@ -47,7 +47,9 @@ echo "Committing and tagging..."
 git add CHANGELOG.md
 git commit -m "[Release] Glossia $next_version"
 git tag "$next_version"
-git push origin "$next_version"
+# Push both the branch and tags
+git push origin main  # or replace 'main' with your branch name
+git push origin "$next_version"  # push the tag explicitly
 
 echo "Generating release notes..."
 release_notes=$(git cliff --latest)
@@ -60,13 +62,16 @@ PAYLOAD=$(jq -n \
   '{
     tag_name: $tag_name,
     name: $name,
-    body: $body
+    body: $body,
+    draft: false,
+    prerelease: false
   }')
 
-# Make API request to create the release
+# Make API request to create the release with correct GitHub API endpoint
 echo "Creating release..."
-RESPONSE=$(curl -s -X POST "https://github.com/api/v1/repos/glossia/glossia/releases" \
-  -H "Authorization: token $GITHUB_TOKEN" \
+RESPONSE=$(curl -s -X POST "https://api.github.com/repos/glossia/glossia/releases" \
+  -H "Authorization: Bearer $GITHUB_TOKEN" \
+  -H "Accept: application/vnd.github+json" \
   -H "Content-Type: application/json" \
   -d "$PAYLOAD")
 
