@@ -36,7 +36,7 @@ else
 fi
 
 echo "Building image..."
-image_tag="github.com/glossia/glossia:$next_version"
+image_tag="ghcr.io/glossia/glossia:$next_version"
 $container_cmd build -t $image_tag .
 
 # Updating the CHANGELOG.md
@@ -65,8 +65,8 @@ PAYLOAD=$(jq -n \
 
 # Make API request to create the release
 echo "Creating release..."
-RESPONSE=$(curl -s -X POST "https://codeberg.org/api/v1/repos/glossia/glossia/releases" \
-  -H "Authorization: token $GLOSSIA_CODEBERG_WORKFLOWS_TOKEN" \
+RESPONSE=$(curl -s -X POST "https://github.com/api/v1/repos/glossia/glossia/releases" \
+  -H "Authorization: token $GITHUB_TOKEN" \
   -H "Content-Type: application/json" \
   -d "$PAYLOAD")
 
@@ -79,4 +79,4 @@ fi
 
 # Push image
 echo "Pushing image..."
-$container_cmd push $image_tag --creds pepicrft:$GLOSSIA_CODEBERG_WORKFLOWS_TOKEN
+$container_cmd push $image_tag --creds pepicrft:$GITHUB_TOKEN

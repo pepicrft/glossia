@@ -8,6 +8,11 @@ env:
   MISE_EXPERIMENTAL: "1"
   MISE_GITHUB_TOKEN: ${{ secrets.GLOSSIA_GITHUB_TOKEN }}
   MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+permissions:
+  contents: write
+  packages: write
 
 jobs:
   glossia:
@@ -23,7 +28,12 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
-
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Provision environment with Mise
         uses: jdx/mise-action@v2
         with:
