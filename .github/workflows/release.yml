@@ -13,20 +13,6 @@ jobs:
   glossia:
     name: Glossia
     runs-on: ubuntu-latest
-    container:
-      image: node:20-bookworm
-      options: >-
-        --privileged
-      env:
-        DOCKER_HOST: "tcp://docker:2375"
-        DOCKER_TLS_CERTDIR: ""
-    services:
-      docker:
-        image: docker:24.0.5-dind
-        options: >-
-          --privileged
-        env:
-          DOCKER_TLS_CERTDIR: ""
     steps:
       - name: Set Git config
         run: |
