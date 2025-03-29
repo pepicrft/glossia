@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #MISE description="Releases a new version of the project if needed."
 
-set -eo pipefail
+set -exo pipefail
 
 bumped_changelog=$(git cliff --bump)
 current_changelog=$(cat CHANGELOG.md)
