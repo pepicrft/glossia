@@ -2,12 +2,13 @@ defmodule Glossia.MixProject do
   use Mix.Project
 
   @version "0.1.0"
+  @elixir_version_requirement "~> 1.14"
 
   def project do
     [
       app: :glossia,
       version: @version,
-      elixir: "~> 1.14",
+      elixir: @elixir_version_requirement,
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
