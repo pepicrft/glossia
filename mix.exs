@@ -12,8 +12,15 @@ defmodule Glossia.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      package: package()
+      package: package(),
+      description: description()
     ]
+  end
+
+  defp description do
+    ~S"""
+    A Phoenix application to create a language hubs for organizations.
+    """
   end
 
   defp package do
@@ -65,7 +72,8 @@ defmodule Glossia.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:styler, "~> 1.4", only: [:dev, :test], runtime: false},
       {:hackney, "~> 1.23"},
-      {:gen_smtp, "~> 1.1"}
+      {:gen_smtp, "~> 1.1"},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 
