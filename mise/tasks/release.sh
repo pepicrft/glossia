@@ -44,8 +44,12 @@ $container_cmd build --build-arg VERSION=$VERSION -t $image_tag .
 echo "Updating CHANGELOG.md..."
 git cliff --bump -o CHANGELOG.md
 
+echo "Updating version in mix.exs..."
+sed -i '' 's/@version "[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*"/@version "$next_version"/' mix.exs
+
 echo "Committing and tagging..."
 git add CHANGELOG.md
+git add mix.exs
 git commit -m "[Release] Glossia $next_version"
 git tag "$next_version"
 # Push both the branch and tags

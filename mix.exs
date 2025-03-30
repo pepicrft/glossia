@@ -1,11 +1,14 @@
 defmodule Glossia.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
+  @elixir_version_requirement "~> 1.17.3"
+
   def project do
     [
       app: :glossia,
-      version: version(),
-      elixir: "~> #{elixir()}",
+      version: @version,
+      elixir: @elixir_version_requirement,
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -111,9 +114,5 @@ defmodule Glossia.MixProject do
         |> Regex.run(line)
         |> Enum.at(1)
     end
-  end
-
-  defp version do
-     System.get_env("VERSION", "0.1.0")
   end
 end
