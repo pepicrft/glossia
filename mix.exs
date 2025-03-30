@@ -1,15 +1,35 @@
 defmodule Glossia.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
+  @elixir_version_requirement "~> 1.17.3"
+
   def project do
     [
       app: :glossia,
-      version: "0.1.0",
-      elixir: "~> 1.14",
+      version: @version,
+      elixir: @elixir_version_requirement,
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      package: package(),
+      description: description()
+    ]
+  end
+
+  defp description do
+    ~S"""
+    A Phoenix application to create a language hubs for organizations.
+    """
+  end
+
+  defp package do
+    [
+      files: ["lib", "priv", "config", "assets", "mix.exs", "README*", "LICENSE*"],
+      maintainers: ["Pedro Piñera Buendía"],
+      licenses: ["MPL-2.0"],
+      links: %{"GitHub" => "https://github.com/glossia/glossia"}
     ]
   end
 
@@ -53,7 +73,8 @@ defmodule Glossia.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:styler, "~> 1.4", only: [:dev, :test], runtime: false},
       {:hackney, "~> 1.23"},
-      {:gen_smtp, "~> 1.1"}
+      {:gen_smtp, "~> 1.1"},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 
@@ -76,5 +97,22 @@ defmodule Glossia.MixProject do
         "phx.digest"
       ]
     ]
+  end
+
+  defp elixir do
+    "mise.toml"
+    |> File.read!()
+    |> String.split("\n")
+    |> Enum.find(fn line -> String.contains?(line, "elixir =") end)
+    |> case do
+      nil ->
+        "Version not found"
+
+      line ->
+        # Extract the version number between quotes
+        ~r/elixir = "(.+?)"/
+        |> Regex.run(line)
+        |> Enum.at(1)
+    end
   end
 end

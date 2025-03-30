@@ -21,6 +21,7 @@ if [ "$bumped_changelog_hash" == "$current_changelog_hash" ]; then
 fi
 
 next_version=$(git cliff --bumped-version)
+export VERSION=$next_version
 
 # Build image
 if command -v podman &> /dev/null
@@ -37,14 +38,18 @@ fi
 
 echo "Building image..."
 image_tag="ghcr.io/glossia/glossia:$next_version"
-$container_cmd build -t $image_tag .
+$container_cmd build --build-arg VERSION=$VERSION -t $image_tag .
 
 # Updating the CHANGELOG.md
 echo "Updating CHANGELOG.md..."
 git cliff --bump -o CHANGELOG.md
 
+echo "Updating version in mix.exs..."
+sed -i '' 's/@version "[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*"/@version "$next_version"/' mix.exs
+
 echo "Committing and tagging..."
 git add CHANGELOG.md
+git add mix.exs
 git commit -m "[Release] Glossia $next_version"
 git tag "$next_version"
 # Push both the branch and tags
@@ -82,6 +87,11 @@ else
     echo "$RESPONSE"
 fi
 
-# Push image
+# Push image to the registry
 echo "Pushing image..."
 $container_cmd push $image_tag --creds pepicrft:$GITHUB_TOKEN
+
+# Push a new version to the Hex package registry
+# It authenticates using the env. variable HEX_API_KEY
+echo "Pushing new version to Hex..."
+mix hex.publish

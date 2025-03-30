@@ -11,6 +11,7 @@
 #   - https://pkgs.org/ - resource for finding needed packages
 #   - Ex: hexpm/elixir:1.17.3-erlang-27.1.2-debian-bullseye-20241202-slim
 #
+ARG VERSION
 ARG ELIXIR_VERSION=1.17.3
 ARG OTP_VERSION=27.1.2
 ARG DEBIAN_VERSION=bullseye-20241202-slim
@@ -68,8 +69,8 @@ RUN mix release
 FROM ${RUNNER_IMAGE}
 
 RUN apt-get update -y && \
-  apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates \
-  && apt-get clean && rm -f /var/lib/apt/lists/*_*
+    apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates \
+    && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
