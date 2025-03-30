@@ -94,4 +94,4 @@ $container_cmd push $image_tag --creds pepicrft:$GITHUB_TOKEN
 # Push a new version to the Hex package registry
 # It authenticates using the env. variable HEX_API_KEY
 echo "Pushing new version to Hex..."
-mix hex.publish
+mix hex.publish --yes
