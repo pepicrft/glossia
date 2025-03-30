@@ -1,14 +1,11 @@
 defmodule Glossia.MixProject do
   use Mix.Project
 
-  @version "0.1.0"
-  @elixir_version_requirement "~> 1.14"
-
   def project do
     [
       app: :glossia,
-      version: @version,
-      elixir: @elixir_version_requirement,
+      version: version(),
+      elixir: "~> #{elixir()}",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -97,5 +94,26 @@ defmodule Glossia.MixProject do
         "phx.digest"
       ]
     ]
+  end
+
+  defp elixir do
+    "mise.toml"
+    |> File.read!()
+    |> String.split("\n")
+    |> Enum.find(fn line -> String.contains?(line, "elixir =") end)
+    |> case do
+      nil ->
+        "Version not found"
+
+      line ->
+        # Extract the version number between quotes
+        ~r/elixir = "(.+?)"/
+        |> Regex.run(line)
+        |> Enum.at(1)
+    end
+  end
+
+  defp version do
+     System.get_env("VERSION", "0.1.0")
   end
 end
