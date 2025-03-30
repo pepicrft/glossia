@@ -45,7 +45,7 @@ echo "Updating CHANGELOG.md..."
 git cliff --bump -o CHANGELOG.md
 
 echo "Updating version in mix.exs..."
-sed -i'' -e 's/@version "[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*"/@version "$next_version"/' mix.exs
+sed -i'' -e "s/@version \"[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\"/@version \"$next_version\"/" mix.exs
 
 echo "Committing and tagging..."
 git add CHANGELOG.md
