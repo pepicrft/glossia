@@ -1,15 +1,27 @@
 defmodule Glossia.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
+
   def project do
     [
       app: :glossia,
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      package: package()
+    ]
+  end
+
+  defp package do
+    [
+      files: ["lib", "priv", "config", "assets", "mix.exs", "README*", "LICENSE*"],
+      maintainers: ["Pedro Piñera Buendía"],
+      licenses: ["MPL-2.0"],
+      links: %{"GitHub" => "https://github.com/glossia/glossia"}
     ]
   end
 
