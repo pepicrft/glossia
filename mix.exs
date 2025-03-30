@@ -1,7 +1,7 @@
 defmodule Glossia.MixProject do
   use Mix.Project
 
-  @version "$next_version"
+  @version "0.3.0"
   @elixir_version_requirement "~> 1.17.3"
 
   def project do
