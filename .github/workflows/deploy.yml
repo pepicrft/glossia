@@ -1,0 +1,21 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+
+env:
+  MISE_EXPERIMENTAL: "1"
+  MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  production:
+    name: Production
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: jdx/mise-action@v2
+        with:
+          cache: true
+      - run: mise run deploy
