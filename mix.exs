@@ -74,7 +74,8 @@ defmodule Glossia.MixProject do
       {:styler, "~> 1.4", only: [:dev, :test], runtime: false},
       {:hackney, "~> 1.23"},
       {:gen_smtp, "~> 1.1"},
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:tailwind, "~> 0.3", runtime: Mix.env() == :dev}
     ]
   end
 
@@ -93,26 +94,10 @@ defmodule Glossia.MixProject do
       "assets.setup": ["esbuild.install --if-missing"],
       "assets.build": ["esbuild glossia"],
       "assets.deploy": [
+        "tailwind myproject --minify",
         "esbuild glossia --minify",
         "phx.digest"
       ]
     ]
-  end
-
-  defp elixir do
-    "mise.toml"
-    |> File.read!()
-    |> String.split("\n")
-    |> Enum.find(fn line -> String.contains?(line, "elixir =") end)
-    |> case do
-      nil ->
-        "Version not found"
-
-      line ->
-        # Extract the version number between quotes
-        ~r/elixir = "(.+?)"/
-        |> Regex.run(line)
-        |> Enum.at(1)
-    end
   end
 end
