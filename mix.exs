@@ -94,7 +94,7 @@ defmodule Glossia.MixProject do
       "assets.setup": ["esbuild.install --if-missing"],
       "assets.build": ["esbuild glossia"],
       "assets.deploy": [
-        "tailwind myproject --minify",
+        "tailwind glossia --minify",
         "esbuild glossia --minify",
         "phx.digest"
       ]
