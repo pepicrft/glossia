@@ -20,4 +20,4 @@
 
 ## Usage
 
-Check out [our documentation](https://docs.glossia.ai) to learn more about how to use Glossia's hosted version, or how to self-host it.
+Check out [our documentation](https://docs.glossia.org) to learn more about how to use Glossia's hosted version, or how to self-host it.
