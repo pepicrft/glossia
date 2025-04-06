@@ -61,7 +61,6 @@ defmodule Glossia.MixProject do
       {:phoenix_live_view, "~> 1.0.0"},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.8.3"},
-      {:esbuild, "~> 0.8"},
       {:swoosh, "~> 1.5"},
       {:finch, "~> 0.13"},
       {:telemetry_metrics, "~> 1.0"},
@@ -75,7 +74,7 @@ defmodule Glossia.MixProject do
       {:hackney, "~> 1.23"},
       {:gen_smtp, "~> 1.1"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-      {:tailwind, "~> 0.3", runtime: Mix.env() == :dev}
+      {:live_vue, "~> 0.5"}
     ]
   end
 
@@ -91,11 +90,11 @@ defmodule Glossia.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.setup": ["esbuild.install --if-missing"],
-      "assets.build": ["esbuild glossia"],
+      "assets.setup": [],
+      "assets.build": ["cmd --cd assets pnpm run build", "cmd --cd assets pnpm run build-server"],
       "assets.deploy": [
-        "tailwind glossia --minify",
-        "esbuild glossia --minify",
+        "cmd --cd assets pnpm run build",
+        "cmd --cd assets pnpm run build-server",
         "phx.digest"
       ]
     ]

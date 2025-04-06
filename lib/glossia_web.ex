@@ -85,6 +85,8 @@ defmodule GlossiaWeb do
     quote do
       # Translation
       use Gettext, backend: GlossiaWeb.Gettext
+      use LiveVue
+      use LiveVue.Components, vue_root: ["./assets/vue", "./lib/glossia_web"]
 
       import GlossiaWeb.CoreComponents
 

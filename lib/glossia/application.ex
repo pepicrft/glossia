@@ -12,6 +12,7 @@ defmodule Glossia.Application do
       Glossia.Repo,
       {DNSCluster, query: Application.get_env(:glossia, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Glossia.PubSub},
+      {NodeJS.Supervisor, [path: LiveVue.SSR.NodeJS.server_path(), pool_size: 4]},
       # Start the Finch HTTP client for sending emails
       {Finch, name: Glossia.Finch},
       # Start a worker by calling: Glossia.Worker.start_link(arg)

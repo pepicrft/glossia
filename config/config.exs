@@ -7,17 +7,6 @@
 # General application configuration
 import Config
 
-# Configure esbuild (the version is required)
-config :esbuild,
-  version: "0.17.11",
-  glossia: [
-    args: ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
-    cd: Path.expand("../assets", __DIR__),
-    # When :glossia is used as a dependency, it's part of a /deps directory, therefore we need
-    # to include the directory that contains :glossia in NODE_PATH.
-    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__) <> ":" <> Path.expand("../..", __DIR__)}
-  ]
-
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails
@@ -49,17 +38,6 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
-
-# Tailwind
-config :tailwind,
-  version: "4.0.0",
-  glossia: [
-    args: ~w(
-      --input=assets/css/app.css
-      --output=priv/static/assets/app.css
-    ),
-    cd: Path.expand("..", __DIR__)
-  ]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
