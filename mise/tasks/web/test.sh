@@ -3,4 +3,7 @@
 
 set -eo pipefail
 
-cd web && mix test
+cd web
+mix local.hex --force
+mix local.rebar --force
+mix test

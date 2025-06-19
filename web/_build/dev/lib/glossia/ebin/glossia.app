@@ -1,5 +1,5 @@
 {application,glossia,
-             [{config_mtime,1750345611},
+             [{config_mtime,1750349503},
               {compile_env,[{glossia,['Elixir.GlossiaWeb.Gettext'],error},
                             {glossia,[dev_routes],{ok,true}}]},
               {optional_applications,[]},

@@ -18,10 +18,17 @@ defmodule Glossia.Formatters.String do
   """
   def enumerate(strings) when is_list(strings) do
     case length(strings) do
-      0 -> ""
-      1 -> hd(strings)
-      2 -> Enum.join(strings, " and ")
-      _ -> Enum.join(Enum.take(strings, length(strings) - 1), ", ") <> " and " <> List.last(strings)
+      0 ->
+        ""
+
+      1 ->
+        hd(strings)
+
+      2 ->
+        Enum.join(strings, " and ")
+
+      _ ->
+        Enum.join(Enum.take(strings, length(strings) - 1), ", ") <> " and " <> List.last(strings)
     end
   end
 end

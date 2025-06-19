@@ -188,9 +188,14 @@ defmodule Glossia.Environment do
   """
   def email_smtp_auth(env \\ System.get_env()) do
     case Map.get(env, @email_smtp_auth_env_var) do
-      nil -> :if_available
-      value when is_binary(value) and value in ["always", "never", "if_available"] -> String.to_atom(value)
-      _ -> :if_available
+      nil ->
+        :if_available
+
+      value when is_binary(value) and value in ["always", "never", "if_available"] ->
+        String.to_atom(value)
+
+      _ ->
+        :if_available
     end
   end
 
@@ -236,9 +241,14 @@ defmodule Glossia.Environment do
   """
   def email_smtp_tls(env \\ System.get_env()) do
     case Map.get(env, @email_smtp_tls_env_var) do
-      nil -> :if_available
-      value when is_binary(value) and value in ["always", "never", "if_available"] -> String.to_atom(value)
-      _ -> :if_available
+      nil ->
+        :if_available
+
+      value when is_binary(value) and value in ["always", "never", "if_available"] ->
+        String.to_atom(value)
+
+      _ ->
+        :if_available
     end
   end
 

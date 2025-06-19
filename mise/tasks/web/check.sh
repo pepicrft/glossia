@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
-#MISE description="Run code checks"
+#MISE description="Run web code checks"
 #USAGE flag "-f --fix" help="Fixes the fixable issues"
 
 set -eo pipefail
+
+cd web
+mix local.hex --force
+mix local.rebar --force
 
 if [ "$usage_fix" = "true" ]; then
     mix format

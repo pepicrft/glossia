@@ -11,7 +11,7 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: lib/glossia_web/components/core_components.ex:481
+#: lib/glossia_web/components/core_components.ex:483
 #, elixir-autogen, elixir-format
 msgid "Actions"
 msgstr ""

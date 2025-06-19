@@ -3,4 +3,7 @@
 
 set -eo pipefail
 
-cd web && mix compile --warnings-as-errors
+cd web
+mix local.hex --force
+mix local.rebar --force
+mix compile --warnings-as-errors

@@ -3,4 +3,7 @@
 
 set -eo pipefail
 
-cd web && mix phx.server
+cd web
+mix local.hex --force
+mix local.rebar --force
+mix phx.server
