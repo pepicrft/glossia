@@ -10,14 +10,66 @@
     It's MPL-2.0 licensed.
 </p>
 
+## Project Structure
+
+This is a monorepo containing the following components:
+
+- **`web/`** - Phoenix web application (Elixir/Erlang)
+- **`cli/`** - Command-line interface (Go)
+
 ## Development
+
+### Prerequisites
+
+- [mise](https://mise.jdx.dev/) for managing development dependencies
 
 ### Set up
 
-1. Clone the project: `git clone git@github.com:glossia/glossia.git`.
+1. Clone the project: `git clone git@github.com:glossia/glossia.git`
 2. Install dependencies: `mise install`
-3. Run the web app locally: `mise run dev`
+
+### Web Application
+
+The web application is a Phoenix/Elixir application located in the `web/` directory.
+
+```bash
+# Run the web application locally
+mise run web/dev
+
+# Build the web application
+mise run web/build
+
+# Run web tests
+mise run web/test
+
+# Run web code checks
+mise run web/check
+```
+
+### CLI
+
+The CLI is a Go application located in the `cli/` directory.
+
+```bash
+# Build the CLI
+mise run cli/build
+
+# Run CLI tests
+mise run cli/test
+
+# Lint CLI code
+mise run cli/lint
+
+# Run the CLI locally
+cd cli && go run main.go --help
+```
 
 ## Usage
 
+### Web Application
+
 Check out [our documentation](https://docs.glossia.org) to learn more about how to use Glossia's hosted version, or how to self-host it.
+
+### CLI
+
+See the [CLI documentation](./cli/README.md) for detailed usage instructions.

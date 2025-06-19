@@ -1,4 +1,4 @@
-name: Web CI
+name: Web
 on:
   push:
     branches:
@@ -7,12 +7,12 @@ on:
 
 env:
   MISE_EXPERIMENTAL: "1"
-  MISE_GITHUB_TOKEN: ${{ secrets.GLOSSIA_GITHUB_TOKEN }}
+  MISE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
 
 jobs:
   web-build-image:
-    name: Web - Build image
+    name: Build image
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -25,7 +25,7 @@ jobs:
           push: false
           tags: glossia
   web-check:
-    name: Web - Static checks
+    name: Static checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -42,7 +42,7 @@ jobs:
           cache: true
       - run: mise run web/check
   web-build:
-    name: Web - Build
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -59,7 +59,7 @@ jobs:
           cache: true
       - run: mise run web/build
   web-test:
-    name: Web - Test
+    name: Test
     runs-on: ubuntu-latest
     env:
       MIX_ENV: test
