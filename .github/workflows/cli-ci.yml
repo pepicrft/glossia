@@ -1,0 +1,50 @@
+name: CLI CI
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'cli/**'
+      - '.github/workflows/cli-ci.yml'
+      - 'mise.toml'
+  pull_request:
+    paths:
+      - 'cli/**'
+      - '.github/workflows/cli-ci.yml'
+      - 'mise.toml'
+
+env:
+  MISE_EXPERIMENTAL: "1"
+
+jobs:
+  cli-lint:
+    name: CLI - Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+        with:
+          cache: true
+      - run: mise run cli/lint
+
+  cli-test:
+    name: CLI - Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+        with:
+          cache: true
+      - run: mise run cli/test
+
+  cli-build:
+    name: CLI - Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+        with:
+          cache: true
+      - run: mise run cli/build
+      - name: Test CLI binary
+        run: cd cli && ./glossia --help
