@@ -76,7 +76,9 @@ defmodule Glossia.MixProject do
       {:gen_smtp, "~> 1.1"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
-      {:tidewave, "~> 0.1", only: :dev}
+      {:tidewave, "~> 0.1", only: :dev},
+      {:ueberauth, "~> 0.10"},
+      {:ueberauth_github, "~> 0.8"}
     ]
   end
 

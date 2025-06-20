@@ -24,6 +24,13 @@ if not is_nil(System.get_env("DATABASE_HOSTNAME")) do
   config :glossia, Glossia.Repo, hostname: System.get_env("DATABASE_HOSTNAME")
 end
 
+# Configure OAuth providers from environment variables
+if github_client_id = System.get_env("GITHUB_CLIENT_ID") do
+  config :ueberauth, Ueberauth.Strategy.Github.OAuth,
+    client_id: github_client_id,
+    client_secret: System.get_env("GITHUB_CLIENT_SECRET")
+end
+
 if config_env() == :prod do
   Glossia.Environment.raise_when_required_absent()
 
