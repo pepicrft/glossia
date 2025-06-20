@@ -75,7 +75,8 @@ defmodule Glossia.MixProject do
       {:hackney, "~> 1.23"},
       {:gen_smtp, "~> 1.1"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-      {:tailwind, "~> 0.3", runtime: Mix.env() == :dev}
+      {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
+      {:tidewave, "~> 0.1", only: :dev}
     ]
   end
 
