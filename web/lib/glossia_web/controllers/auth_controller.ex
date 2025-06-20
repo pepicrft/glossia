@@ -45,12 +45,12 @@ defmodule GlossiaWeb.AuthController do
   end
 
   defp create_or_update_user(auth, provider) do
-    provider_id = provider_string_to_int(provider)
+    provider_atom = provider_string_to_atom(provider)
     user_id_on_provider = Integer.to_string(auth.uid)
     email = auth.info.email
     
-    if provider_id && email do
-      case Accounts.find_or_create_user_by_auth(provider_id, user_id_on_provider, email) do
+    if provider_atom && email do
+      case Accounts.find_or_create_user_by_auth(provider_atom, user_id_on_provider, email) do
         {:ok, user} -> {:ok, user}
         {:error, changeset} -> {:error, inspect(changeset.errors)}
       end
@@ -59,7 +59,7 @@ defmodule GlossiaWeb.AuthController do
     end
   end
 
-  defp provider_string_to_int("github"), do: 0
-  defp provider_string_to_int("gitlab"), do: 1
-  defp provider_string_to_int(_), do: nil
+  defp provider_string_to_atom("github"), do: :github
+  defp provider_string_to_atom("gitlab"), do: :gitlab
+  defp provider_string_to_atom(_), do: nil
 end

@@ -78,7 +78,8 @@ defmodule Glossia.MixProject do
       {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
       {:tidewave, "~> 0.1", only: :dev},
       {:ueberauth, "~> 0.10"},
-      {:ueberauth_github, "~> 0.8"}
+      {:ueberauth_github, "~> 0.8"},
+      {:uuidv7, "~> 0.2"}
     ]
   end
 

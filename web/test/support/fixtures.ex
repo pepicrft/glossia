@@ -12,7 +12,7 @@ defmodule Glossia.Fixtures do
   def account_fixture(attrs \\ %{}) do
     attrs = 
       attrs
-      |> Enum.into(%{handle: "testuser#{System.unique_integer([:positive])}"})
+      |> Enum.into(%{handle: UUIDv7.generate()})
 
     {:ok, account} = 
       %Account{}
@@ -31,7 +31,7 @@ defmodule Glossia.Fixtures do
     attrs = 
       attrs
       |> Enum.into(%{
-        email: "user#{System.unique_integer([:positive])}@example.com",
+        email: "#{UUIDv7.generate()}@example.com",
         account_id: account.id
       })
       |> Map.drop([:account])
@@ -53,8 +53,8 @@ defmodule Glossia.Fixtures do
     attrs = 
       attrs
       |> Enum.into(%{
-        provider: 0,  # github
-        user_id_on_provider: "#{System.unique_integer([:positive])}",
+        provider: :github,
+        user_id_on_provider: UUIDv7.generate(),
         user_id: user.id
       })
       |> Map.drop([:user])
@@ -86,13 +86,16 @@ defmodule Glossia.Fixtures do
   Creates a mock Ueberauth.Auth struct for testing.
   """
   def ueberauth_auth_fixture(attrs \\ %{}) do
+    uid = UUIDv7.generate()
+    email = "#{UUIDv7.generate()}@example.com"
+    
     attrs = 
       attrs
       |> Enum.into(%{
-        uid: System.unique_integer([:positive]),
+        uid: uid,
         provider: :github,
         info: %{
-          email: "test#{System.unique_integer([:positive])}@example.com",
+          email: email,
           name: "Test User"
         }
       })

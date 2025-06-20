@@ -21,42 +21,42 @@ defmodule GlossiaWeb.AuthControllerTest do
   describe "authentication logic" do
     test "creates new user with GitHub authentication data" do
       # Verify user doesn't exist
-      refute Accounts.get_user_by_auth(0, "12345")
+      refute Accounts.get_user_by_auth(:github, "12345")
 
       # Create user through authentication
-      {:ok, user} = Accounts.find_or_create_user_by_auth(0, "12345", "testuser@example.com")
+      {:ok, user} = Accounts.find_or_create_user_by_auth(:github, "12345", "testuser@example.com")
 
       assert user.email == "testuser@example.com"
       assert user.account.handle == "testuser"
       
       # Verify auth identity was created
       auth_identity = List.first(user.auth2_identities)
-      assert auth_identity.provider == 0
+      assert auth_identity.provider == :github
       assert auth_identity.user_id_on_provider == "12345"
     end
 
     test "returns existing user for same authentication data" do
       # Create initial user
-      {:ok, user1} = Accounts.find_or_create_user_by_auth(0, "12345", "testuser@example.com")
+      {:ok, user1} = Accounts.find_or_create_user_by_auth(:github, "12345", "testuser@example.com")
 
       # Try to authenticate again
-      {:ok, user2} = Accounts.find_or_create_user_by_auth(0, "12345", "testuser@example.com")
+      {:ok, user2} = Accounts.find_or_create_user_by_auth(:github, "12345", "testuser@example.com")
 
       assert user1.id == user2.id
     end
 
     test "handles complex email addresses in handle generation" do
-      {:ok, user} = Accounts.find_or_create_user_by_auth(0, "12345", "user.name+tag@example.com")
+      {:ok, user} = Accounts.find_or_create_user_by_auth(:github, "12345", "user.name+tag@example.com")
       assert user.account.handle == "usernametag"
     end
 
     test "handles duplicate handles by adding suffix" do
       # Create first user
-      {:ok, user1} = Accounts.find_or_create_user_by_auth(0, "11111", "test@example.com")
+      {:ok, user1} = Accounts.find_or_create_user_by_auth(:github, "11111", "test@example.com")
       assert user1.account.handle == "test"
 
       # Create second user with same email domain
-      {:ok, user2} = Accounts.find_or_create_user_by_auth(0, "22222", "test@different.com")
+      {:ok, user2} = Accounts.find_or_create_user_by_auth(:github, "22222", "test@different.com")
       assert user2.account.handle == "test1"
     end
   end
@@ -64,7 +64,7 @@ defmodule GlossiaWeb.AuthControllerTest do
   describe "POST /auth/logout" do
     test "logs out user and clears session", %{conn: conn} do
       # First, create and log in a user
-      {:ok, user} = Accounts.find_or_create_user_by_auth(0, "12345", "test@example.com")
+      {:ok, user} = Accounts.find_or_create_user_by_auth(:github, "12345", "test@example.com")
       
       conn = 
         conn

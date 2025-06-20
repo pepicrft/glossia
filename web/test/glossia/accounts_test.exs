@@ -70,7 +70,7 @@ defmodule Glossia.AccountsTest do
       {:ok, account} = Accounts.create_account("testuser")
       {:ok, user} = Accounts.create_user("test@example.com", account.id)
       
-      provider = 0  # github
+      provider = :github
       user_id_on_provider = "12345"
 
       assert {:ok, %Auth2Identity{} = auth_identity} = 
@@ -85,7 +85,7 @@ defmodule Glossia.AccountsTest do
       {:ok, account} = Accounts.create_account("testuser")
       {:ok, user} = Accounts.create_user("test@example.com", account.id)
       
-      provider = 0
+      provider = :github
       user_id_on_provider = "12345"
       
       {:ok, _auth_identity} = Accounts.create_auth2_identity(provider, user_id_on_provider, user.id)
@@ -100,64 +100,70 @@ defmodule Glossia.AccountsTest do
     test "get_user_by_auth/2 returns user with given provider and user_id_on_provider" do
       {:ok, account} = Accounts.create_account("testuser")
       {:ok, user} = Accounts.create_user("test@example.com", account.id)
-      {:ok, _auth_identity} = Accounts.create_auth2_identity(0, "12345", user.id)
+      {:ok, _auth_identity} = Accounts.create_auth2_identity(:github, "12345", user.id)
       
-      fetched_user = Accounts.get_user_by_auth(0, "12345")
+      fetched_user = Accounts.get_user_by_auth(:github, "12345")
       assert fetched_user.id == user.id
       assert fetched_user.account.handle == "testuser"
       assert length(fetched_user.auth2_identities) == 1
     end
 
     test "get_user_by_auth/2 returns nil when no matching auth identity exists" do
-      assert Accounts.get_user_by_auth(0, "nonexistent") == nil
+      assert Accounts.get_user_by_auth(:github, "nonexistent") == nil
     end
   end
 
   describe "find_or_create_user_by_auth/3" do
     test "creates new user when no existing auth identity found" do
-      email = "newuser@example.com"
+      user_id = UUIDv7.generate()
+      email = "#{user_id}@example.com"
       
-      assert {:ok, user} = Accounts.find_or_create_user_by_auth(0, "12345", email)
+      assert {:ok, user} = Accounts.find_or_create_user_by_auth(:github, "12345", email)
       assert user.email == email
-      assert user.account.handle == "newuser"
+      assert user.account.handle == user_id
       assert length(user.auth2_identities) == 1
       
       auth_identity = List.first(user.auth2_identities)
-      assert auth_identity.provider == 0
+      assert auth_identity.provider == :github
       assert auth_identity.user_id_on_provider == "12345"
     end
 
     test "returns existing user when auth identity already exists" do
+      email = "#{UUIDv7.generate()}@example.com"
+      provider_user_id = UUIDv7.generate()
+      
       # Create initial user
-      {:ok, user1} = Accounts.find_or_create_user_by_auth(0, "12345", "test@example.com")
+      {:ok, user1} = Accounts.find_or_create_user_by_auth(:github, provider_user_id, email)
       
       # Try to create again with same auth info
-      {:ok, user2} = Accounts.find_or_create_user_by_auth(0, "12345", "test@example.com")
+      {:ok, user2} = Accounts.find_or_create_user_by_auth(:github, provider_user_id, email)
       
       assert user1.id == user2.id
     end
 
     test "generates unique handle when email domain conflicts" do
-      # Create first user with handle "test"
-      {:ok, user1} = Accounts.find_or_create_user_by_auth(0, "11111", "test@example.com")
-      assert user1.account.handle == "test"
+      base_handle = UUIDv7.generate()
+      
+      # Create first user with handle
+      {:ok, user1} = Accounts.find_or_create_user_by_auth(:github, UUIDv7.generate(), "#{base_handle}@example.com")
+      assert user1.account.handle == base_handle
       
       # Create second user with same email domain
-      {:ok, user2} = Accounts.find_or_create_user_by_auth(0, "22222", "test@different.com")
-      assert user2.account.handle == "test1"
+      {:ok, user2} = Accounts.find_or_create_user_by_auth(:github, UUIDv7.generate(), "#{base_handle}@different.com")
+      assert user2.account.handle == "#{base_handle}1"
       
       # Create third user with same email domain
-      {:ok, user3} = Accounts.find_or_create_user_by_auth(0, "33333", "test@another.com")
-      assert user3.account.handle == "test2"
+      {:ok, user3} = Accounts.find_or_create_user_by_auth(:github, UUIDv7.generate(), "#{base_handle}@another.com")
+      assert user3.account.handle == "#{base_handle}2"
     end
 
     test "handles complex email addresses" do
-      {:ok, user} = Accounts.find_or_create_user_by_auth(0, "12345", "user.name+tag@example.com")
+      {:ok, user} = Accounts.find_or_create_user_by_auth(:github, UUIDv7.generate(), "user.name+tag@example.com")
       assert user.account.handle == "usernametag"
     end
 
     test "handles email with special characters" do
-      {:ok, user} = Accounts.find_or_create_user_by_auth(0, "12345", "user-name@example.com")
+      {:ok, user} = Accounts.find_or_create_user_by_auth(:github, UUIDv7.generate(), "user-name@example.com")
       assert user.account.handle == "user-name"
     end
   end

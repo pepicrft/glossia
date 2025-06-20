@@ -21,7 +21,7 @@ defmodule Glossia.Accounts do
   @doc """
   Gets a user by authentication provider and provider user ID.
   """
-  def get_user_by_auth(provider, user_id_on_provider) do
+  def get_user_by_auth(provider, user_id_on_provider) when is_atom(provider) do
     from(u in User,
       join: ai in assoc(u, :auth2_identities),
       where: ai.provider == ^provider and ai.user_id_on_provider == ^user_id_on_provider,
@@ -38,7 +38,7 @@ defmodule Glossia.Accounts do
     |> Repo.preload([:account, :auth2_identities])
   end
 
-  defp create_user_with_auth(provider, user_id_on_provider, email) do
+  defp create_user_with_auth(provider, user_id_on_provider, email) when is_atom(provider) do
     Repo.transaction(fn ->
       # Create account with handle derived from email
       handle = generate_handle_from_email(email)
@@ -74,7 +74,7 @@ defmodule Glossia.Accounts do
   @doc """
   Creates an Auth2Identity.
   """
-  def create_auth2_identity(provider, user_id_on_provider, user_id) do
+  def create_auth2_identity(provider, user_id_on_provider, user_id) when is_atom(provider) do
     %Auth2Identity{}
     |> Auth2Identity.changeset(%{
       provider: provider,
