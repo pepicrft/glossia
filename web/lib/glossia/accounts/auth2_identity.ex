@@ -1,4 +1,5 @@
 defmodule Glossia.Accounts.Auth2Identity do
+  @moduledoc false
   use Ecto.Schema
   import Ecto.Changeset
 

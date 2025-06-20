@@ -1,4 +1,5 @@
 defmodule Glossia.Accounts.Account do
+  @moduledoc false
   use Ecto.Schema
   import Ecto.Changeset
 
