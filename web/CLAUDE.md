@@ -2,9 +2,17 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Monorepo Structure
+
+Glossia is organized as a monorepo containing:
+- **web/**: Phoenix web application (Elixir/Phoenix 1.7.20)
+- **cli/**: Command-line interface (Go)
+
+This document focuses on the web application in the `web/` directory.
+
 ## Project Overview
 
-Glossia is a Phoenix web application that creates language hubs for organizations. It's built with Elixir/Phoenix 1.7.20 and uses PostgreSQL as the database with Ecto for data management.
+The Glossia web application creates language hubs for organizations. It's built with Elixir/Phoenix 1.7.20 and uses PostgreSQL as the database with Ecto for data management.
 
 ## Key Architecture
 
@@ -18,6 +26,8 @@ Glossia is a Phoenix web application that creates language hubs for organization
 - **Deployment**: Containerized with Docker, designed for Fly.io deployment
 
 ## Development Commands
+
+All commands should be run from the `web/` directory.
 
 ### Setup and Dependencies
 ```bash
@@ -59,6 +69,14 @@ mix test --only tag_name   # Run tests with specific tag
 mix credo                  # Run Credo linter for code quality
 mix format                 # Format Elixir code using built-in formatter
 ```
+
+### Pre-push Verification
+```bash
+mise run web:check         # Run all checks before pushing changes
+mise run web:check --fix   # Run checks and fix auto-fixable problems
+```
+
+The `web:check` command runs all necessary verification steps including tests, formatting, and linting. Always run this command before pushing changes upstream. If issues are found, use the `--fix` flag to automatically fix problems where possible.
 
 ## Project Structure
 
