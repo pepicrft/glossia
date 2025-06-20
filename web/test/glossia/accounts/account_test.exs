@@ -97,13 +97,12 @@ defmodule Glossia.Accounts.AccountTest do
     test "different handles can coexist" do
       changeset1 = Account.changeset(%Account{}, %{handle: "user1"})
       changeset2 = Account.changeset(%Account{}, %{handle: "user2"})
-      
+
       {:ok, account1} = Repo.insert(changeset1)
       {:ok, account2} = Repo.insert(changeset2)
-      
+
       assert account1.handle == "user1"
       assert account2.handle == "user2"
     end
   end
-
 end

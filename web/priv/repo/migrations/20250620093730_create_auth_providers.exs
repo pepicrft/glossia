@@ -2,7 +2,7 @@ defmodule Glossia.Repo.Migrations.CreateAuth2Identities do
   use Ecto.Migration
 
   def change do
-    execute "CREATE TYPE provider_enum AS ENUM ('github', 'gitlab')", 
+    execute "CREATE TYPE provider_enum AS ENUM ('github', 'gitlab')",
             "DROP TYPE provider_enum"
 
     create table(:auth2_identities) do

@@ -6,13 +6,13 @@ defmodule GlossiaWeb.AuthControllerTest do
   describe "GET /auth/:provider" do
     test "redirects to GitHub OAuth", %{conn: conn} do
       conn = get(conn, ~p"/auth/github")
-      
+
       assert redirected_to(conn) =~ "github.com/login/oauth/authorize"
     end
 
     test "includes client_id in redirect URL", %{conn: conn} do
       conn = get(conn, ~p"/auth/github")
-      
+
       location = redirected_to(conn)
       assert location =~ "client_id="
     end
@@ -28,7 +28,7 @@ defmodule GlossiaWeb.AuthControllerTest do
 
       assert user.email == "testuser@example.com"
       assert user.account.handle == "testuser"
-      
+
       # Verify auth identity was created
       auth_identity = List.first(user.auth2_identities)
       assert auth_identity.provider == :github
@@ -37,16 +37,20 @@ defmodule GlossiaWeb.AuthControllerTest do
 
     test "returns existing user for same authentication data" do
       # Create initial user
-      {:ok, user1} = Accounts.find_or_create_user_by_auth(:github, "12345", "testuser@example.com")
+      {:ok, user1} =
+        Accounts.find_or_create_user_by_auth(:github, "12345", "testuser@example.com")
 
       # Try to authenticate again
-      {:ok, user2} = Accounts.find_or_create_user_by_auth(:github, "12345", "testuser@example.com")
+      {:ok, user2} =
+        Accounts.find_or_create_user_by_auth(:github, "12345", "testuser@example.com")
 
       assert user1.id == user2.id
     end
 
     test "handles complex email addresses in handle generation" do
-      {:ok, user} = Accounts.find_or_create_user_by_auth(:github, "12345", "user.name+tag@example.com")
+      {:ok, user} =
+        Accounts.find_or_create_user_by_auth(:github, "12345", "user.name+tag@example.com")
+
       assert user.account.handle == "usernametag"
     end
 
@@ -65,8 +69,8 @@ defmodule GlossiaWeb.AuthControllerTest do
     test "logs out user and clears session", %{conn: conn} do
       # First, create and log in a user
       {:ok, user} = Accounts.find_or_create_user_by_auth(:github, "12345", "test@example.com")
-      
-      conn = 
+
+      conn =
         conn
         |> init_test_session(%{})
         |> put_session(:user_id, user.id)
@@ -78,7 +82,7 @@ defmodule GlossiaWeb.AuthControllerTest do
     end
 
     test "handles logout when not logged in", %{conn: conn} do
-      conn = 
+      conn =
         conn
         |> init_test_session(%{})
         |> post(~p"/auth/logout")
@@ -87,5 +91,4 @@ defmodule GlossiaWeb.AuthControllerTest do
       refute get_session(conn, :user_id)
     end
   end
-
 end

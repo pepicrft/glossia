@@ -10,11 +10,11 @@ defmodule Glossia.Fixtures do
   Creates an account with the given attributes.
   """
   def account_fixture(attrs \\ %{}) do
-    attrs = 
+    attrs =
       attrs
       |> Enum.into(%{handle: UUIDv7.generate()})
 
-    {:ok, account} = 
+    {:ok, account} =
       %Account{}
       |> Account.changeset(attrs)
       |> Repo.insert()
@@ -27,8 +27,8 @@ defmodule Glossia.Fixtures do
   """
   def user_fixture(attrs \\ %{}) do
     account = attrs[:account] || account_fixture()
-    
-    attrs = 
+
+    attrs =
       attrs
       |> Enum.into(%{
         email: "#{UUIDv7.generate()}@example.com",
@@ -36,7 +36,7 @@ defmodule Glossia.Fixtures do
       })
       |> Map.drop([:account])
 
-    {:ok, user} = 
+    {:ok, user} =
       %User{}
       |> User.changeset(attrs)
       |> Repo.insert()
@@ -49,8 +49,8 @@ defmodule Glossia.Fixtures do
   """
   def auth2_identity_fixture(attrs \\ %{}) do
     user = attrs[:user] || user_fixture()
-    
-    attrs = 
+
+    attrs =
       attrs
       |> Enum.into(%{
         provider: :github,
@@ -59,7 +59,7 @@ defmodule Glossia.Fixtures do
       })
       |> Map.drop([:user])
 
-    {:ok, auth2_identity} = 
+    {:ok, auth2_identity} =
       %Auth2Identity{}
       |> Auth2Identity.changeset(attrs)
       |> Repo.insert()
@@ -88,8 +88,8 @@ defmodule Glossia.Fixtures do
   def ueberauth_auth_fixture(attrs \\ %{}) do
     uid = UUIDv7.generate()
     email = "#{UUIDv7.generate()}@example.com"
-    
-    attrs = 
+
+    attrs =
       attrs
       |> Enum.into(%{
         uid: uid,
@@ -114,7 +114,7 @@ defmodule Glossia.Fixtures do
   Creates a mock Ueberauth.Failure struct for testing.
   """
   def ueberauth_failure_fixture(attrs \\ %{}) do
-    attrs = 
+    attrs =
       attrs
       |> Enum.into(%{
         provider: :github,

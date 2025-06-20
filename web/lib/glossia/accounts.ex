@@ -42,7 +42,7 @@ defmodule Glossia.Accounts do
     Repo.transaction(fn ->
       # Create account with handle derived from email
       handle = generate_handle_from_email(email)
-      
+
       with {:ok, account} <- create_account(handle),
            {:ok, user} <- create_user(email, account.id),
            {:ok, _auth_identity} <- create_auth2_identity(provider, user_id_on_provider, user.id) do
@@ -102,6 +102,7 @@ defmodule Glossia.Accounts do
 
   defp find_unique_handle(base_handle, suffix) do
     candidate = "#{base_handle}#{suffix}"
+
     case get_account_by_handle(candidate) do
       nil -> candidate
       _account -> find_unique_handle(base_handle, suffix + 1)

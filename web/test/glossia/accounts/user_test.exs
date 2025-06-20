@@ -85,7 +85,7 @@ defmodule Glossia.Accounts.UserTest do
       {:ok, account2} = Repo.insert(%Account{handle: "testuser2"})
       user2_attrs = %{email: "test@example.com", account_id: account2.id}
       changeset2 = User.changeset(%User{}, user2_attrs)
-      
+
       assert {:error, changeset} = Repo.insert(changeset2)
       assert errors_on(changeset).email
     end
@@ -93,11 +93,10 @@ defmodule Glossia.Accounts.UserTest do
     test "can create user with valid data", %{account: account} do
       user_attrs = %{email: "valid@example.com", account_id: account.id}
       changeset = User.changeset(%User{}, user_attrs)
-      
+
       assert {:ok, user} = Repo.insert(changeset)
       assert user.email == "valid@example.com"
       assert user.account_id == account.id
     end
   end
-
 end

@@ -52,10 +52,14 @@ defmodule Glossia.Accounts.Auth2IdentityTest do
 
     test "changeset validates provider is in valid range" do
       # Valid providers: :github, :gitlab
-      valid_changeset = Auth2Identity.changeset(%Auth2Identity{}, Map.put(@valid_attrs, :provider, :gitlab))
+      valid_changeset =
+        Auth2Identity.changeset(%Auth2Identity{}, Map.put(@valid_attrs, :provider, :gitlab))
+
       assert valid_changeset.valid?
 
-      invalid_changeset = Auth2Identity.changeset(%Auth2Identity{}, Map.put(@valid_attrs, :provider, :invalid))
+      invalid_changeset =
+        Auth2Identity.changeset(%Auth2Identity{}, Map.put(@valid_attrs, :provider, :invalid))
+
       refute invalid_changeset.valid?
       assert errors_on(invalid_changeset).provider
     end
@@ -74,5 +78,4 @@ defmodule Glossia.Accounts.Auth2IdentityTest do
       assert :gitlab in providers
     end
   end
-
 end

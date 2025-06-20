@@ -48,7 +48,7 @@ defmodule GlossiaWeb.AuthController do
     provider_atom = provider_string_to_atom(provider)
     user_id_on_provider = Integer.to_string(auth.uid)
     email = auth.info.email
-    
+
     if provider_atom && email do
       case Accounts.find_or_create_user_by_auth(provider_atom, user_id_on_provider, email) do
         {:ok, user} -> {:ok, user}
