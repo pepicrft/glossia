@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for glossia on 2025-02-26T18:38:19+01:00
+# fly.toml app configuration file generated for glossia on 2025-06-21T10:09:18+02:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -13,7 +13,7 @@ kill_signal = 'SIGTERM'
   release_command = '/app/bin/migrate'
 
 [env]
-  PHX_HOST = 'glossia.org'
+  PHX_HOST = 'glossia.fly.dev'
   PORT = '8080'
 
 [http_service]
