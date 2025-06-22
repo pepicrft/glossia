@@ -18,9 +18,9 @@ The Glossia web application creates language hubs for organizations. It's built 
 
 - **Phoenix Web Framework**: Standard Phoenix 1.7 structure with LiveView for interactive features
 - **Database**: PostgreSQL with Ecto migrations and repo pattern
-- **Frontend**: 
+- **Frontend**:
   - Tailwind CSS (v4.0.0) for styling
-  - ESBuild for JavaScript bundling  
+  - ESBuild for JavaScript bundling
   - Phoenix LiveView for interactive components
 - **Email**: Swoosh mailer with local adapter for development
 - **Deployment**: Containerized with Docker, designed for Fly.io deployment
@@ -46,7 +46,7 @@ mix ecto.rollback           # Rollback last migration
 
 ### Development Server
 ```bash
-mix phx.server             # Start development server on localhost:4000
+mix phx.server             # Start development server on localhost:8080
 iex -S mix phx.server      # Start server with interactive Elixir shell
 ```
 
@@ -104,7 +104,7 @@ The `web:check` command runs all necessary verification steps including tests, f
 ## Development Environment
 
 - **Database**: PostgreSQL with default credentials (postgres/postgres) on localhost:5432
-- **Web Server**: Runs on http://127.0.0.1:4000 in development
+- **Web Server**: Runs on http://127.0.0.1:8080 in development
 - **Live Reload**: Automatically reloads on changes to templates, controllers, and assets
 - **Email**: Uses local adapter - emails viewable at `/dev/mailbox` in development
 

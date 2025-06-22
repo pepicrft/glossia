@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Glossia Changelog</title>
+    <description>Stay up to date with the latest improvements and updates to Glossia.</description>
+    <link><%= @url.("/changelog") %></link>
+    <atom:link href="<%= @url.("/changelog/feed/rss") %>" rel="self" type="application/rss+xml" />
+    <language>en-us</language>
+    <lastBuildDate><%= Calendar.strftime(DateTime.utc_now(), "%a, %d %b %Y %H:%M:%S GMT") %></lastBuildDate>
+    <%= for entry <- @entries do %>
+      <item>
+        <title><%= entry.title %></title>
+        <description><![CDATA[<%= entry.body %>]]></description>
+        <link><%= @url.("/changelog/#{entry.id}") %></link>
+        <guid isPermaLink="true"><%= @url.("/changelog/#{entry.id}") %></guid>
+        <pubDate><%= Calendar.strftime(DateTime.new!(entry.date, ~T[12:00:00], "Etc/UTC"), "%a, %d %b %Y %H:%M:%S GMT") %></pubDate>
+        <category><%= entry.type %></category>
+      </item>
+    <% end %>
+  </channel>
+</rss>

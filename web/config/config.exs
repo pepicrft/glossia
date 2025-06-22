@@ -51,6 +51,13 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# Configure Phoenix to recognize XML format
+config :mime, :types, %{
+  "application/xml" => ["xml"],
+  "application/rss+xml" => ["xml"],
+  "application/atom+xml" => ["xml"]
+}
+
 # Tailwind
 config :tailwind,
   version: "4.0.0",

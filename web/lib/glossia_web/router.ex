@@ -2,7 +2,7 @@ defmodule GlossiaWeb.Router do
   use GlossiaWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
+    plug :accepts, ["html", "xml"]
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, html: {GlossiaWeb.Layouts, :root}
@@ -13,11 +13,23 @@ defmodule GlossiaWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
   end
-
+  
   scope "/", GlossiaWeb do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    get "/blog", BlogController, :index
+    get "/blog/:id", BlogController, :show
+    get "/blog/feed/:format", BlogController, :feed
+
+    get "/changelog", ChangelogController, :index
+    get "/changelog/:id", ChangelogController, :show
+    get "/changelog/feed/:format", ChangelogController, :feed
+
+    get "/about", InfoController, :about
+    get "/terms", InfoController, :terms
+    get "/cookies", InfoController, :cookies
   end
 
   scope "/auth", GlossiaWeb do

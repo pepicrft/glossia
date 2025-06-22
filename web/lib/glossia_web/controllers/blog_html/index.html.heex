@@ -1,0 +1,72 @@
+<section class="bg-white border-b-8 border-black">
+  <div class="px-4 py-16">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-6xl md:text-8xl font-black text-black uppercase tracking-tight leading-none mb-8">
+        <span class="text-glossia-pink">BLOG</span>
+      </h1>
+      <div class="bg-black border-4 border-glossia-pink p-6 mb-8">
+        <p class="text-white font-mono text-lg uppercase tracking-wide leading-relaxed">
+          LEARN ABOUT CONTINUOUS LOCALIZATION, BEST PRACTICES, AND UPDATES FROM THE GLOSSIA TEAM.
+        </p>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/blog/feed/rss" class="bg-glossia-pink border-4 border-black px-6 py-3 text-lg font-black text-white uppercase hover:bg-black hover:border-glossia-pink transition-colors">
+          RSS FEED
+        </a>
+        <a href="/blog/feed/atom" class="bg-white border-4 border-black px-6 py-3 text-lg font-black text-black uppercase hover:bg-black hover:text-white transition-colors">
+          ATOM FEED
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-white">
+  <div class="px-4 py-16">
+    <div class="max-w-6xl mx-auto">
+      <div class="space-y-0">
+        <%= for {post, index} <- Enum.with_index(@posts) do %>
+          <article class={"#{if rem(index, 2) == 0, do: "bg-white", else: "bg-black"} border-4 #{if index == 0, do: "border-black", else: "border-t-0 border-black"} p-8 hover:bg-glossia-pink hover:text-white transition-colors group"}>
+            <div class="flex items-start justify-between">
+              <div class="flex-1">
+                <div class="mb-4">
+                  <time datetime={post.date} class={"#{if rem(index, 2) == 0, do: "text-black", else: "text-white"} group-hover:text-white font-mono text-sm uppercase tracking-wide"}>
+                    {Calendar.strftime(post.date, "%B %d, %Y")}
+                  </time>
+                  <%= if post.tags != [] do %>
+                    <div class="flex gap-x-2 mt-2">
+                      <%= for tag <- Enum.take(post.tags, 3) do %>
+                        <span class="bg-glossia-pink border-2 border-black px-2 py-1 text-xs font-black text-white uppercase tracking-wide">
+                          {tag}
+                        </span>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+                <h2 class={"text-3xl font-black #{if rem(index, 2) == 0, do: "text-black", else: "text-white"} group-hover:text-white uppercase tracking-wide leading-tight mb-4"}>
+                  <a href={~p"/blog/#{post.id}"}>
+                    {post.title}
+                  </a>
+                </h2>
+                <p class={"#{if rem(index, 2) == 0, do: "text-black", else: "text-white"} group-hover:text-white font-mono text-sm uppercase tracking-wide leading-relaxed mb-4"}>
+                  {String.slice(post.description, 0, 200)}...
+                </p>
+                <div class="flex items-center justify-between">
+                  <p class={"font-black #{if rem(index, 2) == 0, do: "text-black", else: "text-white"} group-hover:text-white uppercase text-sm tracking-wide"}>
+                    BY {post.author}
+                  </p>
+                  <a
+                    href={~p"/blog/#{post.id}"}
+                    class={"bg-glossia-pink border-2 border-black px-4 py-2 text-sm font-black text-white uppercase hover:bg-black hover:border-glossia-pink transition-colors"}
+                  >
+                    READ MORE →
+                  </a>
+                </div>
+              </div>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>

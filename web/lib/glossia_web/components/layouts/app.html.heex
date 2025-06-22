@@ -1,3 +1,147 @@
-<p>
-  App
-</p>
+<!-- Brutalist top navigation bar -->
+<div class="bg-black text-white border-b-4 border-glossia-orange">
+  <div class="max-w-full px-4">
+    <div class="flex items-center justify-between py-3 text-sm font-mono uppercase tracking-wider">
+      <div class="flex items-center space-x-6">
+        <span class="text-white font-bold">CONTINUOUS TRANSLATION FOR MODERN TEAMS</span>
+      </div>
+      <div class="flex items-center space-x-6">
+        <a href="/blog/feed/rss" class="text-white hover:text-glossia-orange font-bold">RSS</a>
+        <a href="/about" class="text-white hover:text-glossia-orange font-bold">ABOUT</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header class="bg-white border-b-4 border-black">
+  <nav class="max-w-full flex items-center justify-between p-4" aria-label="Global">
+    <div class="flex">
+      <a href="/" class="flex items-center">
+        <!-- Brutalist logo -->
+        <img src="/images/rounded-logo.svg" alt="Glossia" class="h-12 w-12 mr-4" />
+        <span class="text-4xl font-black text-black uppercase tracking-tight">GLOSSIA</span>
+      </a>
+    </div>
+    
+    <div class="flex gap-x-0">
+      <a
+        href="/"
+        class="px-6 py-3 text-lg font-black uppercase text-black hover:bg-black hover:text-white border-4 border-black transition-colors"
+      >
+        HOME
+      </a>
+      <a
+        href="/blog"
+        class="px-6 py-3 text-lg font-black uppercase text-black hover:bg-black hover:text-white border-4 border-l-0 border-black transition-colors"
+      >
+        BLOG
+      </a>
+      <a
+        href="/changelog"
+        class="px-6 py-3 text-lg font-black uppercase text-black hover:bg-black hover:text-white border-4 border-l-0 border-black transition-colors"
+      >
+        CHANGELOG
+      </a>
+      <a
+        href="/about"
+        class="px-6 py-3 text-lg font-black uppercase text-black hover:bg-black hover:text-white border-4 border-l-0 border-black transition-colors"
+      >
+        ABOUT
+      </a>
+    </div>
+    
+    <div class="flex">
+      <a
+        href="/about"
+        class="bg-glossia-orange border-4 border-black px-8 py-4 text-lg font-black text-white uppercase hover:bg-black hover:border-glossia-orange transition-colors"
+      >
+        LEARN MORE
+      </a>
+    </div>
+  </nav>
+</header>
+
+<main class="bg-white">
+  <.flash_group flash={@flash} />
+  {@inner_content}
+</main>
+
+<footer class="bg-black text-white border-t-4 border-glossia-pink">
+  <div class="max-w-full px-4 py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div class="space-y-6">
+        <div class="flex items-center">
+          <img src="/images/rounded-logo.svg" alt="Glossia" class="h-12 w-12 mr-4" />
+          <span class="text-2xl font-black text-white uppercase tracking-tight">GLOSSIA</span>
+        </div>
+        <p class="text-white font-mono text-sm uppercase tracking-wide leading-relaxed">
+          CONTINUOUS TRANSLATION FOR MODERN SOFTWARE TEAMS. SEAMLESSLY INTEGRATE LOCALIZATION INTO YOUR DEVELOPMENT WORKFLOW.
+        </p>
+      </div>
+      
+      <div>
+        <h3 class="text-white font-black text-lg uppercase tracking-wider mb-6 border-b-2 border-glossia-orange pb-2">PRODUCT</h3>
+        <ul class="space-y-3">
+          <li>
+            <a href="/" class="text-white hover:text-glossia-pink font-mono uppercase text-sm tracking-wide">
+              HOME
+            </a>
+          </li>
+          <li>
+            <a href="/about" class="text-white hover:text-glossia-pink font-mono uppercase text-sm tracking-wide">
+              ABOUT
+            </a>
+          </li>
+          <li>
+            <a href="/blog" class="text-white hover:text-glossia-pink font-mono uppercase text-sm tracking-wide">
+              BLOG
+            </a>
+          </li>
+          <li>
+            <a href="/changelog" class="text-white hover:text-glossia-pink font-mono uppercase text-sm tracking-wide">
+              CHANGELOG
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div>
+        <h3 class="text-white font-black text-lg uppercase tracking-wider mb-6 border-b-2 border-glossia-pink pb-2">RESOURCES</h3>
+        <ul class="space-y-3">
+          <li>
+            <a href="/blog/feed/rss" class="text-white hover:text-glossia-pink font-mono uppercase text-sm tracking-wide">
+              RSS FEED
+            </a>
+          </li>
+          <li>
+            <a href="/changelog/feed/rss" class="text-white hover:text-glossia-pink font-mono uppercase text-sm tracking-wide">
+              CHANGELOG RSS
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div>
+        <h3 class="text-white font-black text-lg uppercase tracking-wider mb-6 border-b-2 border-glossia-pink pb-2">LEGAL</h3>
+        <ul class="space-y-3">
+          <li>
+            <a href="/terms" class="text-white hover:text-glossia-pink font-mono uppercase text-sm tracking-wide">
+              TERMS OF SERVICE
+            </a>
+          </li>
+          <li>
+            <a href="/cookies" class="text-white hover:text-glossia-pink font-mono uppercase text-sm tracking-wide">
+              COOKIE POLICY
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="mt-12 pt-8 border-t-2 border-glossia-pink">
+      <p class="text-white font-mono text-sm uppercase tracking-wide text-center">
+        © {DateTime.utc_now().year} GLOSSIA. ALL RIGHTS RESERVED.
+      </p>
+    </div>
+  </div>
+</footer>

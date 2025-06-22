@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Glossia Changelog</title>
+  <subtitle>Stay up to date with the latest improvements and updates to Glossia.</subtitle>
+  <link href="<%= @url.("/changelog/feed/atom") %>" rel="self" type="application/atom+xml"/>
+  <link href="<%= @url.("/changelog") %>" rel="alternate" type="text/html"/>
+  <id><%= @url.("/changelog") %></id>
+  <updated><%= DateTime.to_iso8601(DateTime.utc_now()) %></updated>
+  <%= for entry <- @entries do %>
+    <entry>
+      <title><%= entry.title %></title>
+      <link href="<%= @url.("/changelog/#{entry.id}") %>" rel="alternate" type="text/html"/>
+      <id><%= @url.("/changelog/#{entry.id}") %></id>
+      <published><%= DateTime.to_iso8601(DateTime.new!(entry.date, ~T[12:00:00], "Etc/UTC")) %></published>
+      <updated><%= DateTime.to_iso8601(DateTime.new!(entry.date, ~T[12:00:00], "Etc/UTC")) %></updated>
+      <summary type="html"><![CDATA[<%= entry.body %>]]></summary>
+      <category term="<%= entry.type %>"/>
+    </entry>
+  <% end %>
+</feed>
