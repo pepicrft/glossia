@@ -12,4 +12,8 @@ defmodule GlossiaWeb.PageController do
       layout: {GlossiaWeb.Layouts, :app}
     )
   end
+
+  def dashboard(conn, _params) do
+    render(conn, :dashboard, layout: {GlossiaWeb.Layouts, :app})
+  end
 end

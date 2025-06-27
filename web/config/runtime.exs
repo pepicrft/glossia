@@ -31,6 +31,13 @@ if github_client_id = System.get_env("GITHUB_CLIENT_ID") do
     client_secret: System.get_env("GITHUB_CLIENT_SECRET")
 end
 
+# Hardcoded GitHub OAuth configuration for development
+if config_env() == :dev do
+  config :ueberauth, Ueberauth.Strategy.Github.OAuth,
+    client_id: "Iv23li2qoyzLF8ITSf0S",
+    client_secret: "ac0ef2db385ddc23e403dce0d4361ca94973a2df"
+end
+
 if config_env() == :prod do
   Glossia.Environment.raise_when_required_absent()
 
@@ -71,7 +78,7 @@ if config_env() == :prod do
       """
 
   host = System.get_env("PHX_HOST") || "example.com"
-  port = String.to_integer(System.get_env("PORT") || "8080")
+  port = String.to_integer(System.get_env("PORT") || "7070")
 
   config :glossia, Glossia.Repo,
     # ssl: true,

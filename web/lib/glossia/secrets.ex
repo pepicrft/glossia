@@ -38,7 +38,7 @@ defmodule Glossia.Secrets do
   Gets the base URL for the application.
   """
   def base_url do
-    get_env("BASE_URL", "http://localhost:8080")
+    get_env("BASE_URL", "http://localhost:7070")
   end
 
   defp get_env!(key) do

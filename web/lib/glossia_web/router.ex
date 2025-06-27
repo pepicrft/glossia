@@ -8,12 +8,13 @@ defmodule GlossiaWeb.Router do
     plug :put_root_layout, html: {GlossiaWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug GlossiaWeb.Plugs.Auth
   end
 
   pipeline :api do
     plug :accepts, ["json"]
   end
-  
+
   scope "/", GlossiaWeb do
     pipe_through :browser
 
@@ -30,6 +31,9 @@ defmodule GlossiaWeb.Router do
     get "/about", InfoController, :about
     get "/terms", InfoController, :terms
     get "/cookies", InfoController, :cookies
+
+    get "/login", AuthController, :login
+    get "/dashboard", PageController, :dashboard
   end
 
   scope "/auth", GlossiaWeb do

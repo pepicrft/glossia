@@ -4,6 +4,10 @@ defmodule GlossiaWeb.AuthController do
 
   alias Glossia.Accounts
 
+  def login(conn, _params) do
+    render(conn, :login)
+  end
+
   def request(conn, _params) do
     # This function is handled by Ueberauth automatically
     # It redirects to the OAuth provider
@@ -22,7 +26,7 @@ defmodule GlossiaWeb.AuthController do
         conn
         |> put_session(:user_id, user.id)
         |> put_flash(:info, "Successfully authenticated!")
-        |> redirect(to: ~p"/")
+        |> redirect(to: ~p"/dashboard")
 
       {:error, reason} ->
         conn

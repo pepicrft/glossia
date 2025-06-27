@@ -46,7 +46,7 @@ mix ecto.rollback           # Rollback last migration
 
 ### Development Server
 ```bash
-mix phx.server             # Start development server on localhost:8080
+mix phx.server             # Start development server on localhost:7070
 iex -S mix phx.server      # Start server with interactive Elixir shell
 ```
 
@@ -104,7 +104,7 @@ The `web:check` command runs all necessary verification steps including tests, f
 ## Development Environment
 
 - **Database**: PostgreSQL with default credentials (postgres/postgres) on localhost:5432
-- **Web Server**: Runs on http://127.0.0.1:8080 in development
+- **Web Server**: Runs on http://127.0.0.1:7070 in development
 - **Live Reload**: Automatically reloads on changes to templates, controllers, and assets
 - **Email**: Uses local adapter - emails viewable at `/dev/mailbox` in development
 
