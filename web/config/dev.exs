@@ -25,8 +25,8 @@ config :glossia, GlossiaWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "KRhd38FdAtfEAjcKX2azuRkGl1iWuT0x3OHeNM5niIxHkbNascHzPPpYofZGUF6I",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:glossia, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:glossia, ~w(--watch)]}
+    app_esbuild: {Esbuild, :install_and_run, [:glossia, ~w(--sourcemap=inline --watch)]},
+    marketing_esbuild: {Esbuild, :install_and_run, [:marketing, ~w(--sourcemap=inline --watch)]}
   ]
 
 # Watch static and templates for browser reloading.

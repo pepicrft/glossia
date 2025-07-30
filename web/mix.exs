@@ -28,7 +28,6 @@ defmodule Glossia.MixProject do
     [
       files: ["lib", "priv", "config", "assets", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["Pedro Piñera Buendía"],
-      licenses: ["MPL-2.0"],
       links: %{"GitHub" => "https://github.com/glossia/glossia"}
     ]
   end
@@ -75,7 +74,6 @@ defmodule Glossia.MixProject do
       {:hackney, "~> 1.23"},
       {:gen_smtp, "~> 1.1"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-      {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
       {:tidewave, "~> 0.1", only: :dev},
       {:ueberauth, "~> 0.10"},
       {:ueberauth_github, "~> 0.8"},
@@ -98,10 +96,10 @@ defmodule Glossia.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["esbuild.install --if-missing"],
-      "assets.build": ["esbuild glossia"],
+      "assets.build": ["esbuild glossia", "esbuild marketing"],
       "assets.deploy": [
-        "tailwind glossia --minify",
         "esbuild glossia --minify",
+        "esbuild marketing --minify",
         "phx.digest"
       ]
     ]

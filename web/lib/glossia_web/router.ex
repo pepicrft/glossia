@@ -11,15 +11,29 @@ defmodule GlossiaWeb.Router do
     plug GlossiaWeb.Plugs.Auth
   end
 
+  pipeline :marketing do
+    plug :accepts, ["html", "xml"]
+    plug :fetch_session
+    plug :fetch_live_flash
+    plug :put_root_layout, html: {GlossiaWeb.Layouts, :marketing}
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+    plug GlossiaWeb.Plugs.Auth
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
 
+  # Marketing pages with marketing layout
   scope "/", GlossiaWeb do
-    pipe_through :browser
+    pipe_through :marketing
 
     get "/", PageController, :home
-
+    get "/about", InfoController, :about
+    get "/terms", InfoController, :terms
+    get "/cookies", InfoController, :cookies
+    
     get "/blog", BlogController, :index
     get "/blog/:id", BlogController, :show
     get "/blog/feed/:format", BlogController, :feed
@@ -27,10 +41,11 @@ defmodule GlossiaWeb.Router do
     get "/changelog", ChangelogController, :index
     get "/changelog/:id", ChangelogController, :show
     get "/changelog/feed/:format", ChangelogController, :feed
+  end
 
-    get "/about", InfoController, :about
-    get "/terms", InfoController, :terms
-    get "/cookies", InfoController, :cookies
+  # App pages with app layout
+  scope "/", GlossiaWeb do
+    pipe_through :browser
 
     get "/login", AuthController, :login
     get "/dashboard", PageController, :dashboard
