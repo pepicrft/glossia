@@ -197,8 +197,8 @@ body {
 
 /* Linear-inspired Components */
 .Marketing_Hero {
-  min-height: 90vh;
-  padding: 8rem 0 4rem;
+  min-height: 70vh;
+  padding: 6rem 0 4rem;
   background: var(--bg-primary);
 }
 
@@ -392,6 +392,7 @@ body {
   border-bottom: 1px solid var(--border-light);
   z-index: 1000;
   padding: 1rem 0;
+  height: 60px;
 }
 
 /* Responsive */
