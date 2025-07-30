@@ -160,9 +160,8 @@ body {
 }
 
 .nav-logo {
-  font-size: 1.5rem;
-  font-weight: 900;
-  text-transform: uppercase;
+  font-size: 1.25rem;
+  font-weight: 600;
   text-decoration: none;
   color: #000;
 }
@@ -174,8 +173,7 @@ body {
 }
 
 .nav-link {
-  font-weight: 700;
-  text-transform: uppercase;
+  font-weight: 500;
   text-decoration: none;
   color: #000;
   transition: color 0.2s;
@@ -205,10 +203,10 @@ body {
 }
 
 .Marketing_Hero_Title {
-  font-size: clamp(3rem, 6vw, 5.5rem);
-  font-weight: 700;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 600;
   line-height: 1.1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
   margin-bottom: 1.5rem;
 }
@@ -283,11 +281,11 @@ body {
 }
 
 .Marketing_Feature_Title {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: 2rem;
+  font-weight: 600;
   line-height: 1.2;
   margin-bottom: 1rem;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 .Marketing_Feature_Description {
@@ -349,11 +347,11 @@ body {
 }
 
 .Marketing_Section_Title {
-  font-size: 3rem;
-  font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: 600;
   text-align: center;
   margin-bottom: 1rem;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 .Marketing_Section_Subtitle {
