@@ -47,6 +47,20 @@ window.liveSocket = liveSocket;
 // Marketing-specific JavaScript
 console.log("Marketing JS loaded");
 
+// Handle navigation scroll effect
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('.marketing-nav');
+  if (nav) {
+    if (window.scrollY > 50) {
+      nav.style.background = 'rgba(255, 255, 255, 0.95)';
+      nav.style.boxShadow = '0 2px 8px 0 rgba(0, 0, 0, 0.08)';
+    } else {
+      nav.style.background = 'rgba(255, 255, 255, 0.8)';
+      nav.style.boxShadow = '0 1px 0 0 rgba(0, 0, 0, 0.05)';
+    }
+  }
+});
+
 // Smooth scrolling for anchor links
 document.addEventListener('DOMContentLoaded', () => {
   // Smooth scroll to sections
@@ -61,24 +75,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     });
-  });
-
-  // Add scroll-based animations
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('animate-in');
-      }
-    });
-  }, observerOptions);
-
-  // Observe all elements with animate class
-  document.querySelectorAll('.animate').forEach(el => {
-    observer.observe(el);
   });
 });

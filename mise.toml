@@ -7,6 +7,10 @@ go = "1.23.4"
 "age" = "1.2.1"
 "ubi:orhun/git-cliff" = "2.8.0"
 "jq" = "1.7.1"
+"cargo:mcp-proxy" = "latest"
+"node" = "24.4.1"
+"npm:@anthropic-ai/claude-code" = "1.0.61"
+"npm:@playwright/mcp" = "0.0.32"
 
 [hooks]
 postinstall = "mise run install"

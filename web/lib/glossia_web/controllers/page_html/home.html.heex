@@ -2,13 +2,6 @@
 <section class="Marketing_Hero">
   <div class="marketing-container">
     <div class="text-center">
-      <div class="Marketing_Badge">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-right: 0.5rem;">
-          <path d="M8 1L10.163 5.326L15 6.004L11.5 9.328L12.326 14L8 11.672L3.674 14L4.5 9.328L1 6.004L5.837 5.326L8 1Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        Introducing Glossia AI Agents
-      </div>
-      
       <h1 class="Marketing_Hero_Title">
         Build globally.<br />
         <span class="Marketing_Hero_Gradient">Ship locally.</span>
@@ -45,7 +38,7 @@
     </p>
     
     <div class="Marketing_Grid">
-      <div class="Marketing_Card animate">
+      <div class="Marketing_Card ">
         <div class="Marketing_Icon">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
             <path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" stroke-linecap="round" stroke-linejoin="round"/>
@@ -57,7 +50,7 @@
         </p>
       </div>
       
-      <div class="Marketing_Card animate">
+      <div class="Marketing_Card ">
         <div class="Marketing_Icon">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
             <path d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" stroke-linecap="round" stroke-linejoin="round"/>
@@ -69,7 +62,7 @@
         </p>
       </div>
       
-      <div class="Marketing_Card animate">
+      <div class="Marketing_Card ">
         <div class="Marketing_Icon">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
             <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" stroke-linecap="round" stroke-linejoin="round"/>
@@ -87,7 +80,7 @@
 <!-- How it Works -->
 <section class="Marketing_Feature">
   <div class="marketing-container">
-    <div class="Marketing_Feature_Content animate" style="max-width: 800px; margin: 0 auto; text-align: center;">
+    <div class="Marketing_Feature_Content " style="max-width: 800px; margin: 0 auto; text-align: center;">
       <h2 class="Marketing_Feature_Title">
         Install once,<br />
         translate forever
@@ -109,7 +102,7 @@
 <!-- Workflow Section -->
 <section class="Marketing_Feature">
   <div class="marketing-container">
-    <div class="Marketing_Feature_Content animate" style="max-width: 800px; margin: 0 auto; text-align: center;">
+    <div class="Marketing_Feature_Content " style="max-width: 800px; margin: 0 auto; text-align: center;">
       <h2 class="Marketing_Feature_Title">
         Works like your<br />
         development team
@@ -156,7 +149,7 @@
       
       <div class="Marketing_Grid">
         <%= for post <- @recent_posts do %>
-          <article class="Marketing_Card animate">
+          <article class="Marketing_Card ">
             <div style="margin-bottom: 1rem;">
               <time datetime={post.date} style="font-size: 0.875rem; color: var(--text-tertiary);">
                 {Calendar.strftime(post.date, "%B %d, %Y")}
@@ -223,7 +216,7 @@
       <div>
         <h4 style="font-weight: 600; margin-bottom: 1rem; font-size: 1.125rem;">Glossia</h4>
         <p style="color: var(--text-secondary); line-height: 1.6;">
-          A modern community-driven open-source language hub for your organization.
+          A modern language hub for your organization.
         </p>
       </div>
       <div>
@@ -265,7 +258,7 @@
     </div>
     <div style="text-align: center; padding-top: 2rem; border-top: 1px solid var(--border-light);">
       <p style="font-size: 0.875rem; color: var(--text-tertiary);">
-        © 2024 Glossia. MPL-2.0 Licensed.
+        © 2024 Glossia. All rights reserved.
       </p>
     </div>
   </div>

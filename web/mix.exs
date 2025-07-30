@@ -28,7 +28,6 @@ defmodule Glossia.MixProject do
     [
       files: ["lib", "priv", "config", "assets", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["Pedro Piñera Buendía"],
-      licenses: ["MPL-2.0"],
       links: %{"GitHub" => "https://github.com/glossia/glossia"}
     ]
   end

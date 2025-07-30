@@ -147,10 +147,13 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  background: #fff;
-  border-bottom: 3px solid #000;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.05);
   z-index: 1000;
   padding: 1rem 0;
+  transition: all 0.3s ease;
 }
 
 .marketing-nav-inner {
@@ -183,17 +186,6 @@ body {
   color: var(--glossia-pink);
 }
 
-/* Animations */
-.animate {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.animate-in {
-  opacity: 1;
-  transform: translateY(0);
-}
 
 /* Linear-inspired Components */
 .Marketing_Hero {
@@ -387,12 +379,14 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border-light);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.05);
   z-index: 1000;
   padding: 1rem 0;
   height: 60px;
+  transition: all 0.3s ease;
 }
 
 /* Responsive */
