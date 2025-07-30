@@ -17,6 +17,12 @@ config :esbuild,
     # When :glossia is used as a dependency, it's part of a /deps directory, therefore we need
     # to include the directory that contains :glossia in NODE_PATH.
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__) <> ":" <> Path.expand("../..", __DIR__)}
+  ],
+  marketing: [
+    args:
+      ~w(js/marketing.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
+    cd: Path.expand("../assets", __DIR__),
+    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__) <> ":" <> Path.expand("../..", __DIR__)}
   ]
 
 # Configures the mailer
@@ -58,16 +64,6 @@ config :mime, :types, %{
   "application/atom+xml" => ["xml"]
 }
 
-# Tailwind
-config :tailwind,
-  version: "4.0.0",
-  glossia: [
-    args: ~w(
-      --input=assets/css/app.css
-      --output=priv/static/assets/app.css
-    ),
-    cd: Path.expand("..", __DIR__)
-  ]
 
 # Configure Ueberauth
 config :ueberauth, Ueberauth,

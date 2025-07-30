@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content={get_csrf_token()} />
+    <.live_title suffix=" · Glossia">
+      {assigns[:page_title] || "Modern Language Hub for Organizations"}
+    </.live_title>
+    <link phx-track-static rel="stylesheet" href={~p"/assets/marketing.css"} />
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/marketing.js"}>
+    </script>
+  </head>
+  <body>
+    <!-- Marketing Navigation -->
+    <nav class="marketing-nav">
+      <div class="marketing-container">
+        <div class="marketing-nav-inner">
+          <a href="/" class="nav-logo">Glossia</a>
+          <ul class="nav-links">
+            <li><a href="/about" class="nav-link">About</a></li>
+            <li><a href="/blog" class="nav-link">Blog</a></li>
+            <li><a href="/changelog" class="nav-link">Changelog</a></li>
+            <li><a href="/auth/login" class="nav-link">Login</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main style="margin-top: 80px;">
+      {@inner_content}
+    </main>
+    
+    <!-- Marketing Footer -->
+    <footer style="border-top: 3px solid #000; padding: 3rem 0; margin-top: 4rem;">
+      <div class="marketing-container">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+          <div>
+            <h4 style="font-weight: 800; text-transform: uppercase; margin-bottom: 1rem;">Glossia</h4>
+            <p style="color: #666;">A modern community-driven open-source language hub for your organization.</p>
+          </div>
+          <div>
+            <h4 style="font-weight: 800; text-transform: uppercase; margin-bottom: 1rem;">Resources</h4>
+            <ul style="list-style: none; padding: 0;">
+              <li><a href="/about" style="color: #000; text-decoration: none; font-weight: 600;">About</a></li>
+              <li><a href="/blog" style="color: #000; text-decoration: none; font-weight: 600;">Blog</a></li>
+              <li><a href="/changelog" style="color: #000; text-decoration: none; font-weight: 600;">Changelog</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="font-weight: 800; text-transform: uppercase; margin-bottom: 1rem;">Legal</h4>
+            <ul style="list-style: none; padding: 0;">
+              <li><a href="/terms" style="color: #000; text-decoration: none; font-weight: 600;">Terms of Service</a></li>
+              <li><a href="/cookies" style="color: #000; text-decoration: none; font-weight: 600;">Cookie Policy</a></li>
+            </ul>
+          </div>
+        </div>
+        <div style="text-align: center; padding-top: 2rem; border-top: 1px solid #eee;">
+          <p style="font-size: 0.875rem; color: #666;">© 2024 Glossia. MPL-2.0 Licensed.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

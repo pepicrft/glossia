@@ -19,7 +19,7 @@ The Glossia web application creates language hubs for organizations. It's built 
 - **Phoenix Web Framework**: Standard Phoenix 1.7 structure with LiveView for interactive features
 - **Database**: PostgreSQL with Ecto migrations and repo pattern
 - **Frontend**:
-  - Tailwind CSS (v4.0.0) for styling
+  - Custom CSS for styling
   - ESBuild for JavaScript bundling
   - Phoenix LiveView for interactive components
 - **Email**: Swoosh mailer with local adapter for development
