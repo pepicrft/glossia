@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENT.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI coding assistants (like Claude Code, Cursor, etc.) when working with code in this repository.
 
 ## Monorepo Structure
 
@@ -94,7 +94,9 @@ The `web:check` command runs all necessary verification steps including tests, f
 
 ### Frontend Assets
 - `assets/js/app.js` - Main JavaScript entry point
-- `assets/css/app.css` - Main CSS file (Tailwind)
+- `assets/js/marketing.js` - Marketing site JavaScript
+- `assets/css/app.css` - Main application CSS file
+- `assets/css/marketing.css` - Marketing site CSS file
 - `priv/static/` - Compiled static assets
 
 ### Database
@@ -120,3 +122,58 @@ The `web:check` command runs all necessary verification steps including tests, f
 - Containerized application using multi-stage Docker build
 - Production builds use `mix assets.deploy` for optimized assets
 - Configured for Fly.io deployment with `fly.toml`
+
+## CSS Architecture - EnduringCSS Methodology
+
+This project follows the **EnduringCSS** methodology for organizing and maintaining CSS. The key principles are:
+
+### 1. Component and Page Mapping
+- Each Phoenix controller/page should have a corresponding CSS file
+- Each component should have its own CSS namespace
+- CSS files are organized to mirror the application structure
+
+### 2. Naming Convention
+- Use a namespace prefix for each module/component
+- Format: `.[Namespace]_[Component]_[Element]--[Modifier]`
+- Example: `.Marketing_Hero_Title--large`
+
+### 3. File Organization
+```
+assets/css/
+├── app.css           # Main app styles and imports
+├── marketing.css     # Marketing site styles
+├── pages/            # Page-specific styles
+│   ├── home.css
+│   ├── dashboard.css
+│   └── blog.css
+└── components/       # Component styles
+    ├── navbar.css
+    ├── footer.css
+    └── forms.css
+```
+
+### 4. Isolation and Encapsulation
+- Each CSS module is completely isolated
+- No styles should "leak" between components
+- Use explicit namespaces to avoid conflicts
+
+### 5. State and Modifiers
+- Use modifier classes for state changes
+- Keep JavaScript classes separate from styling classes
+- Example: `.Marketing_Button--disabled`, `.Marketing_Button--loading`
+
+### 6. Example Structure
+```css
+/* marketing.css */
+.Marketing_Hero { /* Block */ }
+.Marketing_Hero_Title { /* Element */ }
+.Marketing_Hero_Title--emphasized { /* Modifier */ }
+
+/* components/navbar.css */
+.Nav { /* Block */ }
+.Nav_Logo { /* Element */ }
+.Nav_Menu { /* Element */ }
+.Nav_Menu--mobile { /* Modifier */ }
+```
+
+This methodology ensures maintainable, scalable CSS that grows well with the application.
