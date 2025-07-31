@@ -1,81 +1,75 @@
-<section class="bg-white border-b-8 border-black">
-  <div class="px-4 py-16">
-    <div class="max-w-4xl mx-auto text-center">
-      <h1 class="text-6xl md:text-8xl font-black text-black uppercase tracking-tight leading-none mb-8">
-        <span class="text-glossia-pink">BLOG</span>
+<!-- Blog Hero Section -->
+<section class="Marketing_Hero Blog_Hero">
+  <div class="marketing-container">
+    <div class="text-center">
+      <h1 class="Marketing_Hero_Title">
+        <span class="Marketing_Hero_Gradient">Blog</span>
       </h1>
-      <div class="bg-black border-4 border-glossia-pink p-6 mb-8">
-        <p class="text-white font-mono text-lg uppercase tracking-wide leading-relaxed">
-          LEARN ABOUT CONTINUOUS LOCALIZATION, BEST PRACTICES, AND UPDATES FROM THE GLOSSIA TEAM.
-        </p>
-      </div>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a
-          href="/blog/feed/rss"
-          class="bg-glossia-pink border-4 border-black px-6 py-3 text-lg font-black text-white uppercase hover:bg-black hover:border-glossia-pink transition-colors"
-        >
-          RSS FEED
+      <p class="Marketing_Hero_Subtitle">
+        Learn about continuous localization, best practices, and updates from the Glossia team.
+      </p>
+      <div class="Marketing_FeedButtons">
+        <a href="/blog/feed/rss" class="Marketing_Button Marketing_Button--secondary">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 5a1 1 0 000 2 1 1 0 000-2zM5 11a6 6 0 016-6v2a4 4 0 00-4 4H5zm0 2A8 8 0 0113 5v2a6 6 0 00-6 6H5zm4 0h2a2 2 0 00-2-2v2z" fill="currentColor"/>
+          </svg>
+          RSS Feed
         </a>
-        <a
-          href="/blog/feed/atom"
-          class="bg-white border-4 border-black px-6 py-3 text-lg font-black text-black uppercase hover:bg-black hover:text-white transition-colors"
-        >
-          ATOM FEED
+        <a href="/blog/feed/atom" class="Marketing_Button Marketing_Button--secondary">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zm0 2a1 1 0 100 2 1 1 0 000-2zm-2 4h4v1H6V9z" fill="currentColor"/>
+          </svg>
+          Atom Feed
         </a>
       </div>
     </div>
   </div>
 </section>
 
-<section class="bg-white">
-  <div class="px-4 py-16">
-    <div class="max-w-6xl mx-auto">
-      <div class="space-y-0">
-        <%= for {post, index} <- Enum.with_index(@posts) do %>
-          <article class={"#{if rem(index, 2) == 0, do: "bg-white", else: "bg-black"} border-4 #{if index == 0, do: "border-black", else: "border-t-0 border-black"} p-8 hover:bg-glossia-pink hover:text-white transition-colors group"}>
-            <div class="flex items-start justify-between">
-              <div class="flex-1">
-                <div class="mb-4">
-                  <time
-                    datetime={post.date}
-                    class={"#{if rem(index, 2) == 0, do: "text-black", else: "text-white"} group-hover:text-white font-mono text-sm uppercase tracking-wide"}
-                  >
-                    {Calendar.strftime(post.date, "%B %d, %Y")}
-                  </time>
-                  <%= if post.tags != [] do %>
-                    <div class="flex gap-x-2 mt-2">
-                      <%= for tag <- Enum.take(post.tags, 3) do %>
-                        <span class="bg-glossia-pink border-2 border-black px-2 py-1 text-xs font-black text-white uppercase tracking-wide">
-                          {tag}
-                        </span>
-                      <% end %>
-                    </div>
-                  <% end %>
-                </div>
-                <h2 class={"text-3xl font-black #{if rem(index, 2) == 0, do: "text-black", else: "text-white"} group-hover:text-white uppercase tracking-wide leading-tight mb-4"}>
-                  <a href={~p"/blog/#{post.id}"}>
-                    {post.title}
-                  </a>
-                </h2>
-                <p class={"#{if rem(index, 2) == 0, do: "text-black", else: "text-white"} group-hover:text-white font-mono text-sm uppercase tracking-wide leading-relaxed mb-4"}>
-                  {String.slice(post.description, 0, 200)}...
-                </p>
-                <div class="flex items-center justify-between">
-                  <p class={"font-black #{if rem(index, 2) == 0, do: "text-black", else: "text-white"} group-hover:text-white uppercase text-sm tracking-wide"}>
-                    BY {post.author}
-                  </p>
-                  <a
-                    href={~p"/blog/#{post.id}"}
-                    class="bg-glossia-pink border-2 border-black px-4 py-2 text-sm font-black text-white uppercase hover:bg-black hover:border-glossia-pink transition-colors"
-                  >
-                    READ MORE →
-                  </a>
-                </div>
+<!-- Blog Posts Section -->
+<section class="Marketing_Section">
+  <div class="marketing-container">
+    <div class="Blog_Container">
+      <%= for post <- @posts do %>
+        <article class="Blog_Article">
+          <div class="Blog_Meta">
+            <time datetime={post.date} class="Blog_Date">
+              {Calendar.strftime(post.date, "%B %d, %Y")}
+            </time>
+            <%= if post.tags != [] do %>
+              <div class="Blog_Tags">
+                <%= for tag <- Enum.take(post.tags, 3) do %>
+                  <span class="Blog_Tag">
+                    {tag}
+                  </span>
+                <% end %>
               </div>
-            </div>
-          </article>
-        <% end %>
-      </div>
+            <% end %>
+          </div>
+          
+          <h2 class="Blog_Title">
+            <a href={~p"/blog/#{post.id}"}>
+              {post.title}
+            </a>
+          </h2>
+          
+          <p class="Blog_Excerpt">
+            {String.slice(post.description, 0, 200)}...
+          </p>
+          
+          <div class="Blog_Footer">
+            <span class="Blog_Author">
+              By {post.author}
+            </span>
+            <a href={~p"/blog/#{post.id}"} class="Blog_ReadMore">
+              Read more 
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+        </article>
+      <% end %>
     </div>
   </div>
 </section>

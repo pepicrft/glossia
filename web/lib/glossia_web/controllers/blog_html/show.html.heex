@@ -1,17 +1,15 @@
-<section class="bg-white border-b-8 border-black">
-  <div class="px-4 py-16">
-    <div class="max-w-4xl mx-auto">
-      <div class="mb-8">
-        <time
-          datetime={@post.date}
-          class="text-glossia-pink font-mono text-lg uppercase tracking-wide font-black"
-        >
+<!-- Article Header -->
+<section class="Marketing_Section Blog_Detail_Header">
+  <div class="marketing-container">
+    <div class="Blog_Detail_Container">
+      <div class="Blog_Detail_Meta">
+        <time datetime={@post.date} class="Blog_Date">
           {Calendar.strftime(@post.date, "%B %d, %Y")}
         </time>
         <%= if @post.tags != [] do %>
-          <div class="flex gap-x-2 mt-4">
+          <div class="Blog_Tags">
             <%= for tag <- @post.tags do %>
-              <span class="bg-black border-2 border-glossia-pink px-3 py-1 text-xs font-black text-white uppercase tracking-wide">
+              <span class="Blog_Tag">
                 {tag}
               </span>
             <% end %>
@@ -19,56 +17,41 @@
         <% end %>
       </div>
 
-      <h1 class="text-6xl md:text-8xl font-black text-black uppercase tracking-tight leading-none mb-8">
+      <h1 class="Blog_Detail_Title">
         {@post.title}
       </h1>
 
-      <div class="bg-black border-4 border-glossia-pink p-6 mb-8">
-        <p class="text-white font-mono text-lg uppercase tracking-wide leading-relaxed">
-          {@post.description}
-        </p>
-      </div>
+      <p class="Blog_Detail_Description">
+        {@post.description}
+      </p>
 
-      <div class="mb-8">
-        <p class="text-black font-black uppercase text-lg tracking-wide">BY {@post.author}</p>
+      <div class="Blog_Detail_AuthorLine">
+        <span class="Blog_Detail_Author">By {@post.author}</span>
       </div>
     </div>
   </div>
 </section>
 
-<section class="bg-white border-b-8 border-black">
-  <div class="px-4 py-16">
-    <div class="max-w-4xl mx-auto">
-      <div class="bg-white border-4 border-black p-8">
-        <div class="prose prose-lg max-w-none 
-          [&>h1]:text-3xl [&>h1]:font-black [&>h1]:text-black [&>h1]:mb-6 [&>h1]:mt-10 
-          [&>h2]:text-2xl [&>h2]:font-black [&>h2]:text-black [&>h2]:mb-6 [&>h2]:mt-8 
-          [&>h3]:text-xl [&>h3]:font-black [&>h3]:text-black [&>h3]:mb-4 [&>h3]:mt-6 
-          [&>p]:font-mono [&>p]:text-base [&>p]:text-black [&>p]:leading-relaxed [&>p]:mb-6 
-          [&>ul]:font-mono [&>ul]:text-base [&>ul]:text-black [&>ul]:mb-6 [&>ul]:space-y-2 
-          [&>ol]:font-mono [&>ol]:text-base [&>ol]:text-black [&>ol]:mb-6 [&>ol]:space-y-2 
-          [&>li]:leading-relaxed
-          [&>blockquote]:bg-black [&>blockquote]:border-4 [&>blockquote]:border-glossia-pink [&>blockquote]:p-6 [&>blockquote]:text-white [&>blockquote]:font-mono [&>blockquote]:my-8 
-          [&>code]:bg-glossia-pink [&>code]:text-white [&>code]:px-2 [&>code]:py-1 [&>code]:font-mono [&>code]:text-sm 
-          [&>pre]:bg-black [&>pre]:border-4 [&>pre]:border-glossia-pink [&>pre]:p-6 [&>pre]:text-white [&>pre]:font-mono [&>pre]:my-8 [&>pre]:overflow-x-auto
-          [&>strong]:font-black [&>strong]:text-black
-          [&>em]:font-black [&>em]:text-glossia-pink
-          [&>a]:text-glossia-pink [&>a]:font-black [&>a]:underline [&>a]:decoration-4 [&>a]:decoration-glossia-pink [&>a:hover]:text-black [&>a:hover]:bg-glossia-pink">
-          {raw(@post.body)}
-        </div>
+<!-- Article Content -->
+<section class="Marketing_Section Blog_Detail_Content">
+  <div class="marketing-container">
+    <div class="Blog_Detail_Container">
+      <div class="Blog_Content">
+        {raw(@post.body)}
       </div>
     </div>
   </div>
 </section>
 
-<section class="bg-glossia-pink">
-  <div class="px-4 py-16">
-    <div class="max-w-4xl mx-auto text-center">
-      <a
-        href="/blog"
-        class="bg-black border-4 border-white px-8 py-4 text-xl font-black text-white uppercase hover:bg-white hover:text-black hover:border-black transition-colors"
-      >
-        ← BACK TO ALL POSTS
+<!-- Back to Blog -->
+<section class="Marketing_Section Blog_Detail_BackSection">
+  <div class="marketing-container">
+    <div class="Blog_Detail_Container">
+      <a href="/blog" class="Marketing_Button Marketing_Button--secondary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="Marketing_BackArrow">
+          <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Back to all posts
       </a>
     </div>
   </div>
