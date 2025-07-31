@@ -117,3 +117,21 @@
 .Login_Back_Button {
   display: inline-flex;
 }
+
+/* GitLab Button Variant */
+.Login_Button--gitlab {
+  background: #fc6d26;
+  border-color: #fc6d26;
+}
+
+.Login_Button--gitlab:hover {
+  background: #e55d1f;
+}
+
+/* Multiple Alternative Links */
+.Login_Alternative_Links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
