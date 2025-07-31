@@ -11,13 +11,19 @@
       <div class="Marketing_FeedButtons">
         <a href="/blog/feed/rss" class="Marketing_Button Marketing_Button--secondary">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M3 5a1 1 0 000 2 1 1 0 000-2zM5 11a6 6 0 016-6v2a4 4 0 00-4 4H5zm0 2A8 8 0 0113 5v2a6 6 0 00-6 6H5zm4 0h2a2 2 0 00-2-2v2z" fill="currentColor"/>
+            <path
+              d="M3 5a1 1 0 000 2 1 1 0 000-2zM5 11a6 6 0 016-6v2a4 4 0 00-4 4H5zm0 2A8 8 0 0113 5v2a6 6 0 00-6 6H5zm4 0h2a2 2 0 00-2-2v2z"
+              fill="currentColor"
+            />
           </svg>
           RSS Feed
         </a>
         <a href="/blog/feed/atom" class="Marketing_Button Marketing_Button--secondary">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zm0 2a1 1 0 100 2 1 1 0 000-2zm-2 4h4v1H6V9z" fill="currentColor"/>
+            <path
+              d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zm0 2a1 1 0 100 2 1 1 0 000-2zm-2 4h4v1H6V9z"
+              fill="currentColor"
+            />
           </svg>
           Atom Feed
         </a>
@@ -46,25 +52,31 @@
               </div>
             <% end %>
           </div>
-          
+
           <h2 class="Blog_Title">
             <a href={~p"/blog/#{post.id}"}>
               {post.title}
             </a>
           </h2>
-          
+
           <p class="Blog_Excerpt">
             {String.slice(post.description, 0, 200)}...
           </p>
-          
+
           <div class="Blog_Footer">
             <span class="Blog_Author">
               By {post.author}
             </span>
             <a href={~p"/blog/#{post.id}"} class="Blog_ReadMore">
-              Read more 
+              Read more
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path
+                  d="M3 8H13M13 8L9 4M13 8L9 12"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             </a>
           </div>

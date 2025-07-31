@@ -42,7 +42,7 @@ if config_env() == :dev do
   config :ueberauth, Ueberauth.Strategy.Github.OAuth,
     client_id: "Iv23li2qoyzLF8ITSf0S",
     client_secret: "ac0ef2db385ddc23e403dce0d4361ca94973a2df"
-  
+
   # You'll need to create OAuth apps for GitLab and Codeberg
   # and add the credentials here for development
 end

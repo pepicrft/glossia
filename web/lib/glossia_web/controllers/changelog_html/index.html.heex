@@ -11,13 +11,19 @@
       <div class="Marketing_FeedButtons">
         <a href="/changelog/feed/rss" class="Marketing_Button Marketing_Button--secondary">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M3 5a1 1 0 000 2 1 1 0 000-2zM5 11a6 6 0 016-6v2a4 4 0 00-4 4H5zm0 2A8 8 0 0113 5v2a6 6 0 00-6 6H5zm4 0h2a2 2 0 00-2-2v2z" fill="currentColor"/>
+            <path
+              d="M3 5a1 1 0 000 2 1 1 0 000-2zM5 11a6 6 0 016-6v2a4 4 0 00-4 4H5zm0 2A8 8 0 0113 5v2a6 6 0 00-6 6H5zm4 0h2a2 2 0 00-2-2v2z"
+              fill="currentColor"
+            />
           </svg>
           RSS Feed
         </a>
         <a href="/changelog/feed/atom" class="Marketing_Button Marketing_Button--secondary">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zm0 2a1 1 0 100 2 1 1 0 000-2zm-2 4h4v1H6V9z" fill="currentColor"/>
+            <path
+              d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zm0 2a1 1 0 100 2 1 1 0 000-2zm-2 4h4v1H6V9z"
+              fill="currentColor"
+            />
           </svg>
           Atom Feed
         </a>
@@ -37,23 +43,47 @@
               <%= case entry.type do %>
                 <% :feature -> %>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 5v14M5 12h14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path
+                      d="M12 5v14M5 12h14"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
                   </svg>
                 <% :improvement -> %>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path
+                      d="M5 12h14m0 0l-7-7m7 7l-7 7"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
                   </svg>
                 <% :fix -> %>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M5 13l4 4L19 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path
+                      d="M5 13l4 4L19 7"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
                   </svg>
                 <% _ -> %>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path
+                      d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
                   </svg>
               <% end %>
             </div>
-            
+
             <div class="Changelog_Content">
               <div class="Changelog_Meta">
                 <span class={"Changelog_Badge Changelog_Badge--#{entry.type}"}>
@@ -72,21 +102,27 @@
                   {Calendar.strftime(entry.date, "%B %d, %Y")}
                 </time>
               </div>
-              
+
               <h2 class="Changelog_Title">
                 <a href={~p"/changelog/#{entry.id}"}>
                   {entry.title}
                 </a>
               </h2>
-              
+
               <div class="Changelog_Excerpt">
                 {raw(String.slice(entry.body, 0, 200))}...
               </div>
-              
+
               <a href={~p"/changelog/#{entry.id}"} class="Changelog_ReadMore">
-                Read more 
+                Read more
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path
+                    d="M3 8H13M13 8L9 4M13 8L9 12"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
                 </svg>
               </a>
             </div>

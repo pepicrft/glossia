@@ -7,19 +7,43 @@
           <%= case @entry.type do %>
             <% :feature -> %>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M12 5v14M5 12h14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path
+                  d="M12 5v14M5 12h14"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             <% :improvement -> %>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path
+                  d="M5 12h14m0 0l-7-7m7 7l-7 7"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             <% :fix -> %>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M5 13l4 4L19 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path
+                  d="M5 13l4 4L19 7"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             <% _ -> %>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path
+                  d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
           <% end %>
         </div>
@@ -66,7 +90,13 @@
     <div class="Changelog_Detail_Container">
       <a href="/changelog" class="Marketing_Button Marketing_Button--secondary">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="Marketing_BackArrow">
-          <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path
+            d="M3 8H13M13 8L9 4M13 8L9 12"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
         Back to changelog
       </a>

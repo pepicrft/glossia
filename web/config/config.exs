@@ -64,7 +64,6 @@ config :mime, :types, %{
   "application/atom+xml" => ["xml"]
 }
 
-
 # Configure Ueberauth
 config :ueberauth, Ueberauth,
   providers: [

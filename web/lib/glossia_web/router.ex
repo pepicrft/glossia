@@ -33,7 +33,7 @@ defmodule GlossiaWeb.Router do
     get "/about", InfoController, :about
     get "/terms", InfoController, :terms
     get "/cookies", InfoController, :cookies
-    
+
     get "/blog", BlogController, :index
     get "/blog/:id", BlogController, :show
     get "/blog/feed/:format", BlogController, :feed
