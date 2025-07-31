@@ -7,9 +7,9 @@
 @import "./marketing/blog.css";
 @import "./marketing/changelog.css";
 
-/* App Routes (when they exist) */
-/* @import "./app/dashboard.css"; */
-/* @import "./app/settings.css"; */
+/* App Layout and Routes */
+@import "./app/layouts/app.css";
+@import "./app/routes/dashboard.css";
 
 /* Reset and Base Styles */
 * {

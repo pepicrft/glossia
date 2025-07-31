@@ -13,7 +13,21 @@ defmodule GlossiaWeb.PageController do
     )
   end
 
-  def dashboard(conn, _params) do
-    render(conn, :dashboard, layout: {GlossiaWeb.Layouts, :app})
+  def dashboard(conn, %{"handle" => handle}) do
+    # TODO: Load account by handle and verify user has access
+    # For now, just render the dashboard
+    current_user = conn.assigns[:current_user]
+    current_account = if current_user do
+      Glossia.Repo.preload(current_user, :account).account
+    else
+      nil
+    end
+    
+    render(conn, :dashboard, 
+      layout: {GlossiaWeb.Layouts, :app},
+      current_user: current_user,
+      current_account: current_account,
+      handle: handle
+    )
   end
 end

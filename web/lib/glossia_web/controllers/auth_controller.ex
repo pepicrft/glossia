@@ -23,10 +23,11 @@ defmodule GlossiaWeb.AuthController do
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, %{"provider" => provider}) do
     case create_or_update_user(auth, provider) do
       {:ok, user} ->
+        user_with_account = Glossia.Repo.preload(user, :account)
         conn
         |> put_session(:user_id, user.id)
         |> put_flash(:info, "Successfully authenticated!")
-        |> redirect(to: ~p"/dashboard")
+        |> redirect(to: ~p"/#{user_with_account.account.handle}")
 
       {:error, reason} ->
         conn

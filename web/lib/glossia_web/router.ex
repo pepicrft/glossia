@@ -48,7 +48,7 @@ defmodule GlossiaWeb.Router do
     pipe_through :browser
 
     get "/login", AuthController, :login
-    get "/dashboard", PageController, :dashboard
+    get "/:handle", PageController, :dashboard
   end
 
   scope "/auth", GlossiaWeb do
