@@ -1,0 +1,84 @@
+/* Home Route CSS - EnduringCSS Methodology */
+
+/* Home page specific styles that extend marketing.css */
+
+/* Home Hero Section Enhancements */
+.Home_Hero {
+  /* Any home-specific hero modifications */
+}
+
+.Home_Hero_Title {
+  /* Home-specific title styling if different from base */
+}
+
+.Home_Hero_CTA {
+  /* Call-to-action button styling specific to home */
+}
+
+/* Home Features Section */
+.Home_Features {
+  /* Features section container */
+}
+
+.Home_Features_Grid {
+  /* Features grid layout */
+}
+
+.Home_Features_Card {
+  /* Individual feature card */
+}
+
+.Home_Features_Icon {
+  /* Feature card icon */
+}
+
+.Home_Features_Title {
+  /* Feature card title */
+}
+
+.Home_Features_Description {
+  /* Feature card description */
+}
+
+/* Home Workflow Section */
+.Home_Workflow {
+  /* Workflow section container */
+}
+
+.Home_Workflow_List {
+  /* Workflow checklist */
+}
+
+.Home_Workflow_Item {
+  /* Individual workflow item */
+}
+
+/* Home Blog Section */
+.Home_Blog {
+  /* Blog section container */
+}
+
+.Home_Blog_Grid {
+  /* Blog posts grid */
+}
+
+.Home_Blog_Card {
+  /* Individual blog post card */
+}
+
+/* Home CTA Section */
+.Home_CTA {
+  /* Final call-to-action section */
+}
+
+.Home_CTA_Title {
+  /* CTA section title */
+}
+
+.Home_CTA_Description {
+  /* CTA section description */
+}
+
+.Home_CTA_Actions {
+  /* CTA buttons container */
+}

@@ -133,49 +133,74 @@ When making changes that affect configuration or deployment:
 
 ## CSS Architecture - EnduringCSS Methodology
 
-This project follows the **EnduringCSS** methodology for organizing and maintaining CSS. The key principles are:
+This project follows the **EnduringCSS** methodology for organizing and maintaining CSS. **Every route must have its own CSS file** that contains all the styles specific to that route.
 
-### 1. Component and Page Mapping
-- Each Phoenix controller/page should have a corresponding CSS file
-- Each component should have its own CSS namespace
-- CSS files are organized to mirror the application structure
+### 1. Route-Based CSS Files
+- **Each Phoenix route must have a corresponding CSS file**
+- CSS files are loaded per-route to ensure optimal performance
+- Route CSS files contain all styles needed for that specific page
 
-### 2. Naming Convention
-- Use a namespace prefix for each module/component
-- Format: `.[Namespace]_[Component]_[Element]--[Modifier]`
-- Example: `.Marketing_Hero_Title--large`
-
-### 3. File Organization
+### 2. File Organization
 ```
 assets/css/
-├── app.css           # Main app styles and imports
-├── marketing.css     # Marketing site styles
-├── pages/            # Page-specific styles
-│   ├── home.css
-│   ├── dashboard.css
-│   └── blog.css
-└── components/       # Component styles
+├── app.css              # Global app styles (variables, reset, base)
+├── marketing.css        # Marketing layout and shared marketing components
+├── marketing/           # Marketing route-specific CSS files
+│   ├── home.css        # Home page styles
+│   ├── login.css       # Login page styles  
+│   ├── blog-index.css  # Blog listing page
+│   ├── blog-show.css   # Blog post page
+│   └── changelog.css   # Changelog page
+├── app/                 # App route-specific CSS files
+│   ├── dashboard.css   # App dashboard
+│   ├── projects.css    # Projects page
+│   └── settings.css    # Settings page
+└── components/          # Reusable component styles
     ├── navbar.css
     ├── footer.css
     └── forms.css
 ```
 
-### 4. Isolation and Encapsulation
-- Each CSS module is completely isolated
-- No styles should "leak" between components
-- Use explicit namespaces to avoid conflicts
+### 3. CSS Loading Strategy
+- Marketing layout loads: `app.css` + `marketing.css` + `marketing/[route].css`
+- App layout loads: `app.css` + `app-layout.css` + `app/[route].css`
+- Each route CSS file is imported only when that route is rendered
 
-### 5. State and Modifiers
-- Use modifier classes for state changes
-- Keep JavaScript classes separate from styling classes
-- Example: `.Marketing_Button--disabled`, `.Marketing_Button--loading`
+### 4. Naming Convention
+- Use a namespace prefix for each module/component
+- Format: `.[Namespace]_[Component]_[Element]--[Modifier]`
+- Examples: 
+  - `.Login_Form_Button--primary`
+  - `.Home_Hero_Title--emphasized`
+  - `.Blog_Post_Meta--highlighted`
 
-### 6. Example Structure
+### 5. Route CSS Implementation
+Each route CSS file should:
+- Contain all styles specific to that route
+- Use the route name as the primary namespace
+- Include responsive design for that route
+- Define any route-specific component variants
+
+### 6. Example Route CSS Structure
 ```css
-/* marketing.css */
-.Marketing_Hero { /* Block */ }
-.Marketing_Hero_Title { /* Element */ }
-.Marketing_Hero_Title--emphasized { /* Modifier */ }
+/* routes/login.css */
+.Login_Container { /* Main login container */ }
+.Login_Form { /* Login form block */ }
+.Login_Form_Button { /* Form button element */ }
+.Login_Form_Button--primary { /* Primary button modifier */ }
+.Login_Alternative { /* Alternative login options */ }
+.Login_Footer { /* Login page footer */ }
+```
+
+### 7. CSS Import in Templates
+Templates should explicitly import their route CSS:
+```heex
+<!-- In marketing login.html.heex -->
+<%= Phoenix.HTML.raw ~s(<link rel="stylesheet" href="/assets/css/marketing/login.css">) %>
+
+<!-- In app dashboard.html.heex -->
+<%= Phoenix.HTML.raw ~s(<link rel="stylesheet" href="/assets/css/app/dashboard.css">) %>
+```
 
 /* components/navbar.css */
 .Nav { /* Block */ }
