@@ -1,7 +1,6 @@
 defmodule Glossia.Accounts.Account do
   @moduledoc false
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Glossia.Schema
 
   schema "accounts" do
     field :handle, :string
@@ -9,7 +8,7 @@ defmodule Glossia.Accounts.Account do
     has_many :users, Glossia.Accounts.User
     has_many :organizations, Glossia.Organizations.Organization
 
-    timestamps(type: :utc_datetime)
+    timestamps()
   end
 
   @doc false

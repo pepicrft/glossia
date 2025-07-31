@@ -123,6 +123,14 @@ The `web:check` command runs all necessary verification steps including tests, f
 - Production builds use `mix assets.deploy` for optimized assets
 - Configured for Fly.io deployment with `fly.toml`
 
+## Documentation Maintenance
+
+When making changes that affect configuration or deployment:
+- Update `docs/contributors/self-hosting.md` with any new environment variables
+- Document the purpose, format, and example values for each variable
+- Keep OAuth provider setup instructions current
+- Update example configurations if deployment patterns change
+
 ## CSS Architecture - EnduringCSS Methodology
 
 This project follows the **EnduringCSS** methodology for organizing and maintaining CSS. The key principles are:

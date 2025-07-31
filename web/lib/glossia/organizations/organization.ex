@@ -1,12 +1,11 @@
 defmodule Glossia.Organizations.Organization do
   @moduledoc false
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Glossia.Schema
 
   schema "organizations" do
     belongs_to :account, Glossia.Accounts.Account
 
-    timestamps(type: :utc_datetime)
+    timestamps()
   end
 
   @doc false

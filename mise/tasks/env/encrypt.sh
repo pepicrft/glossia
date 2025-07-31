@@ -3,4 +3,4 @@
 
 set -eo pipefail
 
-sops encrypt -i --age "age1cqmmqks8fqytf5vgcg6xy2uxske5efd9yvvstcpxn3vg9clxddxsjxx8cw" .env.json
+sops encrypt -i --age "age1h5hshkkxdnfxz5sa0yp4hzlntehwzeey7kc8298znn6ve03q83tqegsxfy" .env.json

@@ -64,6 +64,5 @@ defmodule GlossiaWeb.AuthController do
   end
 
   defp provider_string_to_atom("github"), do: :github
-  defp provider_string_to_atom("gitlab"), do: :gitlab
   defp provider_string_to_atom(_), do: nil
 end

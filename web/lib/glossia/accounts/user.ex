@@ -1,7 +1,6 @@
 defmodule Glossia.Accounts.User do
   @moduledoc false
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Glossia.Schema
 
   schema "users" do
     field :email, :string
@@ -9,7 +8,7 @@ defmodule Glossia.Accounts.User do
     belongs_to :account, Glossia.Accounts.Account
     has_many :auth2_identities, Glossia.Accounts.Auth2Identity
 
-    timestamps(type: :utc_datetime)
+    timestamps()
   end
 
   @doc false

@@ -3,4 +3,4 @@
 
 set -eo pipefail
 
-SOPS_AGE_KEY_FILE=~/.config/mise/age.txt sops edit .env.json
+SOPS_AGE_KEY_FILE=~/.config/mise/glossia-age.txt sops edit .env.json

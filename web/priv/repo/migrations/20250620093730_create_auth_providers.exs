@@ -2,13 +2,14 @@ defmodule Glossia.Repo.Migrations.CreateAuth2Identities do
   use Ecto.Migration
 
   def change do
-    execute "CREATE TYPE provider_enum AS ENUM ('github', 'gitlab')",
+    execute "CREATE TYPE provider_enum AS ENUM ('github')",
             "DROP TYPE provider_enum"
 
-    create table(:auth2_identities) do
+    create table(:auth2_identities, primary_key: false) do
+      add :id, :uuid, primary_key: true
       add :provider, :provider_enum, null: false
       add :user_id_on_provider, :string, null: false
-      add :user_id, references(:users, on_delete: :delete_all), null: false
+      add :user_id, references(:users, type: :uuid, on_delete: :delete_all), null: false
 
       timestamps(type: :utc_datetime)
     end

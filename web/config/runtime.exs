@@ -31,11 +31,20 @@ if github_client_id = System.get_env("GITHUB_CLIENT_ID") do
     client_secret: System.get_env("GITHUB_CLIENT_SECRET")
 end
 
-# Hardcoded GitHub OAuth configuration for development
+# GitLab OAuth support removed due to package compatibility issues
+# The ueberauth_gitlab_strategy package requires an older version of ueberauth
+
+# Additional git forge support (GitLab, Codeberg/Forgejo) planned for future releases
+# Note: The ueberauth_gitlab_strategy package is outdated and incompatible with current ueberauth version
+
+# Hardcoded OAuth configuration for development
 if config_env() == :dev do
   config :ueberauth, Ueberauth.Strategy.Github.OAuth,
     client_id: "Iv23li2qoyzLF8ITSf0S",
     client_secret: "ac0ef2db385ddc23e403dce0d4361ca94973a2df"
+  
+  # You'll need to create OAuth apps for GitLab and Codeberg
+  # and add the credentials here for development
 end
 
 if config_env() == :prod do

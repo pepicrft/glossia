@@ -861,3 +861,108 @@ body {
   border-top: 1px solid var(--border-light);
   text-align: center;
 }
+
+/* Auth Pages CSS - EnduringCSS Methodology */
+
+/* Login Page */
+.Auth_Login_Container {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.Auth_Login_Header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.Auth_Login_Title {
+  margin-bottom: 1rem;
+}
+
+.Auth_Login_Subtitle {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+}
+
+.Auth_Login_Options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.Auth_Login_Button {
+  width: 100%;
+  justify-content: center;
+  padding: 1rem 1.5rem;
+}
+
+.Auth_Login_Alternative {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.Auth_Login_Alternative_Text {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.Auth_Login_Alternative_Link {
+  color: var(--glossia-pink);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.Auth_Login_Note {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+}
+
+.Auth_Login_Note_Text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin: 0;
+}
+
+.Auth_Login_Footer {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.Auth_Login_Footer_Text {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin-bottom: 0.5rem;
+}
+
+.Auth_Login_Footer_Links {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.Auth_Login_Footer_Link {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  text-decoration: none;
+}
+
+.Auth_Login_Footer_Separator {
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+}
+
+.Auth_Login_Back {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.Auth_Login_Back_Button {
+  display: inline-flex;
+}

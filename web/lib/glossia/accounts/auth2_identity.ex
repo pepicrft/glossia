@@ -1,15 +1,14 @@
 defmodule Glossia.Accounts.Auth2Identity do
   @moduledoc false
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Glossia.Schema
 
   schema "auth2_identities" do
-    field :provider, Ecto.Enum, values: [:github, :gitlab]
+    field :provider, Ecto.Enum, values: [:github]
     field :user_id_on_provider, :string
 
     belongs_to :user, Glossia.Accounts.User
 
-    timestamps(type: :utc_datetime)
+    timestamps()
   end
 
   @doc false
@@ -21,5 +20,5 @@ defmodule Glossia.Accounts.Auth2Identity do
     |> unique_constraint([:provider, :user_id])
   end
 
-  def providers, do: [:github, :gitlab]
+  def providers, do: [:github]
 end
