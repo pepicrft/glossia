@@ -162,9 +162,10 @@ assets/css/
 ```
 
 ### 3. CSS Loading Strategy
-- Marketing layout loads: `app.css` + `marketing.css` + `marketing/[route].css`
-- App layout loads: `app.css` + `app-layout.css` + `app/[route].css`
-- Each route CSS file is imported only when that route is rendered
+- All CSS files are imported through the asset pipeline via `app.css`
+- `app.css` imports `marketing.css` and all route-specific CSS files
+- CSS files are bundled and served through Phoenix's asset pipeline
+- Route-specific styles are always available but use proper namespacing to avoid conflicts
 
 ### 4. Naming Convention
 - Use a namespace prefix for each module/component
@@ -192,15 +193,26 @@ Each route CSS file should:
 .Login_Footer { /* Login page footer */ }
 ```
 
-### 7. CSS Import in Templates
-Templates should explicitly import their route CSS:
-```heex
-<!-- In marketing login.html.heex -->
-<%= Phoenix.HTML.raw ~s(<link rel="stylesheet" href="/assets/css/marketing/login.css">) %>
+### 7. CSS Import Strategy
+All CSS is bundled through `app.css` using `@import` statements:
 
-<!-- In app dashboard.html.heex -->
-<%= Phoenix.HTML.raw ~s(<link rel="stylesheet" href="/assets/css/app/dashboard.css">) %>
+```css
+/* app.css */
+/* Import Marketing Layout and Route-specific CSS */
+@import "./marketing.css";
+
+/* Marketing Routes */
+@import "./marketing/home.css";  
+@import "./marketing/login.css";
+@import "./marketing/blog.css";
+@import "./marketing/changelog.css";
+
+/* App Routes */
+@import "./app/dashboard.css";
+@import "./app/settings.css";
 ```
+
+Templates should NOT import CSS directly - all styles are available through the bundled `app.css`.
 
 /* components/navbar.css */
 .Nav { /* Block */ }

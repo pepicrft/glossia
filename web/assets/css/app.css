@@ -104,3 +104,16 @@ button:disabled {
   margin: 0 auto;
   padding: 0 1rem;
 }
+
+/* Import Marketing Layout and Route-specific CSS */
+@import "./marketing.css";
+
+/* Marketing Routes */
+@import "./marketing/home.css";
+@import "./marketing/login.css";
+@import "./marketing/blog.css";
+@import "./marketing/changelog.css";
+
+/* App Routes (when they exist) */
+/* @import "./app/dashboard.css"; */
+/* @import "./app/settings.css"; */
