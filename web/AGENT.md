@@ -72,11 +72,11 @@ mix format                 # Format Elixir code using built-in formatter
 
 ### Pre-push Verification
 ```bash
-mise run web:check         # Run all checks before pushing changes
-mise run web:check --fix   # Run checks and fix auto-fixable problems
+mise run check/web         # Run all checks before pushing changes
+mise run check/web --fix   # Run checks and fix auto-fixable problems
 ```
 
-The `web:check` command runs all necessary verification steps including tests, formatting, and linting. Always run this command before pushing changes upstream. If issues are found, use the `--fix` flag to automatically fix problems where possible.
+The `check/web` command runs all necessary verification steps including tests, formatting, and linting. Always run this command before pushing changes upstream. If issues are found, use the `--fix` flag to automatically fix problems where possible.
 
 ## Project Structure
 

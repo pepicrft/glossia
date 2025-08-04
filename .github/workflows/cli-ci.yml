@@ -27,7 +27,7 @@ jobs:
       - uses: jdx/mise-action@v2
         with:
           cache: true
-      - run: mise run cli/lint
+      - run: mise run lint/cli
 
   cli-test:
     name: Test
@@ -37,7 +37,7 @@ jobs:
       - uses: jdx/mise-action@v2
         with:
           cache: true
-      - run: mise run cli/test
+      - run: mise run test/cli
 
   cli-build:
     name: Build
@@ -47,6 +47,6 @@ jobs:
       - uses: jdx/mise-action@v2
         with:
           cache: true
-      - run: mise run cli/build
+      - run: mise run build/cli
       - name: Test CLI binary
         run: cd cli && ./glossia --help

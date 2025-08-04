@@ -33,16 +33,16 @@ The web application is a Phoenix/Elixir application located in the `web/` direct
 
 ```bash
 # Run the web application locally
-mise run web/dev
+mise run dev/web
 
 # Build the web application
-mise run web/build
+mise run build/web
 
 # Run web tests
-mise run web/test
+mise run test/web
 
 # Run web code checks
-mise run web/check
+mise run check/web
 ```
 
 ### CLI
@@ -51,13 +51,13 @@ The CLI is a Go application located in the `cli/` directory.
 
 ```bash
 # Build the CLI
-mise run cli/build
+mise run build/cli
 
 # Run CLI tests
-mise run cli/test
+mise run test/cli
 
 # Lint CLI code
-mise run cli/lint
+mise run lint/cli
 
 # Run the CLI locally
 cd cli && go run main.go --help

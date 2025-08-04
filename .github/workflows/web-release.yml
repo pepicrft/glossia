@@ -38,4 +38,4 @@ jobs:
         uses: jdx/mise-action@v2
         with:
           cache: true
-      - run: mise run web/release
+      - run: mise run release/web
