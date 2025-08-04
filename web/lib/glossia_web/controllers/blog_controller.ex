@@ -4,12 +4,12 @@ defmodule GlossiaWeb.BlogController do
 
   def index(conn, _params) do
     posts = Blog.published_posts()
-    render(conn, :index, posts: posts, page_title: "Blog", layout: {GlossiaWeb.Layouts, :app})
+    render(conn, :index, posts: posts, page_title: "Blog", layout: false)
   end
 
   def show(conn, %{"id" => id}) do
     post = Blog.get_post_by_id!(id)
-    render(conn, :show, post: post, page_title: post.title, layout: {GlossiaWeb.Layouts, :app})
+    render(conn, :show, post: post, page_title: post.title, layout: false)
   end
 
   def feed(conn, %{"format" => format}) when format in ["rss", "atom"] do

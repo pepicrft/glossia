@@ -5,7 +5,7 @@ defmodule GlossiaWeb.AuthController do
   alias Glossia.Accounts
 
   def login(conn, _params) do
-    render(conn, :login)
+    render(conn, :login, layout: false)
   end
 
   def request(conn, _params) do
@@ -24,6 +24,7 @@ defmodule GlossiaWeb.AuthController do
     case create_or_update_user(auth, provider) do
       {:ok, user} ->
         user_with_account = Glossia.Repo.preload(user, :account)
+
         conn
         |> put_session(:user_id, user.id)
         |> put_flash(:info, "Successfully authenticated!")
@@ -65,5 +66,6 @@ defmodule GlossiaWeb.AuthController do
   end
 
   defp provider_string_to_atom("github"), do: :github
+  defp provider_string_to_atom("gitlab"), do: :gitlab
   defp provider_string_to_atom(_), do: nil
 end

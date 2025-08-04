@@ -7,9 +7,9 @@ defmodule GlossiaWeb.PageController do
     recent_updates = Changelog.recent_entries(3)
 
     render(conn, :home,
+      layout: false,
       recent_posts: recent_posts,
-      recent_updates: recent_updates,
-      layout: {GlossiaWeb.Layouts, :app}
+      recent_updates: recent_updates
     )
   end
 
@@ -17,13 +17,15 @@ defmodule GlossiaWeb.PageController do
     # TODO: Load account by handle and verify user has access
     # For now, just render the dashboard
     current_user = conn.assigns[:current_user]
-    current_account = if current_user do
-      Glossia.Repo.preload(current_user, :account).account
-    else
-      nil
-    end
-    
-    render(conn, :dashboard, 
+
+    current_account =
+      if current_user do
+        Glossia.Repo.preload(current_user, :account).account
+      else
+        nil
+      end
+
+    render(conn, :dashboard,
       layout: {GlossiaWeb.Layouts, :app},
       current_user: current_user,
       current_account: current_account,

@@ -6,14 +6,14 @@ defmodule GlossiaWeb.InfoController do
   use GlossiaWeb, :controller
 
   def about(conn, _params) do
-    render(conn, :about, page_title: "About")
+    render(conn, :about, layout: false, page_title: "About")
   end
 
   def terms(conn, _params) do
-    render(conn, :terms, page_title: "Terms of Service")
+    render(conn, :terms, layout: false, page_title: "Terms of Service")
   end
 
   def cookies(conn, _params) do
-    render(conn, :cookies, page_title: "Cookie Policy")
+    render(conn, :cookies, layout: false, page_title: "Cookie Policy")
   end
 end

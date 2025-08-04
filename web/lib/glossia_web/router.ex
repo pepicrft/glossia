@@ -30,6 +30,7 @@ defmodule GlossiaWeb.Router do
     pipe_through :marketing
 
     get "/", PageController, :home
+    get "/login", AuthController, :login
     get "/about", InfoController, :about
     get "/terms", InfoController, :terms
     get "/cookies", InfoController, :cookies
@@ -47,7 +48,6 @@ defmodule GlossiaWeb.Router do
   scope "/", GlossiaWeb do
     pipe_through :browser
 
-    get "/login", AuthController, :login
     get "/:handle", PageController, :dashboard
   end
 

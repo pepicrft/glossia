@@ -8,13 +8,13 @@ defmodule GlossiaWeb.ChangelogController do
     render(conn, :index,
       entries: entries,
       page_title: "Changelog",
-      layout: {GlossiaWeb.Layouts, :app}
+      layout: false
     )
   end
 
   def show(conn, %{"id" => id}) do
     entry = Changelog.get_entry_by_id!(id)
-    render(conn, :show, entry: entry, page_title: entry.title, layout: {GlossiaWeb.Layouts, :app})
+    render(conn, :show, entry: entry, page_title: entry.title, layout: false)
   end
 
   def feed(conn, %{"format" => format}) when format in ["rss", "atom"] do
