@@ -6,7 +6,7 @@ defmodule Glossia.Accounts.Auth2IdentityTest do
   @valid_attrs %{
     provider: :github,
     user_id_on_provider: "12345",
-    user_id: 1
+    user_id: "550e8400-e29b-41d4-a716-446655440000"
   }
 
   @invalid_attrs %{
@@ -51,9 +51,9 @@ defmodule Glossia.Accounts.Auth2IdentityTest do
     end
 
     test "changeset validates provider is in valid range" do
-      # Valid providers: :github, :gitlab
+      # Valid providers: :github
       valid_changeset =
-        Auth2Identity.changeset(%Auth2Identity{}, Map.put(@valid_attrs, :provider, :gitlab))
+        Auth2Identity.changeset(%Auth2Identity{}, Map.put(@valid_attrs, :provider, :github))
 
       assert valid_changeset.valid?
 
@@ -75,7 +75,7 @@ defmodule Glossia.Accounts.Auth2IdentityTest do
     test "returns provider list" do
       providers = Auth2Identity.providers()
       assert :github in providers
-      assert :gitlab in providers
+      assert providers == [:github]
     end
   end
 end

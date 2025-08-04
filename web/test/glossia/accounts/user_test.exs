@@ -5,7 +5,7 @@ defmodule Glossia.Accounts.UserTest do
 
   @valid_attrs %{
     email: "test@example.com",
-    account_id: 1
+    account_id: "550e8400-e29b-41d4-a716-446655440000"
   }
 
   @invalid_attrs %{
