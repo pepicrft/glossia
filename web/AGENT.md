@@ -131,6 +131,58 @@ When making changes that affect configuration or deployment:
 - Keep OAuth provider setup instructions current
 - Update example configurations if deployment patterns change
 
+## Best Practices
+
+### Pre-commit Checklist
+
+**IMPORTANT**: Before committing and pushing any changes upstream, you MUST ensure all checks pass:
+
+1. **Run ALL static checks** for the component you're working on:
+   ```bash
+   # For web changes
+   mise run check/web
+   
+   # For CLI changes
+   mise run check/cli
+   ```
+
+2. **Run tests** to ensure nothing is broken:
+   ```bash
+   # For web
+   mix test
+   
+   # For CLI
+   go test ./...
+   ```
+
+3. **Format code** properly:
+   ```bash
+   # For web (Elixir)
+   mix format
+   
+   # For CLI (Go)
+   go fmt ./...
+   ```
+
+4. **Build the project** to catch compilation errors:
+   ```bash
+   # For web
+   mise run build/web
+   
+   # For CLI
+   mise run build/cli
+   ```
+
+If ANY of these checks fail, fix the issues before committing. This prevents broken code from entering the main branch and ensures CI passes.
+
+### General Best Practices
+
+1. **Follow Phoenix conventions** - Use contexts, controllers, and views appropriately
+2. **Use semantic commits** - Clear, descriptive commit messages
+3. **Update documentation** - Keep environment variables and setup instructions current
+4. **Test edge cases** - Don't just test the happy path
+5. **Consider performance** - Think about database queries and N+1 problems
+
 ## CSS Architecture - EnduringCSS Methodology
 
 This project follows the **EnduringCSS** methodology for organizing and maintaining CSS. **Every route must have its own CSS file** that contains all the styles specific to that route.

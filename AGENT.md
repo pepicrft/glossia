@@ -185,6 +185,50 @@ Key models:
 
 ## Best Practices
 
+### Pre-commit Checklist
+
+**IMPORTANT**: Before committing and pushing any changes upstream, you MUST ensure all checks pass:
+
+1. **Run ALL static checks** for the component you're working on:
+   ```bash
+   # For web changes
+   mise run check/web
+   
+   # For CLI changes
+   mise run check/cli
+   ```
+
+2. **Run tests** to ensure nothing is broken:
+   ```bash
+   # For web
+   mix test
+   
+   # For CLI
+   go test ./...
+   ```
+
+3. **Format code** properly:
+   ```bash
+   # For web (Elixir)
+   mix format
+   
+   # For CLI (Go)
+   go fmt ./...
+   ```
+
+4. **Build the project** to catch compilation errors:
+   ```bash
+   # For web
+   mise run build/web
+   
+   # For CLI
+   mise run build/cli
+   ```
+
+If ANY of these checks fail, fix the issues before committing. This prevents broken code from entering the main branch and ensures CI passes.
+
+### General Best Practices
+
 1. **Always use EnduringCSS methodology** - Create CSS files for new pages
 2. **Follow Phoenix conventions** - Use contexts, controllers, and views appropriately
 3. **Test your changes** - Run `mix test` before committing
