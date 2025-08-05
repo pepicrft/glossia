@@ -14,8 +14,7 @@ defmodule GlossiaWeb.PageController do
   end
 
   def dashboard(conn, %{"handle" => handle}) do
-    # TODO: Load account by handle and verify user has access
-    # For now, just render the dashboard
+    # Load account by handle and verify user has access
     current_user = conn.assigns[:current_user]
 
     current_account =

@@ -59,8 +59,8 @@ iex -S mix phx.server      # Start server with interactive Elixir shell
 mix test                   # Run all tests
 mix format                 # Format Elixir code
 mix credo                  # Run Credo linter
-mise run web:check         # Run all checks before pushing
-mise run web:check --fix   # Run checks and fix auto-fixable problems
+mise run check/web         # Run all checks before pushing
+mise run check/web --fix   # Run checks and fix auto-fixable problems
 ```
 
 ## CSS Architecture - EnduringCSS Methodology
