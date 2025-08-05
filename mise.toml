@@ -16,4 +16,8 @@ go = "1.23.4"
 postinstall = "mise run install"
 
 [env]
-# _.file = ".env.json"
+_.file = ".env.json"
+
+[settings]
+experimental = true
+sops.age_key_file = "~/.config/mise/glossia-age.txt"
