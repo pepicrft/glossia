@@ -37,9 +37,20 @@ defmodule Glossia.Environment do
   - `RuntimeError` if the email adapter is invalid.
   """
   def email_adapter(env \\ System.get_env()) do
-    case Map.get(env, @email_adapter_env_var) do
+    adapter = Map.get(env, @email_adapter_env_var)
+    
+    case adapter do
       "smtp" -> :smtp
-      adapter -> raise "Invalid email adapter: #{adapter}"
+      nil -> 
+        raise """
+        Email adapter not configured. Please set #{@email_adapter_env_var}=smtp
+        (Currently only 'smtp' is supported)
+        """
+      invalid -> 
+        raise """
+        Invalid email adapter: '#{invalid}'. Please set #{@email_adapter_env_var}=smtp
+        (Currently only 'smtp' is supported)
+        """
     end
   end
 
@@ -251,6 +262,7 @@ defmodule Glossia.Environment do
         :if_available
     end
   end
+
 
   defp truthy?(value) when is_binary(value) do
     value in ["true", "1", "yes", "y", "TRUE", "1", "YES", "Y"]
