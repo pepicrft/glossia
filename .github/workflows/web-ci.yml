@@ -40,7 +40,7 @@ jobs:
       - uses: jdx/mise-action@v2
         with:
           cache: true
-      - run: mise run check/web
+      - run: mise run lint/web
   web-build:
     name: Build
     runs-on: ubuntu-latest

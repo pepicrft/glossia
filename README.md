@@ -42,7 +42,7 @@ mise run build/web
 mise run test/web
 
 # Run web code checks
-mise run check/web
+mise run lint/web
 ```
 
 ### CLI

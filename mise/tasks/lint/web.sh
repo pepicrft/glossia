@@ -5,8 +5,6 @@
 set -eo pipefail
 
 cd web
-mix local.hex --force
-mix local.rebar --force
 
 if [ "$usage_fix" = "true" ]; then
     mix format

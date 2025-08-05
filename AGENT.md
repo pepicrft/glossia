@@ -59,8 +59,8 @@ iex -S mix phx.server      # Start server with interactive Elixir shell
 mix test                   # Run all tests
 mix format                 # Format Elixir code
 mix credo                  # Run Credo linter
-mise run check/web         # Run all checks before pushing
-mise run check/web --fix   # Run checks and fix auto-fixable problems
+mise run lint/web          # Run all checks before pushing
+mise run lint/web --fix    # Run checks and fix auto-fixable problems
 ```
 
 ## CSS Architecture - EnduringCSS Methodology
@@ -192,10 +192,10 @@ Key models:
 1. **Run ALL static checks** for the component you're working on:
    ```bash
    # For web changes
-   mise run check/web
+   mise run lint/web
    
    # For CLI changes
-   mise run check/cli
+   mise run lint/cli
    ```
 
 2. **Run tests** to ensure nothing is broken:

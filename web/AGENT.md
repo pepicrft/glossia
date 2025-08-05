@@ -72,11 +72,11 @@ mix format                 # Format Elixir code using built-in formatter
 
 ### Pre-push Verification
 ```bash
-mise run check/web         # Run all checks before pushing changes
-mise run check/web --fix   # Run checks and fix auto-fixable problems
+mise run lint/web          # Run all checks before pushing changes
+mise run lint/web --fix    # Run checks and fix auto-fixable problems
 ```
 
-The `check/web` command runs all necessary verification steps including tests, formatting, and linting. Always run this command before pushing changes upstream. If issues are found, use the `--fix` flag to automatically fix problems where possible.
+The `lint/web` command runs all necessary verification steps including tests, formatting, and linting. Always run this command before pushing changes upstream. If issues are found, use the `--fix` flag to automatically fix problems where possible.
 
 ## Project Structure
 
@@ -140,10 +140,10 @@ When making changes that affect configuration or deployment:
 1. **Run ALL static checks** for the component you're working on:
    ```bash
    # For web changes
-   mise run check/web
+   mise run lint/web
    
    # For CLI changes
-   mise run check/cli
+   mise run lint/cli
    ```
 
 2. **Run tests** to ensure nothing is broken:
