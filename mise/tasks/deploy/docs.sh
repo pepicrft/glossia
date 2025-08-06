@@ -4,8 +4,7 @@
 set -euo pipefail
 
 echo "📦 Building documentation..."
-pnpm -C docs install
-pnpm -C docs exec vitepress build docs
+pnpm -C docs exec vitepress build
 
 echo "🚀 Deploying to Cloudflare Pages..."
 cd docs/.vitepress/dist
