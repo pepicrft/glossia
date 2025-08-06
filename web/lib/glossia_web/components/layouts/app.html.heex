@@ -1,0 +1,146 @@
+<div class="App_Layout">
+  <!-- Navigation Bar -->
+  <nav class="App_Nav">
+    <div class="App_Nav_Left">
+      <a href="/" class="App_Nav_Logo">Glossia</a>
+      
+<!-- Breadcrumbs -->
+      <div class="App_Breadcrumbs">
+        <a
+          href={"/" <> ((assigns[:current_account] && assigns[:current_account].handle) || "account")}
+          class="App_Breadcrumbs_Item"
+        >
+          {(assigns[:current_account] && assigns[:current_account].handle) || "Account"}
+        </a>
+        <%= if assigns[:current_project] do %>
+          <span class="App_Breadcrumbs_Separator">/</span>
+          <span class="App_Breadcrumbs_Item App_Breadcrumbs_Item--active">
+            {@current_project.handle}
+          </span>
+        <% end %>
+      </div>
+    </div>
+    
+<!-- User Menu -->
+    <div class="App_Nav_User">
+      <div class="App_Nav_Avatar" onclick="toggleUserMenu()">
+        {String.first((assigns[:current_user] && assigns[:current_user].email) || "U")
+        |> String.upcase()}
+      </div>
+
+      <div class="App_Nav_Dropdown" id="userDropdown">
+        <a href="/settings" class="App_Nav_Dropdown_Item">Settings</a>
+        <form action="/auth/logout" method="post" style="margin: 0;">
+          <input type="hidden" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()} />
+          <button
+            type="submit"
+            class="App_Nav_Dropdown_Item App_Nav_Dropdown_Item--danger"
+            style="width: 100%; text-align: left; background: none; border: none; cursor: pointer;"
+          >
+            Logout
+          </button>
+        </form>
+      </div>
+    </div>
+  </nav>
+  
+<!-- Main Content Area -->
+  <div class="App_Main">
+    <!-- Sidebar -->
+    <aside class="App_Sidebar">
+      <div class="App_Sidebar_Section">
+        <h3 class="App_Sidebar_Title">Account</h3>
+        <ul class="App_Sidebar_Menu">
+          <li class="App_Sidebar_Item">
+            <a
+              href={"/" <> ((assigns[:current_account] && assigns[:current_account].handle) || "account")}
+              class="App_Sidebar_Link App_Sidebar_Link--active"
+            >
+              <svg class="App_Sidebar_Icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
+                >
+                </path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 5a2 2 0 012-2h4a2 2 0 012 2v1H8V5z"
+                >
+                </path>
+              </svg>
+              Dashboard
+            </a>
+          </li>
+          <li class="App_Sidebar_Item">
+            <a
+              href={"/" <> ((assigns[:current_account] && assigns[:current_account].handle) || "account") <> "/projects"}
+              class="App_Sidebar_Link"
+            >
+              <svg class="App_Sidebar_Icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                >
+                </path>
+              </svg>
+              Projects
+            </a>
+          </li>
+          <li class="App_Sidebar_Item">
+            <a
+              href={"/" <> ((assigns[:current_account] && assigns[:current_account].handle) || "account") <> "/settings"}
+              class="App_Sidebar_Link"
+            >
+              <svg class="App_Sidebar_Icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                >
+                </path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                >
+                </path>
+              </svg>
+              Settings
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+    
+<!-- Content Area -->
+    <main class="App_Content">
+      <.flash_group flash={@flash} />
+      {@inner_content}
+    </main>
+  </div>
+</div>
+
+<script>
+  function toggleUserMenu() {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('App_Nav_Dropdown--open');
+  }
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(event) {
+    const userMenu = document.querySelector('.App_Nav_User');
+    const dropdown = document.getElementById('userDropdown');
+    
+    if (!userMenu.contains(event.target)) {
+      dropdown.classList.remove('App_Nav_Dropdown--open');
+    }
+  });
+</script>

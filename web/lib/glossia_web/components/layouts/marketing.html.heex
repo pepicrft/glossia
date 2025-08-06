@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content={get_csrf_token()} />
+    <.live_title suffix=" · Glossia">
+      {assigns[:page_title] || "Modern Language Hub for Organizations"}
+    </.live_title>
+    <link phx-track-static rel="stylesheet" href={~p"/assets/marketing.css"} />
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/marketing.js"}>
+    </script>
+  </head>
+  <body>
+    <!-- Marketing Navigation -->
+    <nav class="marketing-nav">
+      <div class="marketing-container">
+        <div class="marketing-nav-inner">
+          <a href="/" class="nav-logo">Glossia</a>
+          <ul class="nav-links">
+            <li><a href="/about" class="nav-link">About</a></li>
+            <li><a href="/blog" class="nav-link">Blog</a></li>
+            <li><a href="/changelog" class="nav-link">Changelog</a></li>
+            <li><a href="/login" class="nav-link">Login</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    
+<!-- Main Content -->
+    <main style="padding-top: 60px;">
+      {@inner_content}
+    </main>
+  </body>
+</html>

@@ -1,0 +1,255 @@
+/* Dashboard Route CSS - EnduringCSS Methodology */
+
+/* Dashboard Container */
+.Dashboard_Container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Dashboard Header */
+.Dashboard_Header {
+  margin-bottom: 2rem;
+}
+
+.Dashboard_Title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #0d0d0d;
+  margin-bottom: 0.5rem;
+}
+
+.Dashboard_Subtitle {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Dashboard Grid */
+.Dashboard_Grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Dashboard Cards */
+.Dashboard_Card {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.2s;
+}
+
+.Dashboard_Card:hover {
+  border-color: #d4d4d4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.Dashboard_Card_Header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.Dashboard_Card_Title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #0d0d0d;
+  margin: 0;
+}
+
+.Dashboard_Card_Icon {
+  width: 24px;
+  height: 24px;
+  color: var(--glossia-pink);
+}
+
+.Dashboard_Card_Content {
+  color: #666;
+  line-height: 1.6;
+}
+
+.Dashboard_Card_Metric {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--glossia-pink);
+  margin-bottom: 0.5rem;
+}
+
+.Dashboard_Card_Label {
+  font-size: 0.875rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+/* Dashboard Actions */
+.Dashboard_Actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.Dashboard_Button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--glossia-pink);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.Dashboard_Button:hover {
+  background: #c31e68;
+  text-decoration: none;
+  color: white;
+}
+
+.Dashboard_Button--secondary {
+  background: white;
+  color: var(--glossia-pink);
+  border: 1px solid var(--glossia-pink);
+}
+
+.Dashboard_Button--secondary:hover {
+  background: #fef7f7;
+  color: var(--glossia-pink);
+}
+
+.Dashboard_Button_Icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Dashboard List */
+.Dashboard_List {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.Dashboard_List_Header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.Dashboard_List_Title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #0d0d0d;
+  margin: 0;
+}
+
+.Dashboard_List_Item {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.2s;
+}
+
+.Dashboard_List_Item:last-child {
+  border-bottom: none;
+}
+
+.Dashboard_List_Item:hover {
+  background: #fafafa;
+}
+
+.Dashboard_List_Item_Content {
+  flex: 1;
+}
+
+.Dashboard_List_Item_Title {
+  font-weight: 500;
+  color: #0d0d0d;
+  margin-bottom: 0.25rem;
+}
+
+.Dashboard_List_Item_Meta {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.Dashboard_List_Item_Actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.Dashboard_List_Item_Action {
+  padding: 0.5rem;
+  color: #666;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.Dashboard_List_Item_Action:hover {
+  background: #f0f0f0;
+  color: var(--glossia-pink);
+  text-decoration: none;
+}
+
+/* Empty State */
+.Dashboard_Empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #666;
+}
+
+.Dashboard_Empty_Icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1rem;
+  color: #ccc;
+}
+
+.Dashboard_Empty_Title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0d0d0d;
+  margin-bottom: 0.5rem;
+}
+
+.Dashboard_Empty_Description {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .Dashboard_Grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .Dashboard_Actions {
+    flex-direction: column;
+  }
+  
+  .Dashboard_Card {
+    padding: 1rem;
+  }
+  
+  .Dashboard_List_Item {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .Dashboard_List_Item_Actions {
+    align-self: flex-end;
+  }
+}

@@ -1,0 +1,246 @@
+/* App Layout CSS - EnduringCSS Methodology */
+
+/* App Layout Container */
+.App_Layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #fafafa;
+}
+
+/* Navigation Bar */
+.App_Nav {
+  background: white;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 0 1.5rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.App_Nav_Left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.App_Nav_Logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--glossia-pink);
+  text-decoration: none;
+}
+
+.App_Nav_Logo:hover {
+  text-decoration: none;
+}
+
+/* Breadcrumbs */
+.App_Breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.App_Breadcrumbs_Item {
+  color: #666;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.App_Breadcrumbs_Item:hover {
+  color: var(--glossia-pink);
+  text-decoration: none;
+}
+
+.App_Breadcrumbs_Item--active {
+  color: #0d0d0d;
+  font-weight: 600;
+}
+
+.App_Breadcrumbs_Separator {
+  color: #ccc;
+  font-size: 0.8rem;
+}
+
+/* User Menu */
+.App_Nav_User {
+  position: relative;
+}
+
+.App_Nav_Avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--glossia-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.App_Nav_Avatar:hover {
+  border-color: var(--glossia-pink);
+}
+
+.App_Nav_Dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 180px;
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: all 0.2s;
+}
+
+.App_Nav_Dropdown--open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.App_Nav_Dropdown_Item {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: #333;
+  text-decoration: none;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+}
+
+.App_Nav_Dropdown_Item:hover {
+  background: #f8f8f8;
+  text-decoration: none;
+}
+
+.App_Nav_Dropdown_Item:last-child {
+  border-bottom: none;
+}
+
+.App_Nav_Dropdown_Item--danger {
+  color: #dc2626;
+}
+
+.App_Nav_Dropdown_Item--danger:hover {
+  background: #fef2f2;
+}
+
+/* Main Content Area */
+.App_Main {
+  flex: 1;
+  display: flex;
+}
+
+/* Sidebar */
+.App_Sidebar {
+  width: 256px;
+  background: white;
+  border-right: 1px solid #e5e5e5;
+  padding: 1.5rem 0;
+  overflow-y: auto;
+}
+
+.App_Sidebar_Section {
+  margin-bottom: 2rem;
+}
+
+.App_Sidebar_Title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+  margin-bottom: 0.75rem;
+  padding: 0 1.5rem;
+}
+
+.App_Sidebar_Menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.App_Sidebar_Item {
+  margin: 0;
+}
+
+.App_Sidebar_Link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  color: #333;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  border-right: 3px solid transparent;
+}
+
+.App_Sidebar_Link:hover {
+  background: #f8f8f8;
+  text-decoration: none;
+  color: var(--glossia-pink);
+}
+
+.App_Sidebar_Link--active {
+  background: #fef7f7;
+  color: var(--glossia-pink);
+  border-right-color: var(--glossia-pink);
+}
+
+.App_Sidebar_Icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Content Area */
+.App_Content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .App_Nav {
+    padding: 0 1rem;
+  }
+  
+  .App_Nav_Left {
+    gap: 1rem;
+  }
+  
+  .App_Breadcrumbs {
+    display: none;
+  }
+  
+  .App_Sidebar {
+    display: none;
+  }
+  
+  .App_Content {
+    padding: 1rem;
+  }
+}

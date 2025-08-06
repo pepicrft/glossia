@@ -1,0 +1,64 @@
+<!-- Article Header -->
+<section class="Marketing_Section Blog_Detail_Header">
+  <div class="marketing-container">
+    <div class="Blog_Detail_Container">
+      <div class="Blog_Detail_Meta">
+        <time datetime={@post.date} class="Blog_Date">
+          {Calendar.strftime(@post.date, "%B %d, %Y")}
+        </time>
+        <%= if @post.tags != [] do %>
+          <div class="Blog_Tags">
+            <%= for tag <- @post.tags do %>
+              <span class="Blog_Tag">
+                {tag}
+              </span>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <h1 class="Blog_Detail_Title">
+        {@post.title}
+      </h1>
+
+      <p class="Blog_Detail_Description">
+        {@post.description}
+      </p>
+
+      <div class="Blog_Detail_AuthorLine">
+        <span class="Blog_Detail_Author">By {@post.author}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Article Content -->
+<section class="Marketing_Section Blog_Detail_Content">
+  <div class="marketing-container">
+    <div class="Blog_Detail_Container">
+      <div class="Blog_Content">
+        {raw(@post.body)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Back to Blog -->
+<section class="Marketing_Section Blog_Detail_BackSection">
+  <div class="marketing-container">
+    <div class="Blog_Detail_Container">
+      <a href="/blog" class="Marketing_Button Marketing_Button--secondary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="Marketing_BackArrow">
+          <path
+            d="M3 8H13M13 8L9 4M13 8L9 12"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        Back to all posts
+      </a>
+    </div>
+  </div>
+</section>

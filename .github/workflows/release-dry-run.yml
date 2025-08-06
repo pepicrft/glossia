@@ -1,0 +1,139 @@
+name: Release Dry Run
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - '*'
+      - '!main'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+  id-token: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
+
+jobs:
+  Check:
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
+      next_version: ${{ steps.check.outputs.next_version }}
+      current_version: ${{ steps.check.outputs.current_version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: jdx/mise-action@v2
+
+      - name: Check version
+        id: check
+        run: |
+          # Run mise task and capture output
+          output=$(mise run release:check-version)
+
+          # Parse output and set GitHub outputs
+          while IFS='=' read -r key value; do
+            echo "${key}=${value}" >> $GITHUB_OUTPUT
+          done <<< "$output"
+
+          # Display info
+          echo "::notice title=Version Check::$(echo "$output" | grep -E 'should_release|next_version|bump_type')"
+
+  CLI:
+    needs: Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jdx/mise-action@v2
+
+      - name: Build test binaries
+        working-directory: cli
+        run: |
+          VERSION=${{ needs.Check.outputs.next_version || 'dry-run' }}
+          echo "::notice title=Build Test::Building CLI binaries with version ${VERSION}"
+
+          # Build just a few platforms for testing
+          mkdir -p ../test-release
+
+          # Linux amd64
+          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
+            -o ../test-release/glossia-linux-amd64 ./main.go
+
+          # Darwin arm64
+          GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
+            -o ../test-release/glossia-darwin-arm64 ./main.go
+
+          # Windows amd64
+          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
+            -o ../test-release/glossia-windows-amd64.exe ./main.go
+
+          echo "::notice title=Binaries Built::Test binaries created successfully"
+
+  Docker:
+    needs: Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image (dry run - no push)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./web
+          platforms: linux/amd64
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  Summary:
+    needs: [Check, CLI, Docker]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release Dry Run Summary
+        run: |
+          echo "# 📋 Release Dry Run Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.Check.outputs.should_release }}" == "true" ]; then
+            echo "## ✅ Release would be triggered" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "- **Current Version:** ${{ needs.Check.outputs.current_version }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Next Version:** ${{ needs.Check.outputs.next_version }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## ℹ️ No release would be triggered" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "No conventional commits found that warrant a release." >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔨 Build Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.CLI.result }}" == "success" ]; then
+            echo "- ✅ CLI builds: Success" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ❌ CLI builds: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.Docker.result }}" == "success" ]; then
+            echo "- ✅ Docker build: Success" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ❌ Docker build: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "*This was a dry run. No releases or tags were created.*" >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Glossia Blog</title>
+    <description>Learn about continuous localization, best practices, and updates from the Glossia team.</description>
+    <link><%= @url.("/blog") %></link>
+    <atom:link href="<%= @url.("/blog/feed/rss") %>" rel="self" type="application/rss+xml" />
+    <language>en-us</language>
+    <lastBuildDate><%= Calendar.strftime(DateTime.utc_now(), "%a, %d %b %Y %H:%M:%S GMT") %></lastBuildDate>
+    <%= for post <- @posts do %>
+      <item>
+        <title><%= post.title %></title>
+        <description><%= post.description %></description>
+        <link><%= @url.("/blog/#{post.id}") %></link>
+        <guid isPermaLink="true"><%= @url.("/blog/#{post.id}") %></guid>
+        <pubDate><%= Calendar.strftime(DateTime.new!(post.date, ~T[12:00:00], "Etc/UTC"), "%a, %d %b %Y %H:%M:%S GMT") %></pubDate>
+        <author><%= post.author %></author>
+        <%= for tag <- post.tags do %>
+          <category><%= tag %></category>
+        <% end %>
+      </item>
+    <% end %>
+  </channel>
+</rss>

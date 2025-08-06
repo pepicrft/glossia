@@ -1,0 +1,24 @@
+[tools]
+elixir = "1.18.4"
+erlang = "28.0.2"
+go = "1.24.5"
+"asdf:chessmango/asdf-flyctl" = "0.3.86"
+"sops" = "3.10.2"
+"age" = "1.2.1"
+"ubi:orhun/git-cliff" = "2.10.0"
+"jq" = "1.7.1"
+"cargo:mcp-proxy" = "latest"
+"node" = "24.5.0"
+"npm:@anthropic-ai/claude-code" = "1.0.69"
+"npm:@playwright/mcp" = "0.0.32"
+
+[hooks]
+postinstall = "mise run install"
+
+[env]
+_.file = ".env.json"
+
+[settings]
+experimental = true
+sops.strict = false
+sops.age_key_file = "~/.config/mise/glossia-age.txt"

@@ -1,0 +1,83 @@
+name: Web
+on:
+  push:
+    branches:
+      - main
+  pull_request: {}
+
+env:
+  MISE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
+
+jobs:
+  web-build-image:
+    name: Build image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build
+        uses: docker/build-push-action@v6
+        with:
+          context: ./web
+          push: false
+          tags: glossia
+  web-check:
+    name: Static checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            web/deps
+            web/_build
+          key: ${{ runner.os }}-mix-${{ hashFiles('web/**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
+      - uses: jdx/mise-action@v2
+      - run: mise run lint/web
+  web-build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            web/deps
+            web/_build
+          key: ${{ runner.os }}-mix-${{ hashFiles('web/**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
+      - uses: jdx/mise-action@v2
+      - run: mise run build/web
+  web-test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      MIX_ENV: test
+    services:
+      db:
+        image: postgres:17
+        ports: ["5432:5432"]
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            web/deps
+            web/_build
+          key: ${{ runner.os }}-mix-test-${{ hashFiles('web/**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-test
+      - uses: jdx/mise-action@v2
+      - run: mise run test/web
