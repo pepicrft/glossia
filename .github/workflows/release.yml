@@ -34,11 +34,7 @@ jobs:
         with:
           fetch-depth: 0
           
-      - name: Install git-cliff
-        run: |
-          wget -q https://github.com/orhun/git-cliff/releases/download/v2.8.0/git-cliff-2.8.0-x86_64-unknown-linux-gnu.tar.gz
-          tar xzf git-cliff-2.8.0-x86_64-unknown-linux-gnu.tar.gz
-          sudo mv git-cliff-*/git-cliff /usr/local/bin/
+      - uses: jdx/mise-action@v2
           
       - name: Get current version
         id: version
@@ -308,17 +304,14 @@ jobs:
           mkdir -p release
           find artifacts -name "*.tar.gz" -exec mv {} release/ \;
           
-      - name: Install tools
+      - uses: jdx/mise-action@v2
+          
+      - name: Install minisign
         run: |
-          # Install minisign
+          # Install minisign (not in mise.toml yet)
           wget -q https://github.com/jedisct1/minisign/releases/download/0.11/minisign-0.11-linux.tar.gz
           tar xzf minisign-0.11-linux.tar.gz
           sudo mv minisign-linux/x86_64/minisign /usr/local/bin/
-          
-          # Install git-cliff
-          wget -q https://github.com/orhun/git-cliff/releases/download/v2.8.0/git-cliff-2.8.0-x86_64-unknown-linux-gnu.tar.gz
-          tar xzf git-cliff-2.8.0-x86_64-unknown-linux-gnu.tar.gz
-          sudo mv git-cliff-*/git-cliff /usr/local/bin/
           
       - name: Generate checksums
         run: |
