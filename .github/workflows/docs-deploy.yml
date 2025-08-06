@@ -26,18 +26,8 @@ jobs:
 
       - uses: jdx/mise-action@v2
 
-      - name: Install dependencies
-        run: pnpm -C docs install
-
-      - name: Build documentation
-        run: pnpm -C docs exec vitepress build
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: glossia-docs
-          directory: docs/.vitepress/dist
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          deploymentName: Production
+      - name: Deploy documentation
+        run: mise run deploy/docs
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
