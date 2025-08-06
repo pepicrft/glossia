@@ -77,7 +77,7 @@ defmodule Glossia.MixProject do
       {:tidewave, "~> 0.3", only: :dev},
       {:ueberauth, "~> 0.10"},
       {:ueberauth_github, "~> 0.8"},
-      {:uuidv7, "~> 0.2"},
+      {:uuidv7, "~> 1.0"},
       {:nimble_publisher, "~> 1.1"},
       {:plug_static_index_html, "~> 1.0"}
     ]
