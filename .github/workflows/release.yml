@@ -22,9 +22,11 @@ jobs:
   # ============================================================================
   # CONTINUOUS RELEASE - Determine if we need a new release from main branch
   # ============================================================================
-  check-release:
+  check:
     if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    env:
+      MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
     outputs:
       should_release: ${{ steps.check.outputs.should_release }}
       next_version: ${{ steps.version.outputs.next_version }}
@@ -103,9 +105,9 @@ jobs:
             echo "should_release=false" >> $GITHUB_OUTPUT
           fi
 
-  create-tag:
-    needs: check-release
-    if: needs.check-release.outputs.should_release == 'true'
+  tag:
+    needs: check
+    if: needs.check.outputs.should_release == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -120,14 +122,14 @@ jobs:
           
       - name: Create and push tag
         run: |
-          git tag -a ${{ needs.check-release.outputs.next_version }} -m "Release ${{ needs.check-release.outputs.next_version }}"
-          git push origin ${{ needs.check-release.outputs.next_version }}
+          git tag -a ${{ needs.check.outputs.next_version }} -m "Release ${{ needs.check.outputs.next_version }}"
+          git push origin ${{ needs.check.outputs.next_version }}
           echo "Tag created and pushed. Release build will be triggered automatically."
 
   # ============================================================================
   # TAGGED RELEASE - Build and publish all components when a tag is pushed
   # ============================================================================
-  prepare-release:
+  prepare:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     outputs:
@@ -144,8 +146,8 @@ jobs:
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
           echo "Building release for version: ${VERSION}"
 
-  build-cli:
-    needs: prepare-release
+  cli:
+    needs: prepare
     if: startsWith(github.ref, 'refs/tags/v')
     strategy:
       matrix:
@@ -198,14 +200,14 @@ jobs:
           GOARM: ${{ matrix.goarm }}
         run: |
           cd cli
-          VERSION=${{ needs.prepare-release.outputs.version }}
+          VERSION=${{ needs.prepare.outputs.version }}
           go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
             -o glossia${{ matrix.suffix }} ./main.go
             
       - name: Create UBI-compliant archive name
         id: archive
         run: |
-          VERSION=${{ needs.prepare-release.outputs.version }}
+          VERSION=${{ needs.prepare.outputs.version }}
           VERSION_NO_V=${VERSION#v}
           
           # Build architecture string
@@ -246,8 +248,8 @@ jobs:
           name: glossia-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.goarm }}
           path: ${{ steps.archive.outputs.archive_name }}
 
-  build-docker:
-    needs: prepare-release
+  docker:
+    needs: prepare
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
@@ -269,9 +271,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=semver,pattern={{version}},value=${{ needs.prepare-release.outputs.version }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ needs.prepare-release.outputs.version }}
-            type=semver,pattern={{major}},value=${{ needs.prepare-release.outputs.version }}
+            type=semver,pattern={{version}},value=${{ needs.prepare.outputs.version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.prepare.outputs.version }}
+            type=semver,pattern={{major}},value=${{ needs.prepare.outputs.version }}
             type=raw,value=latest
             
       - name: Build and push Docker image
@@ -285,10 +287,12 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  create-github-release:
-    needs: [prepare-release, build-cli, build-docker]
+  release:
+    needs: [prepare, cli, docker]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
+    env:
+      MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -366,9 +370,9 @@ jobs:
   # ============================================================================
   # EDGE BUILDS - Build development versions when no release is needed
   # ============================================================================
-  build-edge:
-    needs: check-release
-    if: needs.check-release.outputs.should_release == 'false' && github.ref == 'refs/heads/main'
+  edge:
+    needs: check
+    if: needs.check.outputs.should_release == 'false' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

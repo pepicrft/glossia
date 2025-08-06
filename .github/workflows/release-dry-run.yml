@@ -20,8 +20,10 @@ env:
   IMAGE_NAME: ${{ github.repository }}/web
 
 jobs:
-  check-release:
+  check:
     runs-on: ubuntu-latest
+    env:
+      MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
     outputs:
       should_release: ${{ steps.check.outputs.should_release }}
       next_version: ${{ steps.version.outputs.next_version }}
@@ -123,8 +125,8 @@ jobs:
             echo "::notice title=Release Status::This branch does not contain changes that would trigger a release"
           fi
 
-  test-build-cli:
-    needs: check-release
+  cli:
+    needs: check
     strategy:
       fail-fast: false
       matrix:
@@ -157,7 +159,7 @@ jobs:
           GOARCH: ${{ matrix.goarch }}
         run: |
           cd cli
-          VERSION=${{ needs.check-release.outputs.next_version || 'dry-run' }}
+          VERSION=${{ needs.check.outputs.next_version || 'dry-run' }}
           echo "::notice title=Build Test::Building CLI for ${{ matrix.goos }}-${{ matrix.goarch }} with version ${VERSION}"
           go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
             -o glossia${{ matrix.suffix }} ./main.go
@@ -171,7 +173,7 @@ jobs:
       - name: Create UBI-compliant archive name (dry run)
         id: archive
         run: |
-          VERSION=${{ needs.check-release.outputs.next_version || 'dry-run' }}
+          VERSION=${{ needs.check.outputs.next_version || 'dry-run' }}
           VERSION_NO_V=${VERSION#v}
           
           # Build architecture string
@@ -204,8 +206,8 @@ jobs:
           echo "::notice title=Archive Created::Created ${{ steps.archive.outputs.archive_name }}"
           ls -lh ../${{ steps.archive.outputs.archive_name }}
 
-  test-build-docker:
-    needs: check-release
+  docker:
+    needs: check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -221,7 +223,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=semver,pattern={{version}},value=${{ needs.check-release.outputs.next_version || 'dry-run' }}
+            type=semver,pattern={{version}},value=${{ needs.check.outputs.next_version || 'dry-run' }}
             type=raw,value=dry-run-${{ github.run_number }}
             
       - name: Build Docker image (dry run - no push)
@@ -247,8 +249,8 @@ jobs:
           docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" | grep glossia
           echo "::endgroup::"
 
-  test-release-assets:
-    needs: [check-release, test-build-cli]
+  assets:
+    needs: [check, cli]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -336,7 +338,7 @@ jobs:
           echo "::notice title=Release Assets::Would create $(ls release | wc -l) release assets"
 
   summary:
-    needs: [check-release, test-build-cli, test-build-docker, test-release-assets]
+    needs: [check, cli, docker, assets]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -345,17 +347,17 @@ jobs:
           echo "# 📋 Release Dry Run Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
-          if [ "${{ needs.check-release.outputs.should_release }}" == "true" ]; then
+          if [ "${{ needs.check.outputs.should_release }}" == "true" ]; then
             echo "## ✅ Release would be triggered" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "- **Current Version:** ${{ needs.check-release.outputs.current_version }}" >> $GITHUB_STEP_SUMMARY
-            echo "- **Next Version:** ${{ needs.check-release.outputs.next_version }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Current Version:** ${{ needs.check.outputs.current_version }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Next Version:** ${{ needs.check.outputs.next_version }}" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             
-            if [ -n "${{ needs.check-release.outputs.changelog }}" ]; then
+            if [ -n "${{ needs.check.outputs.changelog }}" ]; then
               echo "## 📝 Changelog Preview" >> $GITHUB_STEP_SUMMARY
               echo "" >> $GITHUB_STEP_SUMMARY
-              echo "${{ needs.check-release.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY
+              echo "${{ needs.check.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY
             fi
           else
             echo "## ℹ️ No release would be triggered" >> $GITHUB_STEP_SUMMARY
@@ -367,19 +369,19 @@ jobs:
           echo "## 🔨 Build Status" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
-          if [ "${{ needs.test-build-cli.result }}" == "success" ]; then
+          if [ "${{ needs.cli.result }}" == "success" ]; then
             echo "- ✅ CLI builds: Success" >> $GITHUB_STEP_SUMMARY
           else
             echo "- ❌ CLI builds: Failed" >> $GITHUB_STEP_SUMMARY
           fi
           
-          if [ "${{ needs.test-build-docker.result }}" == "success" ]; then
+          if [ "${{ needs.docker.result }}" == "success" ]; then
             echo "- ✅ Docker build: Success" >> $GITHUB_STEP_SUMMARY
           else
             echo "- ❌ Docker build: Failed" >> $GITHUB_STEP_SUMMARY
           fi
           
-          if [ "${{ needs.test-release-assets.result }}" == "success" ]; then
+          if [ "${{ needs.assets.result }}" == "success" ]; then
             echo "- ✅ Release assets: Success" >> $GITHUB_STEP_SUMMARY
           else
             echo "- ❌ Release assets: Failed" >> $GITHUB_STEP_SUMMARY
