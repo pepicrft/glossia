@@ -37,6 +37,13 @@ This document captures ideas, improvements, and features that we plan to impleme
 
 ## Feature Development
 
+### UI/UX
+- [ ] Set up main pages with SourceHut-inspired design
+- [ ] Implement minimalist, text-focused interface
+- [ ] Create efficient navigation without JavaScript dependencies
+- [ ] Design high-contrast, accessible color scheme
+- [ ] Build fast, lightweight pages with minimal CSS
+
 ### Authentication & Authorization
 - [ ] Add GitLab OAuth provider support
 - [ ] Implement Forgejo/Codeberg OAuth support
@@ -45,6 +52,7 @@ This document captures ideas, improvements, and features that we plan to impleme
 - [ ] Add team/organization management
 
 ### Core Features
+- [ ] Add daemon Elixir library for running translations in remote environments
 - [ ] Implement translation memory
 - [ ] Add support for multiple file formats (JSON, YAML, TOML, etc.)
 - [ ] Create translation review workflow
@@ -69,6 +77,7 @@ This document captures ideas, improvements, and features that we plan to impleme
 - [ ] Create architecture decision records (ADRs)
 
 ### Documentation
+- [ ] Add documentation site with VitePress
 - [ ] Create user guides and tutorials
 - [ ] Add API reference documentation
 - [ ] Create video tutorials
