@@ -28,6 +28,3 @@ jobs:
 
       - name: Deploy documentation
         run: mise run deploy/docs
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

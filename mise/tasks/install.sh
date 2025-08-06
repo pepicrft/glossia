@@ -1,28 +1,26 @@
 #!/usr/bin/env bash
 
-set -eo pipefail
+set -euo pipefail
 
 # Install web dependencies if web directory exists and has mix.exs
 if [ -f "web/mix.exs" ]; then
-    cd web
-    mix deps.get
+    echo "📦 Installing web dependencies..."
+    (cd web && mix deps.get)
     
     if [ "$GITHUB_ACTIONS" != "true" ]; then
-        mix ecto.setup
+        echo "🗄️  Setting up database..."
+        (cd web && mix ecto.setup)
     fi
-    cd ..
 fi
 
 # Install CLI dependencies if cli directory exists and has go.mod
 if [ -f "cli/go.mod" ]; then
-    cd cli
-    go mod download
-    cd ..
+    echo "📦 Installing CLI dependencies..."
+    go mod download -C cli
 fi
 
 # Install docs dependencies if docs directory exists and has package.json
 if [ -f "docs/package.json" ]; then
-    cd docs
-    pnpm install
-    cd ..
+    echo "📦 Installing docs dependencies..."
+    pnpm -C docs install
 fi

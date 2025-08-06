@@ -3,9 +3,6 @@
 
 set -euo pipefail
 
-echo "📦 Installing dependencies..."
-pnpm -C docs install
-
 echo "📦 Building documentation..."
 pnpm -C docs exec vitepress build
 
