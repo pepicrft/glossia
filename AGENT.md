@@ -205,6 +205,21 @@ When writing GitHub Actions workflows, follow these conventions:
 
 3. **Use matrix builds sparingly**: For Go cross-compilation, build all platforms from a single Ubuntu runner using GOOS/GOARCH
 
+4. **Capitalize job names**: Use PascalCase for job names in workflows for consistency:
+   ```yaml
+   jobs:
+     Check:       # Good - capitalized
+       runs-on: ubuntu-latest
+     
+     Build:       # Good - capitalized
+       needs: Check
+       runs-on: ubuntu-latest
+   
+     # Bad examples:
+     # check:     # lowercase
+     # cli-build: # kebab-case
+   ```
+
 ### Pre-commit Checklist
 
 **IMPORTANT**: Before committing and pushing any changes upstream, you MUST ensure all checks pass:
