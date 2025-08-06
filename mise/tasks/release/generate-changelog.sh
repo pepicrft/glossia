@@ -7,8 +7,8 @@ OUTPUT_FILE="${1:-CHANGELOG.md}"
 VERSION="${2:-}"
 
 if [ -n "$VERSION" ]; then
-  # Generate changelog for specific version
-  git-cliff --tag "$VERSION" --strip header > "$OUTPUT_FILE"
+  # Generate changelog for specific version (only changes since last tag)
+  git-cliff --unreleased --tag "$VERSION" --strip header > "$OUTPUT_FILE"
   echo "Generated changelog for version $VERSION"
 else
   # Generate changelog for latest release

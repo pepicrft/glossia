@@ -8,6 +8,6 @@ pnpm -C docs exec vitepress build
 
 echo "🚀 Deploying to Cloudflare Pages..."
 cd docs/.vitepress/dist
-wrangler pages deploy . --project-name=glossia-docs --compatibility-date=$(date +%Y-%m-%d)
+wrangler pages deploy . --project-name=glossia-docs
 
 echo "✅ Documentation deployed successfully!"
