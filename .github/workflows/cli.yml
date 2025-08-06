@@ -15,7 +15,7 @@ env:
   MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
 
 jobs:
-  Lint:
+  lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
@@ -23,7 +23,7 @@ jobs:
       - uses: jdx/mise-action@v2
       - run: mise run lint/cli
 
-  Test:
+  test:
     name: Test
     runs-on: ubuntu-latest
     steps:
@@ -31,7 +31,7 @@ jobs:
       - uses: jdx/mise-action@v2
       - run: mise run test/cli
 
-  Build:
+  build:
     name: Build
     runs-on: ubuntu-latest
     steps:

@@ -18,7 +18,8 @@ env:
   MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
 
 jobs:
-  Check:
+  check:
+    name: Check
     if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     outputs:
@@ -43,9 +44,10 @@ jobs:
             echo "${key}=${value}" >> $GITHUB_OUTPUT
           done <<< "$output"
 
-  Release:
-    needs: Check
-    if: needs.Check.outputs.should_release == 'true'
+  release:
+    name: Release
+    needs: check
+    if: needs.check.outputs.should_release == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -62,16 +64,16 @@ jobs:
 
       - name: Create and push tag
         run: |
-          git tag -a ${{ needs.Check.outputs.next_version }} -m "Release ${{ needs.Check.outputs.next_version }}"
-          git push origin ${{ needs.Check.outputs.next_version }}
+          git tag -a ${{ needs.check.outputs.next_version }} -m "Release ${{ needs.check.outputs.next_version }}"
+          git push origin ${{ needs.check.outputs.next_version }}
 
       - name: Build CLI binaries
         run: |
-          mise run release:build-cli-all "${{ needs.Check.outputs.next_version }}" "release/binaries"
+          mise run release:build-cli-all "${{ needs.check.outputs.next_version }}" "release/binaries"
 
       - name: Create archives
         run: |
-          mise run release:create-archives "${{ needs.Check.outputs.next_version }}" "release/binaries" "release"
+          mise run release:create-archives "${{ needs.check.outputs.next_version }}" "release/binaries" "release"
 
       - name: Generate checksums
         run: |
@@ -92,12 +94,12 @@ jobs:
 
       - name: Generate changelog
         run: |
-          mise run release:generate-changelog "release/CHANGELOG.md" "${{ needs.Check.outputs.next_version }}"
+          mise run release:generate-changelog "release/CHANGELOG.md" "${{ needs.check.outputs.next_version }}"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.Check.outputs.next_version }}
+          tag_name: ${{ needs.check.outputs.next_version }}
           files: release/*
           body_path: release/CHANGELOG.md
           draft: false
@@ -105,9 +107,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  Docker:
-    needs: Check
-    if: needs.Check.outputs.should_release == 'true'
+  docker:
+    name: Docker
+    needs: check
+    if: needs.check.outputs.should_release == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -128,9 +131,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=semver,pattern={{version}},value=${{ needs.Check.outputs.next_version }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ needs.Check.outputs.next_version }}
-            type=semver,pattern={{major}},value=${{ needs.Check.outputs.next_version }}
+            type=semver,pattern={{version}},value=${{ needs.check.outputs.next_version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.check.outputs.next_version }}
+            type=semver,pattern={{major}},value=${{ needs.check.outputs.next_version }}
             type=raw,value=latest
 
       - name: Build and push Docker image
@@ -144,9 +147,10 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  Edge:
-    needs: Check
-    if: needs.Check.outputs.should_release == 'false' && github.ref == 'refs/heads/main'
+  edge:
+    name: Edge
+    needs: check
+    if: needs.check.outputs.should_release == 'false' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
