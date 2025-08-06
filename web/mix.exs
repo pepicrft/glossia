@@ -74,7 +74,7 @@ defmodule Glossia.MixProject do
       {:hackney, "~> 1.23"},
       {:gen_smtp, "~> 1.1"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-      {:tidewave, "~> 0.1", only: :dev},
+      {:tidewave, "~> 0.3", only: :dev},
       {:ueberauth, "~> 0.10"},
       {:ueberauth_github, "~> 0.8"},
       {:uuidv7, "~> 0.2"},
