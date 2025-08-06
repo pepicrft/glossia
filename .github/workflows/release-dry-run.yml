@@ -17,7 +17,7 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/web
+  IMAGE_NAME: ${{ github.repository }}
   MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
 
 jobs:
@@ -27,7 +27,6 @@ jobs:
       should_release: ${{ steps.check.outputs.should_release }}
       next_version: ${{ steps.check.outputs.next_version }}
       current_version: ${{ steps.check.outputs.current_version }}
-      changelog: ${{ steps.changelog.outputs.changelog }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -48,25 +47,6 @@ jobs:
           
           # Display info
           echo "::notice title=Version Check::$(echo "$output" | grep -E 'should_release|next_version|bump_type')"
-          
-      - name: Generate changelog preview
-        id: changelog
-        if: steps.check.outputs.should_release == 'true'
-        run: |
-          echo "## Changelog Preview for ${{ steps.check.outputs.next_version }}" > CHANGELOG_PREVIEW.md
-          echo "" >> CHANGELOG_PREVIEW.md
-          git-cliff --unreleased --strip header >> CHANGELOG_PREVIEW.md
-          
-          # Output as multiline string
-          {
-            echo 'changelog<<EOF'
-            cat CHANGELOG_PREVIEW.md
-            echo EOF
-          } >> $GITHUB_OUTPUT
-          
-          echo "::group::Changelog Preview"
-          cat CHANGELOG_PREVIEW.md
-          echo "::endgroup::"
 
   cli:
     needs: check
@@ -89,7 +69,7 @@ jobs:
           GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
             -o ../test-release/glossia-linux-amd64 ./main.go
             
-          # Darwin arm64  
+          # Darwin arm64
           GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
             -o ../test-release/glossia-darwin-arm64 ./main.go
             
@@ -108,39 +88,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}},value=${{ needs.check.outputs.next_version || 'dry-run' }}
-            type=raw,value=dry-run-${{ github.run_number }}
-            
       - name: Build Docker image (dry run - no push)
         uses: docker/build-push-action@v5
         with:
           context: ./web
           platforms: linux/amd64
           push: false
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          outputs: type=docker,dest=/tmp/image.tar
-          
-      - name: Inspect Docker image
-        run: |
-          docker load < /tmp/image.tar
-          echo "::group::Docker Image Tags"
-          echo "${{ steps.meta.outputs.tags }}"
-          echo "::endgroup::"
-          
-          echo "::group::Docker Image Size"
-          docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" | grep glossia || true
-          echo "::endgroup::"
 
   summary:
     needs: [check, cli, docker]
@@ -157,13 +112,6 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "- **Current Version:** ${{ needs.check.outputs.current_version }}" >> $GITHUB_STEP_SUMMARY
             echo "- **Next Version:** ${{ needs.check.outputs.next_version }}" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            
-            if [ -n "${{ needs.check.outputs.changelog }}" ]; then
-              echo "## 📝 Changelog Preview" >> $GITHUB_STEP_SUMMARY
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo "${{ needs.check.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY
-            fi
           else
             echo "## ℹ️ No release would be triggered" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY

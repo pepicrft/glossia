@@ -3,9 +3,14 @@
 
 set -eo pipefail
 
-# Get the latest tag
-CURRENT_VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-echo "current_version=${CURRENT_VERSION}"
+# Get the latest tag (empty when none exist)
+CURRENT_VERSION=$(git tag --list --sort=-v:refname | head -n1)
+if [ -z "$CURRENT_VERSION" ]; then
+  CURRENT_VERSION=""
+  echo "current_version=v0.0.0"
+else
+  echo "current_version=${CURRENT_VERSION}"
+fi
 
 # Use git-cliff to determine if there are releasable changes
 git-cliff --unreleased --strip header > UNRELEASED.md
@@ -13,22 +18,33 @@ git-cliff --unreleased --strip header > UNRELEASED.md
 # Check if there are any changes worth releasing
 if [ -s UNRELEASED.md ]; then
   # Analyze commits to determine version bump
+  # Use different range based on whether tags exist
+  if [ -z "$CURRENT_VERSION" ]; then
+    GIT_RANGE="HEAD"
+  else
+    GIT_RANGE="${CURRENT_VERSION}..HEAD"
+  fi
+  
   # Check for breaking changes
-  if git log ${CURRENT_VERSION}..HEAD --grep="BREAKING CHANGE" --grep="!:" | grep -q .; then
+  if git log ${GIT_RANGE} --grep="BREAKING CHANGE" --grep="!:" | grep -q .; then
     BUMP_TYPE="major"
   # Check for features
-  elif git log ${CURRENT_VERSION}..HEAD --grep="^feat" --grep="^feature" | grep -q .; then
+  elif git log ${GIT_RANGE} --grep="^feat" --grep="^feature" | grep -q .; then
     BUMP_TYPE="minor"
   # Check for fixes
-  elif git log ${CURRENT_VERSION}..HEAD --grep="^fix" --grep="^bugfix" | grep -q .; then
+  elif git log ${GIT_RANGE} --grep="^fix" --grep="^bugfix" | grep -q .; then
     BUMP_TYPE="patch"
   else
     BUMP_TYPE="none"
   fi
   
   if [ "$BUMP_TYPE" != "none" ]; then
-    # Parse current version
-    VERSION=${CURRENT_VERSION#v}
+    # Parse current version (use 0.0.0 if no tags)
+    if [ -z "$CURRENT_VERSION" ]; then
+      VERSION="0.0.0"
+    else
+      VERSION=${CURRENT_VERSION#v}
+    fi
     MAJOR=$(echo $VERSION | cut -d. -f1)
     MINOR=$(echo $VERSION | cut -d. -f2)
     PATCH=$(echo $VERSION | cut -d. -f3)

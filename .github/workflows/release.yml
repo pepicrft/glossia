@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    tags:
-      - 'v*'
   workflow_dispatch:
 
 permissions:
@@ -16,13 +14,10 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/web
+  IMAGE_NAME: ${{ github.repository }}
   MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
 
 jobs:
-  # ============================================================================
-  # CONTINUOUS RELEASE - Determine if we need a new release from main branch
-  # ============================================================================
   check:
     if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
@@ -48,7 +43,7 @@ jobs:
             echo "${key}=${value}" >> $GITHUB_OUTPUT
           done <<< "$output"
 
-  tag:
+  release:
     needs: check
     if: needs.check.outputs.should_release == 'true'
     runs-on: ubuntu-latest
@@ -57,6 +52,8 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - uses: jdx/mise-action@v2
           
       - name: Configure Git
         run: |
@@ -67,54 +64,46 @@ jobs:
         run: |
           git tag -a ${{ needs.check.outputs.next_version }} -m "Release ${{ needs.check.outputs.next_version }}"
           git push origin ${{ needs.check.outputs.next_version }}
-          echo "Tag created and pushed. Release build will be triggered automatically."
-
-  # ============================================================================
-  # TAGGED RELEASE - Build and publish all components when a tag is pushed
-  # ============================================================================
-  prepare:
-    if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.version.outputs.version }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
           
-      - name: Get version from tag
-        id: version
+      - name: Build CLI binaries
         run: |
-          VERSION=${GITHUB_REF#refs/tags/}
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
-          echo "Building release for version: ${VERSION}"
-
-  cli:
-    needs: prepare
-    if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - uses: jdx/mise-action@v2
+          mise run release:build-cli-all "${{ needs.check.outputs.next_version }}" "release/binaries"
           
-      - name: Build all CLI binaries
-        run: |
-          mise run release:build-cli-all "${{ needs.prepare.outputs.version }}" "release/binaries"
-            
       - name: Create archives
         run: |
-          mise run release:create-archives "${{ needs.prepare.outputs.version }}" "release/binaries" "release"
+          mise run release:create-archives "${{ needs.check.outputs.next_version }}" "release/binaries" "release"
           
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - name: Generate checksums
+        run: |
+          mise run release:generate-checksums "release"
+          
+      - name: Sign files
+        if: ${{ secrets.GPG_PRIVATE_KEY != '' || secrets.MINISIGN_PRIVATE_KEY != '' }}
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          MINISIGN_PRIVATE_KEY: ${{ secrets.MINISIGN_PRIVATE_KEY }}
+          MINISIGN_PASSWORD: ${{ secrets.MINISIGN_PASSWORD }}
+        run: |
+          mise run release:sign-files "release"
+          
+      - name: Generate changelog
+        run: |
+          mise run release:generate-changelog "release/CHANGELOG.md" "${{ needs.check.outputs.next_version }}"
+          
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: cli-archives
-          path: release/*.tar.gz
+          tag_name: ${{ needs.check.outputs.next_version }}
+          files: release/*
+          body_path: release/CHANGELOG.md
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   docker:
-    needs: prepare
-    if: startsWith(github.ref, 'refs/tags/v')
+    needs: check
+    if: needs.check.outputs.should_release == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -135,9 +124,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=semver,pattern={{version}},value=${{ needs.prepare.outputs.version }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ needs.prepare.outputs.version }}
-            type=semver,pattern={{major}},value=${{ needs.prepare.outputs.version }}
+            type=semver,pattern={{version}},value=${{ needs.check.outputs.next_version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.check.outputs.next_version }}
+            type=semver,pattern={{major}},value=${{ needs.check.outputs.next_version }}
             type=raw,value=latest
             
       - name: Build and push Docker image
@@ -151,52 +140,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  release:
-    needs: [prepare, cli, docker]
-    if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          
-      - uses: jdx/mise-action@v2
-          
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: cli-archives
-          path: release
-          
-      - name: Generate checksums
-        run: |
-          mise run release:generate-checksums "release"
-          
-      - name: Sign files
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-          MINISIGN_PRIVATE_KEY: ${{ secrets.MINISIGN_PRIVATE_KEY }}
-          MINISIGN_PASSWORD: ${{ secrets.MINISIGN_PASSWORD }}
-        run: |
-          mise run release:sign-files "release"
-          
-      - name: Generate changelog
-        run: |
-          mise run release:generate-changelog "release/CHANGELOG.md" "${{ needs.prepare.outputs.version }}"
-          
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: release/*
-          body_path: release/CHANGELOG.md
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # ============================================================================
-  # EDGE BUILDS - Build development versions when no release is needed
-  # ============================================================================
   edge:
     needs: check
     if: needs.check.outputs.should_release == 'false' && github.ref == 'refs/heads/main'
