@@ -39,4 +39,5 @@ jobs:
       - uses: jdx/mise-action@v2
       - run: mise run build/cli
       - name: Test CLI binary
-        run: cd cli && ./glossia --help
+        working-directory: cli
+        run: ./glossia --help

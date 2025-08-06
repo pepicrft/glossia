@@ -77,13 +77,13 @@ jobs:
       - uses: jdx/mise-action@v2
           
       - name: Build test binaries
+        working-directory: cli
         run: |
           VERSION=${{ needs.check.outputs.next_version || 'dry-run' }}
           echo "::notice title=Build Test::Building CLI binaries with version ${VERSION}"
           
           # Build just a few platforms for testing
-          mkdir -p test-release
-          cd cli
+          mkdir -p ../test-release
           
           # Linux amd64
           GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
@@ -97,7 +97,6 @@ jobs:
           GOOS=windows GOARCH=amd64 go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
             -o ../test-release/glossia-windows-amd64.exe ./main.go
             
-          cd ..
           echo "::notice title=Binaries Built::Test binaries created successfully"
 
   docker:

@@ -185,6 +185,26 @@ Key models:
 
 ## Best Practices
 
+### GitHub Actions Conventions
+
+When writing GitHub Actions workflows, follow these conventions:
+
+1. **Use `working-directory` instead of `cd` commands**:
+   ```yaml
+   # Bad - using cd command
+   - name: Build CLI
+     run: cd cli && go build ./...
+   
+   # Good - using working-directory
+   - name: Build CLI
+     working-directory: cli
+     run: go build ./...
+   ```
+
+2. **Keep logic in mise tasks**: Complex build/release logic should be in mise tasks under `mise/tasks/`, not inline in workflows
+
+3. **Use matrix builds sparingly**: For Go cross-compilation, build all platforms from a single Ubuntu runner using GOOS/GOARCH
+
 ### Pre-commit Checklist
 
 **IMPORTANT**: Before committing and pushing any changes upstream, you MUST ensure all checks pass:
