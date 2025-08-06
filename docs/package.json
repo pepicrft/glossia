@@ -2,7 +2,12 @@
   "name": "@glossia/docs",
   "private": true,
   "packageManager": "pnpm@10.14.0",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs"
+  },
   "devDependencies": {
-    "vitepress": "^1.6.4"
+    "vitepress": "1.6.4"
   }
 }
