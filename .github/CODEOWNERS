@@ -1,0 +1,14 @@
+# Code Owners for automatic review requests
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global owners
+* @pepicrft
+
+# CLI specific owners
+/cli/ @pepicrft
+
+# Web application owners
+/web/ @pepicrft
+
+# GitHub Actions workflows
+/.github/workflows/ @pepicrft
