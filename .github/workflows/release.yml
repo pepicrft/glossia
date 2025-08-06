@@ -1,9 +1,11 @@
-name: Continuous Release
+name: Release
 
 on:
   push:
     branches:
       - main
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 permissions:
@@ -17,7 +19,11 @@ env:
   IMAGE_NAME: ${{ github.repository }}/web
 
 jobs:
+  # ============================================================================
+  # CONTINUOUS RELEASE - Determine if we need a new release from main branch
+  # ============================================================================
   check-release:
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     outputs:
       should_release: ${{ steps.check.outputs.should_release }}
@@ -101,7 +107,7 @@ jobs:
             echo "should_release=false" >> $GITHUB_OUTPUT
           fi
 
-  release:
+  create-tag:
     needs: check-release
     if: needs.check-release.outputs.should_release == 'true'
     runs-on: ubuntu-latest
@@ -120,14 +126,256 @@ jobs:
         run: |
           git tag -a ${{ needs.check-release.outputs.next_version }} -m "Release ${{ needs.check-release.outputs.next_version }}"
           git push origin ${{ needs.check-release.outputs.next_version }}
-          
-      - name: Trigger release workflow
-        run: |
-          echo "Tag pushed. The release workflow will be triggered automatically."
+          echo "Tag created and pushed. Release build will be triggered automatically."
 
-  build-and-publish-prerelease:
+  # ============================================================================
+  # TAGGED RELEASE - Build and publish all components when a tag is pushed
+  # ============================================================================
+  prepare-release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Get version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Building release for version: ${VERSION}"
+
+  build-cli:
+    needs: prepare-release
+    if: startsWith(github.ref, 'refs/tags/v')
+    strategy:
+      matrix:
+        include:
+          # Linux
+          - os: ubuntu-latest
+            goos: linux
+            goarch: amd64
+            suffix: ""
+          - os: ubuntu-latest
+            goos: linux
+            goarch: arm64
+            suffix: ""
+          - os: ubuntu-latest
+            goos: linux
+            goarch: arm
+            goarm: 7
+            suffix: ""
+          # macOS
+          - os: macos-latest
+            goos: darwin
+            goarch: amd64
+            suffix: ""
+          - os: macos-latest
+            goos: darwin
+            goarch: arm64
+            suffix: ""
+          # Windows
+          - os: windows-latest
+            goos: windows
+            goarch: amd64
+            suffix: ".exe"
+          - os: windows-latest
+            goos: windows
+            goarch: arm64
+            suffix: ".exe"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'cli/go.mod'
+          
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          GOARM: ${{ matrix.goarm }}
+        run: |
+          cd cli
+          VERSION=${{ needs.prepare-release.outputs.version }}
+          go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
+            -o glossia${{ matrix.suffix }} ./main.go
+            
+      - name: Create UBI-compliant archive name
+        id: archive
+        run: |
+          VERSION=${{ needs.prepare-release.outputs.version }}
+          VERSION_NO_V=${VERSION#v}
+          
+          # Build architecture string
+          ARCH="${{ matrix.goarch }}"
+          if [[ "${{ matrix.goarm }}" != "" ]]; then
+            ARCH="${ARCH}v${{ matrix.goarm }}"
+          fi
+          
+          # UBI naming: glossia-<arch>-<os>.tar.gz
+          if [[ "${{ matrix.goos }}" == "windows" ]]; then
+            ARCHIVE_NAME="glossia-${ARCH}-pc-windows-msvc.tar.gz"
+          elif [[ "${{ matrix.goos }}" == "darwin" ]]; then
+            ARCHIVE_NAME="glossia-${ARCH}-apple-darwin.tar.gz"
+          elif [[ "${{ matrix.goos }}" == "linux" ]]; then
+            if [[ "${{ matrix.goarch }}" == "amd64" ]]; then
+              ARCHIVE_NAME="glossia-x86_64-unknown-linux-gnu.tar.gz"
+            elif [[ "${{ matrix.goarch }}" == "arm64" ]]; then
+              ARCHIVE_NAME="glossia-aarch64-unknown-linux-gnu.tar.gz"
+            elif [[ "${{ matrix.goarch }}" == "arm" ]]; then
+              ARCHIVE_NAME="glossia-armv7-unknown-linux-gnueabihf.tar.gz"
+            else
+              ARCHIVE_NAME="glossia-${ARCH}-unknown-linux-gnu.tar.gz"
+            fi
+          else
+            ARCHIVE_NAME="glossia-${ARCH}-${{ matrix.goos }}.tar.gz"
+          fi
+          
+          echo "archive_name=${ARCHIVE_NAME}" >> $GITHUB_OUTPUT
+          
+      - name: Create archive
+        run: |
+          cd cli
+          tar czf ../${{ steps.archive.outputs.archive_name }} glossia${{ matrix.suffix }}
+          
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: glossia-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.goarm }}
+          path: ${{ steps.archive.outputs.archive_name }}
+
+  build-docker:
+    needs: prepare-release
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=semver,pattern={{version}},value=${{ needs.prepare-release.outputs.version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.prepare-release.outputs.version }}
+            type=semver,pattern={{major}},value=${{ needs.prepare-release.outputs.version }}
+            type=raw,value=latest
+            
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./web
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  create-github-release:
+    needs: [prepare-release, build-cli, build-docker]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          
+      - name: Prepare release assets
+        run: |
+          mkdir -p release
+          find artifacts -name "*.tar.gz" -exec mv {} release/ \;
+          
+      - name: Install tools
+        run: |
+          # Install minisign
+          wget -q https://github.com/jedisct1/minisign/releases/download/0.11/minisign-0.11-linux.tar.gz
+          tar xzf minisign-0.11-linux.tar.gz
+          sudo mv minisign-linux/x86_64/minisign /usr/local/bin/
+          
+          # Install git-cliff
+          wget -q https://github.com/orhun/git-cliff/releases/download/v2.8.0/git-cliff-2.8.0-x86_64-unknown-linux-gnu.tar.gz
+          tar xzf git-cliff-2.8.0-x86_64-unknown-linux-gnu.tar.gz
+          sudo mv git-cliff-*/git-cliff /usr/local/bin/
+          
+      - name: Generate checksums
+        run: |
+          cd release
+          sha256sum *.tar.gz > SHA256.txt
+          sha512sum *.tar.gz > SHA512.txt
+          
+      - name: Import GPG key
+        if: env.GPG_PRIVATE_KEY != ''
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          
+      - name: Sign with GPG
+        if: env.GPG_PRIVATE_KEY != ''
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          cd release
+          for file in *.tar.gz SHA256.txt SHA512.txt; do
+            gpg --batch --yes --detach-sign --armor --output "${file}.asc" "$file"
+          done
+          
+      - name: Sign with minisign
+        if: env.MINISIGN_PRIVATE_KEY != ''
+        env:
+          MINISIGN_PRIVATE_KEY: ${{ secrets.MINISIGN_PRIVATE_KEY }}
+          MINISIGN_PASSWORD: ${{ secrets.MINISIGN_PASSWORD }}
+        run: |
+          cd release
+          echo "$MINISIGN_PRIVATE_KEY" > ~/.minisign_key
+          for file in *.tar.gz SHA256.txt SHA512.txt; do
+            echo "$MINISIGN_PASSWORD" | minisign -S -s ~/.minisign_key -m "$file" -x "${file}.minisig"
+          done
+          rm ~/.minisign_key
+          
+      - name: Generate changelog
+        run: |
+          git-cliff --latest --strip header > release/CHANGELOG.md
+          
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release/*
+          body_path: release/CHANGELOG.md
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ============================================================================
+  # EDGE BUILDS - Build development versions when no release is needed
+  # ============================================================================
+  build-edge:
     needs: check-release
-    if: needs.check-release.outputs.should_release == 'false'
+    if: needs.check-release.outputs.should_release == 'false' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -150,9 +398,9 @@ jobs:
           tags: |
             type=ref,event=branch
             type=sha,prefix=sha-
-            type=raw,value=edge,enable={{is_default_branch}}
+            type=raw,value=edge
             
-      - name: Build and push Docker image
+      - name: Build and push Docker image (edge)
         uses: docker/build-push-action@v5
         with:
           context: ./web
@@ -162,11 +410,3 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          
-      - name: Build CLI for current commit
-        run: |
-          cd cli
-          COMMIT_SHA=$(git rev-parse --short HEAD)
-          go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=dev-${COMMIT_SHA}" \
-            -o glossia ./main.go
-          echo "CLI built with version: dev-${COMMIT_SHA}"
