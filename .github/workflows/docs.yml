@@ -1,0 +1,33 @@
+name: Docs
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+      - ".github/workflows/docs.yml"
+      - "mise.toml"
+      - "pnpm-lock.yaml"
+  pull_request: {}
+
+env:
+  MISE_EXPERIMENTAL: "1"
+  MISE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  docs-build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            docs/node_modules
+            docs/.vitepress/cache
+            docs/.vitepress/dist
+          key: ${{ runner.os }}-pnpm-docs-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-docs-
+      - uses: jdx/mise-action@v2
+      - run: mise run build/docs
