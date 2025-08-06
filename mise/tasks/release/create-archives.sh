@@ -4,8 +4,11 @@
 set -eo pipefail
 
 VERSION="${1:-dev}"
-INPUT_DIR="${2:-release}"
-OUTPUT_DIR="${3:-release/archives}"
+INPUT_DIR="${2:-release/binaries}"
+OUTPUT_DIR="${3:-release}"
+
+# Convert to absolute path before changing directory
+OUTPUT_DIR="$(cd "$(dirname "$OUTPUT_DIR")" && pwd)/$(basename "$OUTPUT_DIR")"
 
 # Ensure output directory exists
 mkdir -p "$OUTPUT_DIR"
@@ -53,11 +56,11 @@ for binary in glossia-*; do
     # Rename binary for archive (Windows needs .exe, others just glossia)
     if [[ "$platform_info" == windows-* ]]; then
       cp "$binary" "glossia.exe"
-      tar czf "../$OUTPUT_DIR/$archive_name" "glossia.exe"
+      tar czf "$OUTPUT_DIR/$archive_name" "glossia.exe"
       rm "glossia.exe"
     else
       cp "$binary" "glossia"
-      tar czf "../$OUTPUT_DIR/$archive_name" "glossia"
+      tar czf "$OUTPUT_DIR/$archive_name" "glossia"
       rm "glossia"
     fi
     
