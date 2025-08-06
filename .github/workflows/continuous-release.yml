@@ -1,0 +1,172 @@
+name: Continuous Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
+  id-token: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/web
+
+jobs:
+  check-release:
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
+      next_version: ${{ steps.version.outputs.next_version }}
+      current_version: ${{ steps.version.outputs.current_version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Install git-cliff
+        run: |
+          wget -q https://github.com/orhun/git-cliff/releases/download/v2.8.0/git-cliff-2.8.0-x86_64-unknown-linux-gnu.tar.gz
+          tar xzf git-cliff-2.8.0-x86_64-unknown-linux-gnu.tar.gz
+          sudo mv git-cliff-*/git-cliff /usr/local/bin/
+          
+      - name: Get current version
+        id: version
+        run: |
+          # Get the latest tag
+          CURRENT_VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "current_version=${CURRENT_VERSION}" >> $GITHUB_OUTPUT
+          
+          # Use git-cliff to determine if there are releasable changes
+          git-cliff --unreleased --strip header > UNRELEASED.md
+          
+          # Check if there are any changes worth releasing
+          if [ -s UNRELEASED.md ]; then
+            # Analyze commits to determine version bump
+            # Check for breaking changes
+            if git log ${CURRENT_VERSION}..HEAD --grep="BREAKING CHANGE" --grep="!:" | grep -q .; then
+              BUMP_TYPE="major"
+            # Check for features
+            elif git log ${CURRENT_VERSION}..HEAD --grep="^feat" --grep="^feature" | grep -q .; then
+              BUMP_TYPE="minor"
+            # Check for fixes
+            elif git log ${CURRENT_VERSION}..HEAD --grep="^fix" --grep="^bugfix" | grep -q .; then
+              BUMP_TYPE="patch"
+            else
+              BUMP_TYPE="none"
+            fi
+            
+            if [ "$BUMP_TYPE" != "none" ]; then
+              # Parse current version
+              VERSION=${CURRENT_VERSION#v}
+              MAJOR=$(echo $VERSION | cut -d. -f1)
+              MINOR=$(echo $VERSION | cut -d. -f2)
+              PATCH=$(echo $VERSION | cut -d. -f3)
+              
+              # Calculate next version
+              case $BUMP_TYPE in
+                major)
+                  NEXT_VERSION="v$((MAJOR + 1)).0.0"
+                  ;;
+                minor)
+                  NEXT_VERSION="v${MAJOR}.$((MINOR + 1)).0"
+                  ;;
+                patch)
+                  NEXT_VERSION="v${MAJOR}.${MINOR}.$((PATCH + 1))"
+                  ;;
+              esac
+              
+              echo "next_version=${NEXT_VERSION}" >> $GITHUB_OUTPUT
+              echo "Version bump type: $BUMP_TYPE"
+              echo "Next version: $NEXT_VERSION"
+            else
+              echo "No conventional commits found that warrant a release"
+              echo "next_version=" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "No unreleased changes found"
+            echo "next_version=" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Check if should release
+        id: check
+        run: |
+          if [ -n "${{ steps.version.outputs.next_version }}" ]; then
+            echo "should_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_release=false" >> $GITHUB_OUTPUT
+          fi
+
+  release:
+    needs: check-release
+    if: needs.check-release.outputs.should_release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+      - name: Create and push tag
+        run: |
+          git tag -a ${{ needs.check-release.outputs.next_version }} -m "Release ${{ needs.check-release.outputs.next_version }}"
+          git push origin ${{ needs.check-release.outputs.next_version }}
+          
+      - name: Trigger release workflow
+        run: |
+          echo "Tag pushed. The release workflow will be triggered automatically."
+
+  build-and-publish-prerelease:
+    needs: check-release
+    if: needs.check-release.outputs.should_release == 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix=sha-
+            type=raw,value=edge,enable={{is_default_branch}}
+            
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./web
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          
+      - name: Build CLI for current commit
+        run: |
+          cd cli
+          COMMIT_SHA=$(git rev-parse --short HEAD)
+          go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=dev-${COMMIT_SHA}" \
+            -o glossia ./main.go
+          echo "CLI built with version: dev-${COMMIT_SHA}"
