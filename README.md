@@ -9,6 +9,14 @@
     🌍 A modern language hub for your organization 🚀
 </p>
 
+---
+
+**Localization makes software more accessible**, helping you expand to new markets. However, existing solutions don't align with continuous deployment processes, leading to friction and indirection that makes teams avoid localization altogether.
+
+We believe **LLMs with human-in-the-loop** can align with modern software practices to continuously localize your software without compromising quality or interrupting development workflows.
+
+---
+
 ## 📦 Components
 
 This monorepo contains:
@@ -27,6 +35,20 @@ docker pull ghcr.io/pepicrft/glossia:latest
 View all available tags: [ghcr.io/pepicrft/glossia](https://github.com/pepicrft/glossia/pkgs/container/glossia)
 
 ## 💻 Installation
+
+### 🎯 Recommended: Install with mise
+
+The easiest way to install Glossia on any platform is using [mise](https://mise.jdx.dev/):
+
+```bash
+# Install the latest version
+mise use -g ubi:pepicrft/glossia
+
+# Or install a specific version
+mise use -g ubi:pepicrft/glossia@0.5.0
+```
+
+This works on macOS, Linux, and Windows (via WSL).
 
 ### 🍎 macOS
 
@@ -100,7 +122,7 @@ docker run -p 7070:7070 \
 
 ## 📄 License
 
-Glossia is open source under the MIT license. See [LICENSE.md](./LICENSE.md) for details.
+Glossia is licensed under the FSL-1.1-MIT license. See [LICENSE.md](./LICENSE.md) for details.
 
 ## 🤝 Contributing
 
