@@ -87,10 +87,6 @@ docker run -p 7070:7070 \
 
 Glossia is licensed under the FSL-1.1-MIT license. See [LICENSE.md](./LICENSE.md) for details.
 
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for details.
-
 ---
 
 <p align="center">
