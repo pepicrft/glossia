@@ -1,7 +1,7 @@
 [tools]
 elixir = "1.18.4"
 erlang = "28.0.2"
-go = "1.24.5"
+go = "1.24.6"
 "asdf:chessmango/asdf-flyctl" = "0.3.86"
 "sops" = "3.10.2"
 "age" = "1.2.1"
