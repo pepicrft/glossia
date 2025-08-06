@@ -3,4 +3,5 @@
 
 set -eo pipefail
 
+pnpm -C docs install
 pnpm -C docs exec vitepress build
