@@ -321,8 +321,8 @@ jobs:
           tar xzf minisign-0.11-linux.tar.gz
           sudo mv minisign-linux/x86_64/minisign /usr/local/bin/
           
-          # Generate a test key
-          echo "" | minisign -G -p test.pub -s test.key
+          # Generate a test key (with no password)
+          printf "\n\n" | minisign -G -p test.pub -s test.key
           
           cd release
           for file in *.tar.gz SHA256.txt SHA512.txt; do
