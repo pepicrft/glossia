@@ -173,6 +173,7 @@ jobs:
           
       - name: Create UBI-compliant archive name (dry run)
         id: archive
+        shell: bash
         run: |
           VERSION=${{ needs.check.outputs.next_version || 'dry-run' }}
           VERSION_NO_V=${VERSION#v}
@@ -201,6 +202,7 @@ jobs:
           echo "::notice title=Archive Name::Would create archive: ${ARCHIVE_NAME}"
           
       - name: Create archive (dry run)
+        shell: bash
         run: |
           cd cli
           tar czf ../${{ steps.archive.outputs.archive_name }} glossia${{ matrix.suffix }}

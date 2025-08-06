@@ -207,6 +207,7 @@ jobs:
             
       - name: Create UBI-compliant archive name
         id: archive
+        shell: bash
         run: |
           VERSION=${{ needs.prepare.outputs.version }}
           VERSION_NO_V=${VERSION#v}
@@ -239,6 +240,7 @@ jobs:
           echo "archive_name=${ARCHIVE_NAME}" >> $GITHUB_OUTPUT
           
       - name: Create archive
+        shell: bash
         run: |
           cd cli
           tar czf ../${{ steps.archive.outputs.archive_name }} glossia${{ matrix.suffix }}
