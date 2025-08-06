@@ -5,7 +5,19 @@ set -euo pipefail
 
 RELEASE_DIR="${1:-release/archives}"
 
+# Check if directory exists
+if [ ! -d "$RELEASE_DIR" ]; then
+  echo "Warning: Release directory $RELEASE_DIR does not exist, skipping signing"
+  exit 0
+fi
+
 cd "$RELEASE_DIR"
+
+# Check if there are any files to sign
+if ! ls *.tar.gz &>/dev/null && ! ls SHA*.txt &>/dev/null; then
+  echo "No files to sign in $RELEASE_DIR, skipping"
+  exit 0
+fi
 
 # GPG signing (if key is available)
 if [ -n "${GPG_PRIVATE_KEY:-}" ]; then
@@ -66,4 +78,10 @@ else
 fi
 
 cd - > /dev/null
-echo "Signing completed"
+
+# Provide summary
+if [ -n "${GPG_PRIVATE_KEY:-}" ] || [ -n "${MINISIGN_PRIVATE_KEY:-}" ]; then
+  echo "Signing completed successfully"
+else
+  echo "No signing keys available, skipping file signing (this is normal for external contributors)"
+fi

@@ -85,6 +85,11 @@ jobs:
           MINISIGN_PASSWORD: ${{ secrets.MINISIGN_PASSWORD }}
         run: |
           mise run release:sign-files "release"
+          
+      - name: Note about signing
+        if: ${{ secrets.GPG_PRIVATE_KEY == '' && secrets.MINISIGN_PRIVATE_KEY == '' }}
+        run: |
+          echo "::notice title=Signing Skipped::No signing keys configured. This is expected for external contributors."
 
       - name: Generate changelog
         run: |
