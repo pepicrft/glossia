@@ -19,3 +19,10 @@ if [ -f "cli/go.mod" ]; then
     go mod download
     cd ..
 fi
+
+# Install docs dependencies if docs directory exists and has package.json
+if [ -f "docs/package.json" ]; then
+    cd docs
+    pnpm install
+    cd ..
+fi

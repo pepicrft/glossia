@@ -3,15 +3,10 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "docs/**"
-      - ".github/workflows/docs.yml"
-      - "mise.toml"
-      - "pnpm-lock.yaml"
+    paths: {}
   pull_request: {}
 
 env:
-  MISE_EXPERIMENTAL: "1"
   MISE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
