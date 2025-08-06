@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -eo pipefail
 
 # Install web dependencies if web directory exists and has mix.exs
 if [ -f "web/mix.exs" ]; then
     echo "📦 Installing web dependencies..."
     (cd web && mix deps.get)
-    
+
     if [ "$GITHUB_ACTIONS" != "true" ]; then
         echo "🗄️  Setting up database..."
         (cd web && mix ecto.setup)
