@@ -17,12 +17,17 @@ We believe **LLMs with human-in-the-loop** can align with modern software practi
 
 ---
 
+## 📚 Documentation
+
+Visit our [documentation site](https://glossia-docs.pages.dev) to learn more about Glossia, its features, and how to get started.
+
 ## 📦 Components
 
 This monorepo contains:
 
 - **`web/`** - 🌐 Phoenix web application (Elixir/Erlang)
 - **`cli/`** - 🛠️ Command-line interface (Go)
+- **`docs/`** - 📖 Documentation site (VitePress)
 
 ## 🐳 Docker Image
 

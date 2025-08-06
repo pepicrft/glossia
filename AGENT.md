@@ -155,6 +155,31 @@ See `docs/contributors/self-hosting.md` for complete documentation.
 
 ## Documentation Maintenance
 
+### User-Facing Documentation
+
+**IMPORTANT**: Any user-facing changes to the project MUST be accompanied by documentation updates:
+
+1. **When adding new features**:
+   - Add new documentation pages under `docs/docs/` explaining the feature
+   - Update existing pages that reference related functionality
+   - Include examples and use cases
+
+2. **When modifying existing features**:
+   - Update all relevant documentation pages to reflect the changes
+   - Ensure code examples in docs remain accurate
+   - Update any configuration or setup instructions affected
+
+3. **When removing features**:
+   - Remove or update documentation that references deprecated functionality
+   - Add migration guides if users need to adapt
+
+4. **Documentation structure**:
+   - Keep documentation organized and easy to navigate
+   - Add new pages to the VitePress configuration (`docs/.vitepress/config.mjs`)
+   - Follow the existing writing style and formatting
+
+### Contributor Documentation
+
 When making changes that affect configuration or deployment:
 - Update `docs/contributors/self-hosting.md` with any new environment variables
 - Document the purpose, format, and example values for each variable
