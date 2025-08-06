@@ -1,74 +1,113 @@
 <p align="center">
     <img  width="150" src="./logo.svg"/>
 </p>
-<h1 align="center">Glossia</h1>
+<h1 align="center">✨ Glossia ✨</h1>
 <div align="center">
     <!-- Badges -->
 </div>
 <p align="center">
-    A modern language hub for your organization.
+    🌍 A modern language hub for your organization 🚀
 </p>
 
-## Project Structure
+## 📦 Components
 
-This is a monorepo containing the following components:
+This monorepo contains:
 
-- **`web/`** - Phoenix web application (Elixir/Erlang)
-- **`cli/`** - Command-line interface (Go)
+- **`web/`** - 🌐 Phoenix web application (Elixir/Erlang)
+- **`cli/`** - 🛠️ Command-line interface (Go)
 
-## Development
+## 🐳 Docker Image
 
-### Prerequisites
-
-- [mise](https://mise.jdx.dev/) for managing development dependencies
-
-### Set up
-
-1. Clone the project: `git clone git@github.com:glossia/glossia.git`
-2. Install dependencies: `mise install`
-
-### Web Application
-
-The web application is a Phoenix/Elixir application located in the `web/` directory.
+Pull the latest Docker image from GitHub Container Registry:
 
 ```bash
-# Run the web application locally
-mise run dev/web
-
-# Build the web application
-mise run build/web
-
-# Run web tests
-mise run test/web
-
-# Run web code checks
-mise run lint/web
+docker pull ghcr.io/pepicrft/glossia:latest
 ```
 
-### CLI
+View all available tags: [ghcr.io/pepicrft/glossia](https://github.com/pepicrft/glossia/pkgs/container/glossia)
 
-The CLI is a Go application located in the `cli/` directory.
+## 💻 Installation
+
+### 🍎 macOS
+
+Download the appropriate binary for your architecture:
+- [Intel Mac (x86_64)](https://github.com/pepicrft/glossia/releases/latest/download/glossia-x86_64-apple-darwin.tar.gz)
+- [Apple Silicon (M1/M2)](https://github.com/pepicrft/glossia/releases/latest/download/glossia-aarch64-apple-darwin.tar.gz)
 
 ```bash
-# Build the CLI
-mise run build/cli
-
-# Run CLI tests
-mise run test/cli
-
-# Lint CLI code
-mise run lint/cli
-
-# Run the CLI locally
-cd cli && go run main.go --help
+# Extract and install
+tar -xzf glossia-*.tar.gz
+chmod +x glossia
+sudo mv glossia /usr/local/bin/
 ```
 
-## Usage
+### 🐧 Linux
 
-### Web Application
+Download for your architecture:
+- [x86_64](https://github.com/pepicrft/glossia/releases/latest/download/glossia-x86_64-unknown-linux-gnu.tar.gz)
+- [ARM64](https://github.com/pepicrft/glossia/releases/latest/download/glossia-aarch64-unknown-linux-gnu.tar.gz)
+- [ARMv7](https://github.com/pepicrft/glossia/releases/latest/download/glossia-armv7-unknown-linux-gnueabihf.tar.gz)
 
-Check out [our documentation](https://docs.glossia.org) to learn more about how to use Glossia's hosted version, or how to self-host it.
+```bash
+# Extract and install
+tar -xzf glossia-*.tar.gz
+chmod +x glossia
+sudo mv glossia /usr/local/bin/
+```
 
-### CLI
+### 🪟 Windows
 
-See the [CLI documentation](./cli/README.md) for detailed usage instructions.
+Download for your architecture:
+- [x86_64](https://github.com/pepicrft/glossia/releases/latest/download/glossia-x86_64-pc-windows-msvc.tar.gz)
+- [ARM64](https://github.com/pepicrft/glossia/releases/latest/download/glossia-aarch64-pc-windows-msvc.tar.gz)
+
+Extract the archive and add the `glossia.exe` to your PATH.
+
+## 🚀 Quick Start
+
+### CLI Usage
+
+```bash
+# Initialize a new project
+glossia init
+
+# Check version
+glossia --version
+
+# Get help
+glossia --help
+```
+
+### 🐳 Running with Docker
+
+```bash
+# Run the latest version
+docker run -p 7070:7070 ghcr.io/pepicrft/glossia:latest
+
+# Run with environment variables
+docker run -p 7070:7070 \
+  -e DATABASE_URL=postgresql://user:pass@host/db \
+  -e PHX_HOST=glossia.example.com \
+  ghcr.io/pepicrft/glossia:latest
+```
+
+## 📚 Resources
+
+- 🌟 [Latest Release](https://github.com/pepicrft/glossia/releases/latest)
+- 🐳 [Docker Images](https://github.com/pepicrft/glossia/pkgs/container/glossia)
+- 🐛 [Report Issues](https://github.com/pepicrft/glossia/issues)
+- 💬 [Discussions](https://github.com/pepicrft/glossia/discussions)
+
+## 📄 License
+
+Glossia is open source under the MIT license. See [LICENSE.md](./LICENSE.md) for details.
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for details.
+
+---
+
+<p align="center">
+    Made with ❤️ by the Glossia team
+</p>

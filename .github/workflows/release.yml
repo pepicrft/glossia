@@ -6,6 +6,10 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
   pull-requests: write
@@ -44,8 +48,8 @@ jobs:
             echo "${key}=${value}" >> $GITHUB_OUTPUT
           done <<< "$output"
 
-  release:
-    name: Release
+  build-release:
+    name: Build Release
     needs: check
     if: needs.check.outputs.should_release == 'true'
     runs-on: ubuntu-latest
@@ -53,19 +57,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: jdx/mise-action@v2
-
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Create and push tag
-        run: |
-          git tag -a ${{ needs.check.outputs.next_version }} -m "Release ${{ needs.check.outputs.next_version }}"
-          git push origin ${{ needs.check.outputs.next_version }}
 
       - name: Build CLI binaries
         run: |
@@ -90,11 +83,50 @@ jobs:
           else
             echo "::notice title=Signing Skipped::No signing keys configured. This is expected for external contributors."
           fi
-          
+
+      - name: Remove CHANGELOG.md from artifacts
+        run: |
+          rm -f release/CHANGELOG.md
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts
+          path: release/
+          retention-days: 1
+
+  publish-release:
+    name: Publish Release
+    needs: [check, build-release, docker]
+    if: needs.check.outputs.should_release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: jdx/mise-action@v2
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-artifacts
+          path: release/
 
       - name: Generate changelog
         run: |
           mise run release:generate-changelog "release/CHANGELOG.md" "${{ needs.check.outputs.next_version }}"
+
+      - name: Create and push tag
+        run: |
+          git tag -a ${{ needs.check.outputs.next_version }} -m "Release ${{ needs.check.outputs.next_version }}"
+          git push origin ${{ needs.check.outputs.next_version }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

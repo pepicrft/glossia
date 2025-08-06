@@ -41,9 +41,17 @@ for platform in "${PLATFORMS[@]}"; do
   # Build binary
   echo "Building for $goos/$goarch${goarm:+v$goarm}..."
   cd cli
+  output_file="../$OUTPUT_DIR/glossia-${goos}-${goarch}${goarm:+v$goarm}${suffix}"
   go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
-    -o "../$OUTPUT_DIR/glossia-${goos}-${goarch}${goarm:+v$goarm}${suffix}" \
+    -o "$output_file" \
     ./main.go
+  
+  # Ad-hoc sign macOS binaries to avoid Gatekeeper issues
+  if [[ "$goos" == "darwin" ]] && command -v codesign &> /dev/null; then
+    echo "Ad-hoc signing macOS binary..."
+    codesign --sign - --force --preserve-metadata=entitlements,requirements,flags,runtime "$output_file"
+  fi
+  
   cd ..
   
   # Unset GOARM if it was set
