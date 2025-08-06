@@ -6,7 +6,6 @@ on:
   pull_request: {}
 
 env:
-  MISE_EXPERIMENTAL: "1"
   MISE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
 
@@ -38,8 +37,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-mix-
       - uses: jdx/mise-action@v2
-        with:
-          cache: true
       - run: mise run lint/web
   web-build:
     name: Build
@@ -55,8 +52,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-mix-
       - uses: jdx/mise-action@v2
-        with:
-          cache: true
       - run: mise run build/web
   web-test:
     name: Test
@@ -85,6 +80,4 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-mix-test
       - uses: jdx/mise-action@v2
-        with:
-          cache: true
       - run: mise run test/web

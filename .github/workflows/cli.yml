@@ -4,14 +4,10 @@ on:
     branches:
       - main
     paths:
-      - 'cli/**'
-      - '.github/workflows/cli-ci.yml'
-      - 'mise.toml'
-  pull_request:
-    paths:
-      - 'cli/**'
-      - '.github/workflows/cli-ci.yml'
-      - 'mise.toml'
+      - "cli/**"
+      - ".github/workflows/cli-ci.yml"
+      - "mise.toml"
+  pull_request: {}
 
 env:
   MISE_EXPERIMENTAL: "1"
@@ -19,34 +15,29 @@ env:
   MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
 
 jobs:
-  cli-lint:
+  Lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
-        with:
-          cache: true
       - run: mise run lint/cli
 
-  cli-test:
+  Test:
     name: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
-        with:
-          cache: true
       - run: mise run test/cli
 
-  cli-build:
+  Build:
     name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
-        with:
-          cache: true
       - run: mise run build/cli
       - name: Test CLI binary
-        run: cd cli && ./glossia --help
+        working-directory: cli
+        run: ./glossia --help
