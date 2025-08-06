@@ -18,12 +18,11 @@ permissions:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/web
+  MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
 
 jobs:
   check:
     runs-on: ubuntu-latest
-    env:
-      MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
     outputs:
       should_release: ${{ steps.check.outputs.should_release }}
       next_version: ${{ steps.version.outputs.next_version }}

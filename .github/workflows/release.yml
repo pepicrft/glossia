@@ -17,6 +17,7 @@ permissions:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/web
+  MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
 
 jobs:
   # ============================================================================
@@ -25,8 +26,6 @@ jobs:
   check:
     if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    env:
-      MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
     outputs:
       should_release: ${{ steps.check.outputs.should_release }}
       next_version: ${{ steps.version.outputs.next_version }}
@@ -295,8 +294,6 @@ jobs:
     needs: [prepare, cli, docker]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
-    env:
-      MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
     steps:
       - uses: actions/checkout@v4
         with:
