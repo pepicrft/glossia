@@ -47,4 +47,8 @@ Glossia consists of two main components:
 
 ## Getting Started
 
-Ready to modernize your localization workflow? Check out our [Quick Start Guide](/quickstart) to get Glossia up and running in minutes.
+Ready to modernize your localization workflow? Get started by installing Glossia using mise:
+
+```bash
+mise use -g ubi:pepicrft/glossia
+```
