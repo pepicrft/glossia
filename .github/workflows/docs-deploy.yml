@@ -1,0 +1,30 @@
+name: Deploy Docs
+on:
+  push:
+    branches:
+      - main
+
+env:
+  MISE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  deploy:
+    name: Deploy to Cloudflare Pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            docs/node_modules
+            docs/.vitepress/cache
+            docs/.vitepress/dist
+          key: ${{ runner.os }}-pnpm-docs-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-docs-
+
+      - uses: jdx/mise-action@v2
+
+      - name: Deploy documentation
+        run: mise run deploy/docs
