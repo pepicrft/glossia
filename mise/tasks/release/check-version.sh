@@ -20,22 +20,34 @@ if [ -s UNRELEASED.md ]; then
   # Analyze commits to determine version bump
   # Use different range based on whether tags exist
   if [ -z "$CURRENT_VERSION" ]; then
-    GIT_RANGE="HEAD"
+    GIT_RANGE=""
   else
     GIT_RANGE="${CURRENT_VERSION}..HEAD"
   fi
   
   # Check for breaking changes
-  if git log ${GIT_RANGE} --grep="BREAKING CHANGE" --grep="!:" | grep -q .; then
+  if [ -z "$GIT_RANGE" ]; then
+    git log --grep="BREAKING CHANGE" --grep="!:" | grep -q . && FOUND_BREAKING=true || FOUND_BREAKING=false
+  else
+    git log ${GIT_RANGE} --grep="BREAKING CHANGE" --grep="!:" | grep -q . && FOUND_BREAKING=true || FOUND_BREAKING=false
+  fi
+  
+  if [ "$FOUND_BREAKING" = "true" ]; then
     BUMP_TYPE="major"
   # Check for features
-  elif git log ${GIT_RANGE} --grep="^feat" --grep="^feature" | grep -q .; then
-    BUMP_TYPE="minor"
-  # Check for fixes
-  elif git log ${GIT_RANGE} --grep="^fix" --grep="^bugfix" | grep -q .; then
-    BUMP_TYPE="patch"
+  elif [ -z "$GIT_RANGE" ]; then
+    git log --grep="^feat" --grep="^feature" | grep -q . && BUMP_TYPE="minor" || BUMP_TYPE=""
   else
-    BUMP_TYPE="none"
+    git log ${GIT_RANGE} --grep="^feat" --grep="^feature" | grep -q . && BUMP_TYPE="minor" || BUMP_TYPE=""
+  fi
+  
+  # Check for fixes if no feature found
+  if [ -z "$BUMP_TYPE" ]; then
+    if [ -z "$GIT_RANGE" ]; then
+      git log --grep="^fix" --grep="^bugfix" | grep -q . && BUMP_TYPE="patch" || BUMP_TYPE="none"
+    else
+      git log ${GIT_RANGE} --grep="^fix" --grep="^bugfix" | grep -q . && BUMP_TYPE="patch" || BUMP_TYPE="none"
+    fi
   fi
   
   if [ "$BUMP_TYPE" != "none" ]; then

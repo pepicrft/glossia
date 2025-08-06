@@ -31,20 +31,20 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
+
       - uses: jdx/mise-action@v2
-          
+
       - name: Check version
         id: check
         run: |
           # Run mise task and capture output
           output=$(mise run release:check-version)
-          
+
           # Parse output and set GitHub outputs
           while IFS='=' read -r key value; do
             echo "${key}=${value}" >> $GITHUB_OUTPUT
           done <<< "$output"
-          
+
           # Display info
           echo "::notice title=Version Check::$(echo "$output" | grep -E 'should_release|next_version|bump_type')"
 
@@ -53,30 +53,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: jdx/mise-action@v2
-          
+
       - name: Build test binaries
         working-directory: cli
         run: |
           VERSION=${{ needs.check.outputs.next_version || 'dry-run' }}
           echo "::notice title=Build Test::Building CLI binaries with version ${VERSION}"
-          
+
           # Build just a few platforms for testing
           mkdir -p ../test-release
-          
+
           # Linux amd64
           GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
             -o ../test-release/glossia-linux-amd64 ./main.go
-            
+
           # Darwin arm64
           GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
             -o ../test-release/glossia-darwin-arm64 ./main.go
-            
+
           # Windows amd64
           GOOS=windows GOARCH=amd64 go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
             -o ../test-release/glossia-windows-amd64.exe ./main.go
-            
+
           echo "::notice title=Binaries Built::Test binaries created successfully"
 
   docker:
@@ -84,10 +84,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        
+
       - name: Build Docker image (dry run - no push)
         uses: docker/build-push-action@v5
         with:
@@ -106,7 +106,7 @@ jobs:
         run: |
           echo "# 📋 Release Dry Run Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ "${{ needs.check.outputs.should_release }}" == "true" ]; then
             echo "## ✅ Release would be triggered" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
@@ -117,23 +117,23 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "No conventional commits found that warrant a release." >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## 🔨 Build Status" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ "${{ needs.cli.result }}" == "success" ]; then
             echo "- ✅ CLI builds: Success" >> $GITHUB_STEP_SUMMARY
           else
             echo "- ❌ CLI builds: Failed" >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           if [ "${{ needs.docker.result }}" == "success" ]; then
             echo "- ✅ Docker build: Success" >> $GITHUB_STEP_SUMMARY
           else
             echo "- ❌ Docker build: Failed" >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "*This was a dry run. No releases or tags were created.*" >> $GITHUB_STEP_SUMMARY
