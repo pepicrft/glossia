@@ -78,7 +78,7 @@ jobs:
           mise run release:generate-checksums "release"
 
       - name: Sign files
-        if: ${{ secrets.GPG_PRIVATE_KEY != '' || secrets.MINISIGN_PRIVATE_KEY != '' }}
+        if: ${{ secrets.GPG_PRIVATE_KEY || secrets.MINISIGN_PRIVATE_KEY }}
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           MINISIGN_PRIVATE_KEY: ${{ secrets.MINISIGN_PRIVATE_KEY }}
@@ -87,7 +87,7 @@ jobs:
           mise run release:sign-files "release"
           
       - name: Note about signing
-        if: ${{ secrets.GPG_PRIVATE_KEY == '' && secrets.MINISIGN_PRIVATE_KEY == '' }}
+        if: ${{ !secrets.GPG_PRIVATE_KEY && !secrets.MINISIGN_PRIVATE_KEY }}
         run: |
           echo "::notice title=Signing Skipped::No signing keys configured. This is expected for external contributors."
 
