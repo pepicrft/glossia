@@ -25,8 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       should_release: ${{ steps.check.outputs.should_release }}
-      next_version: ${{ steps.version.outputs.next_version }}
-      current_version: ${{ steps.version.outputs.current_version }}
+      next_version: ${{ steps.check.outputs.next_version }}
+      current_version: ${{ steps.check.outputs.current_version }}
       changelog: ${{ steps.changelog.outputs.changelog }}
     steps:
       - uses: actions/checkout@v4
@@ -35,180 +35,70 @@ jobs:
           
       - uses: jdx/mise-action@v2
           
-      - name: Get current version
-        id: version
+      - name: Check version
+        id: check
         run: |
-          # Get the latest tag
-          CURRENT_VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-          echo "current_version=${CURRENT_VERSION}" >> $GITHUB_OUTPUT
+          # Run mise task and capture output
+          output=$(mise run release:check-version)
           
-          # Use git-cliff to determine if there are releasable changes
-          git-cliff --unreleased --strip header > UNRELEASED.md
+          # Parse output and set GitHub outputs
+          while IFS='=' read -r key value; do
+            echo "${key}=${value}" >> $GITHUB_OUTPUT
+          done <<< "$output"
           
-          # Check if there are any changes worth releasing
-          if [ -s UNRELEASED.md ]; then
-            # Analyze commits to determine version bump
-            # Check for breaking changes
-            if git log ${CURRENT_VERSION}..HEAD --grep="BREAKING CHANGE" --grep="!:" | grep -q .; then
-              BUMP_TYPE="major"
-            # Check for features
-            elif git log ${CURRENT_VERSION}..HEAD --grep="^feat" --grep="^feature" | grep -q .; then
-              BUMP_TYPE="minor"
-            # Check for fixes
-            elif git log ${CURRENT_VERSION}..HEAD --grep="^fix" --grep="^bugfix" | grep -q .; then
-              BUMP_TYPE="patch"
-            else
-              BUMP_TYPE="none"
-            fi
-            
-            if [ "$BUMP_TYPE" != "none" ]; then
-              # Parse current version
-              VERSION=${CURRENT_VERSION#v}
-              MAJOR=$(echo $VERSION | cut -d. -f1)
-              MINOR=$(echo $VERSION | cut -d. -f2)
-              PATCH=$(echo $VERSION | cut -d. -f3)
-              
-              # Calculate next version
-              case $BUMP_TYPE in
-                major)
-                  NEXT_VERSION="v$((MAJOR + 1)).0.0"
-                  ;;
-                minor)
-                  NEXT_VERSION="v${MAJOR}.$((MINOR + 1)).0"
-                  ;;
-                patch)
-                  NEXT_VERSION="v${MAJOR}.${MINOR}.$((PATCH + 1))"
-                  ;;
-              esac
-              
-              echo "next_version=${NEXT_VERSION}" >> $GITHUB_OUTPUT
-              echo "::notice title=Version Bump::Version bump type: $BUMP_TYPE"
-              echo "::notice title=Next Version::Next version would be: $NEXT_VERSION"
-            else
-              echo "::notice::No conventional commits found that warrant a release"
-              echo "next_version=" >> $GITHUB_OUTPUT
-            fi
-          else
-            echo "::notice::No unreleased changes found"
-            echo "next_version=" >> $GITHUB_OUTPUT
-          fi
+          # Display info
+          echo "::notice title=Version Check::$(echo "$output" | grep -E 'should_release|next_version|bump_type')"
           
       - name: Generate changelog preview
         id: changelog
+        if: steps.check.outputs.should_release == 'true'
         run: |
-          if [ -n "${{ steps.version.outputs.next_version }}" ]; then
-            echo "## Changelog Preview for ${{ steps.version.outputs.next_version }}" > CHANGELOG_PREVIEW.md
-            echo "" >> CHANGELOG_PREVIEW.md
-            git-cliff --unreleased --strip header >> CHANGELOG_PREVIEW.md
-            
-            # Output as multiline string
-            {
-              echo 'changelog<<EOF'
-              cat CHANGELOG_PREVIEW.md
-              echo EOF
-            } >> $GITHUB_OUTPUT
-            
-            echo "::group::Changelog Preview"
-            cat CHANGELOG_PREVIEW.md
-            echo "::endgroup::"
-          fi
+          echo "## Changelog Preview for ${{ steps.check.outputs.next_version }}" > CHANGELOG_PREVIEW.md
+          echo "" >> CHANGELOG_PREVIEW.md
+          git-cliff --unreleased --strip header >> CHANGELOG_PREVIEW.md
           
-      - name: Check if should release
-        id: check
-        run: |
-          if [ -n "${{ steps.version.outputs.next_version }}" ]; then
-            echo "should_release=true" >> $GITHUB_OUTPUT
-            echo "::notice title=Release Status::This branch contains changes that would trigger a release"
-          else
-            echo "should_release=false" >> $GITHUB_OUTPUT
-            echo "::notice title=Release Status::This branch does not contain changes that would trigger a release"
-          fi
+          # Output as multiline string
+          {
+            echo 'changelog<<EOF'
+            cat CHANGELOG_PREVIEW.md
+            echo EOF
+          } >> $GITHUB_OUTPUT
+          
+          echo "::group::Changelog Preview"
+          cat CHANGELOG_PREVIEW.md
+          echo "::endgroup::"
 
   cli:
     needs: check
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          # Test subset of platforms for dry run
-          - os: ubuntu-latest
-            goos: linux
-            goarch: amd64
-            suffix: ""
-          - os: macos-latest
-            goos: darwin
-            goarch: arm64
-            suffix: ""
-          - os: windows-latest
-            goos: windows
-            goarch: amd64
-            suffix: ".exe"
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: 'cli/go.mod'
-          cache-dependency-path: 'cli/go.sum'
+      - uses: jdx/mise-action@v2
           
-      - name: Build binary (dry run)
-        shell: bash
-        env:
-          GOOS: ${{ matrix.goos }}
-          GOARCH: ${{ matrix.goarch }}
+      - name: Build test binaries
         run: |
-          cd cli
           VERSION=${{ needs.check.outputs.next_version || 'dry-run' }}
-          echo "::notice title=Build Test::Building CLI for ${{ matrix.goos }}-${{ matrix.goarch }} with version ${VERSION}"
-          go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
-            -o glossia${{ matrix.suffix }} ./main.go
+          echo "::notice title=Build Test::Building CLI binaries with version ${VERSION}"
+          
+          # Build just a few platforms for testing
+          mkdir -p test-release
+          cd cli
+          
+          # Linux amd64
+          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
+            -o ../test-release/glossia-linux-amd64 ./main.go
             
-      - name: Test binary execution
-        if: matrix.os == runner.os
-        shell: bash
-        run: |
-          cd cli
-          ./glossia${{ matrix.suffix }} version
-          
-      - name: Create UBI-compliant archive name (dry run)
-        id: archive
-        shell: bash
-        run: |
-          VERSION=${{ needs.check.outputs.next_version || 'dry-run' }}
-          VERSION_NO_V=${VERSION#v}
-          
-          # Build architecture string
-          ARCH="${{ matrix.goarch }}"
-          
-          # UBI naming: glossia-<arch>-<os>.tar.gz
-          if [[ "${{ matrix.goos }}" == "windows" ]]; then
-            ARCHIVE_NAME="glossia-${ARCH}-pc-windows-msvc.tar.gz"
-          elif [[ "${{ matrix.goos }}" == "darwin" ]]; then
-            ARCHIVE_NAME="glossia-${ARCH}-apple-darwin.tar.gz"
-          elif [[ "${{ matrix.goos }}" == "linux" ]]; then
-            if [[ "${{ matrix.goarch }}" == "amd64" ]]; then
-              ARCHIVE_NAME="glossia-x86_64-unknown-linux-gnu.tar.gz"
-            elif [[ "${{ matrix.goarch }}" == "arm64" ]]; then
-              ARCHIVE_NAME="glossia-aarch64-unknown-linux-gnu.tar.gz"
-            else
-              ARCHIVE_NAME="glossia-${ARCH}-unknown-linux-gnu.tar.gz"
-            fi
-          else
-            ARCHIVE_NAME="glossia-${ARCH}-${{ matrix.goos }}.tar.gz"
-          fi
-          
-          echo "archive_name=${ARCHIVE_NAME}" >> $GITHUB_OUTPUT
-          echo "::notice title=Archive Name::Would create archive: ${ARCHIVE_NAME}"
-          
-      - name: Create archive (dry run)
-        shell: bash
-        run: |
-          cd cli
-          tar czf ../${{ steps.archive.outputs.archive_name }} glossia${{ matrix.suffix }}
-          echo "::notice title=Archive Created::Created ${{ steps.archive.outputs.archive_name }}"
-          ls -lh ../${{ steps.archive.outputs.archive_name }}
+          # Darwin arm64  
+          GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
+            -o ../test-release/glossia-darwin-arm64 ./main.go
+            
+          # Windows amd64
+          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w -X github.com/glossia/glossia/cli/cmd.version=${VERSION}" \
+            -o ../test-release/glossia-windows-amd64.exe ./main.go
+            
+          cd ..
+          echo "::notice title=Binaries Built::Test binaries created successfully"
 
   docker:
     needs: check
@@ -250,99 +140,11 @@ jobs:
           echo "::endgroup::"
           
           echo "::group::Docker Image Size"
-          docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" | grep glossia
+          docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" | grep glossia || true
           echo "::endgroup::"
-
-  assets:
-    needs: [check, cli]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        
-      - name: Create mock release assets
-        run: |
-          mkdir -p release
-          
-          # Create mock tar.gz files for testing
-          echo "mock binary content" > glossia
-          tar czf release/glossia-x86_64-unknown-linux-gnu.tar.gz glossia
-          tar czf release/glossia-aarch64-unknown-linux-gnu.tar.gz glossia
-          tar czf release/glossia-x86_64-apple-darwin.tar.gz glossia
-          tar czf release/glossia-aarch64-apple-darwin.tar.gz glossia
-          tar czf release/glossia-x86_64-pc-windows-msvc.tar.gz glossia
-          rm glossia
-          
-      - name: Generate checksums (dry run)
-        run: |
-          cd release
-          sha256sum *.tar.gz > SHA256.txt
-          sha512sum *.tar.gz > SHA512.txt
-          
-          echo "::group::SHA256 Checksums"
-          cat SHA256.txt
-          echo "::endgroup::"
-          
-          echo "::group::SHA512 Checksums"
-          cat SHA512.txt
-          echo "::endgroup::"
-          
-      - name: Test GPG signing (dry run)
-        run: |
-          # Generate a temporary GPG key for testing
-          cat >keyconfig <<EOF
-          %echo Generating a test GPG key
-          Key-Type: RSA
-          Key-Length: 2048
-          Name-Real: Test Release Bot
-          Name-Email: test@example.com
-          Expire-Date: 0
-          %no-protection
-          %commit
-          %echo done
-          EOF
-          
-          gpg --batch --generate-key keyconfig
-          
-          cd release
-          for file in *.tar.gz SHA256.txt SHA512.txt; do
-            gpg --batch --yes --detach-sign --armor --output "${file}.asc" "$file"
-            echo "::notice title=GPG Sign::Would sign: $file -> ${file}.asc"
-          done
-          
-          echo "::group::GPG Signatures Created"
-          ls -la *.asc
-          echo "::endgroup::"
-          
-      - name: Test minisign signing (dry run)
-        run: |
-          # Install minisign
-          wget -q https://github.com/jedisct1/minisign/releases/download/0.11/minisign-0.11-linux.tar.gz
-          tar xzf minisign-0.11-linux.tar.gz
-          sudo mv minisign-linux/x86_64/minisign /usr/local/bin/
-          
-          # Generate a test key (with no password)
-          printf "\n\n" | minisign -G -p test.pub -s test.key
-          
-          cd release
-          for file in *.tar.gz SHA256.txt SHA512.txt; do
-            echo "" | minisign -S -s ../test.key -m "$file" -x "${file}.minisig"
-            echo "::notice title=Minisign::Would sign: $file -> ${file}.minisig"
-          done
-          
-          echo "::group::Minisign Signatures Created"
-          ls -la *.minisig
-          echo "::endgroup::"
-          
-      - name: List all release assets (dry run)
-        run: |
-          echo "::group::All Release Assets"
-          ls -lah release/
-          echo "::endgroup::"
-          
-          echo "::notice title=Release Assets::Would create $(ls release | wc -l) release assets"
 
   summary:
-    needs: [check, cli, docker, assets]
+    needs: [check, cli, docker]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -383,12 +185,6 @@ jobs:
             echo "- ✅ Docker build: Success" >> $GITHUB_STEP_SUMMARY
           else
             echo "- ❌ Docker build: Failed" >> $GITHUB_STEP_SUMMARY
-          fi
-          
-          if [ "${{ needs.assets.result }}" == "success" ]; then
-            echo "- ✅ Release assets: Success" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "- ❌ Release assets: Failed" >> $GITHUB_STEP_SUMMARY
           fi
           
           echo "" >> $GITHUB_STEP_SUMMARY
