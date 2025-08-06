@@ -24,7 +24,7 @@ jobs:
           git config --global user.email "release@glossia.org"
           git config --global user.name "Glossia Releaser"
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
