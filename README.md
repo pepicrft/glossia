@@ -36,9 +36,7 @@ View all available tags: [ghcr.io/pepicrft/glossia](https://github.com/pepicrft/
 
 ## 💻 Installation
 
-### 🎯 Recommended: Install with mise
-
-The easiest way to install Glossia on any platform is using [mise](https://mise.jdx.dev/):
+Install Glossia using [mise](https://mise.jdx.dev/):
 
 ```bash
 # Install the latest version
@@ -49,41 +47,6 @@ mise use -g ubi:pepicrft/glossia@0.5.0
 ```
 
 This works on macOS, Linux, and Windows (via WSL).
-
-### 🍎 macOS
-
-Download the appropriate binary for your architecture:
-- [Intel Mac (x86_64)](https://github.com/pepicrft/glossia/releases/latest/download/glossia-x86_64-apple-darwin.tar.gz)
-- [Apple Silicon (M1/M2)](https://github.com/pepicrft/glossia/releases/latest/download/glossia-aarch64-apple-darwin.tar.gz)
-
-```bash
-# Extract and install
-tar -xzf glossia-*.tar.gz
-chmod +x glossia
-sudo mv glossia /usr/local/bin/
-```
-
-### 🐧 Linux
-
-Download for your architecture:
-- [x86_64](https://github.com/pepicrft/glossia/releases/latest/download/glossia-x86_64-unknown-linux-gnu.tar.gz)
-- [ARM64](https://github.com/pepicrft/glossia/releases/latest/download/glossia-aarch64-unknown-linux-gnu.tar.gz)
-- [ARMv7](https://github.com/pepicrft/glossia/releases/latest/download/glossia-armv7-unknown-linux-gnueabihf.tar.gz)
-
-```bash
-# Extract and install
-tar -xzf glossia-*.tar.gz
-chmod +x glossia
-sudo mv glossia /usr/local/bin/
-```
-
-### 🪟 Windows
-
-Download for your architecture:
-- [x86_64](https://github.com/pepicrft/glossia/releases/latest/download/glossia-x86_64-pc-windows-msvc.tar.gz)
-- [ARM64](https://github.com/pepicrft/glossia/releases/latest/download/glossia-aarch64-pc-windows-msvc.tar.gz)
-
-Extract the archive and add the `glossia.exe` to your PATH.
 
 ## 🚀 Quick Start
 
