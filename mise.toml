@@ -9,7 +9,7 @@ go = "1.24.6"
 "jq" = "1.7.1"
 "cargo:mcp-proxy" = "latest"
 "node" = "24.5.0"
-"npm:@anthropic-ai/claude-code" = "1.0.69"
+"npm:@anthropic-ai/claude-code" = "1.0.70"
 "npm:@playwright/mcp" = "0.0.32"
 
 [hooks]
