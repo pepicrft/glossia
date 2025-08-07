@@ -12,7 +12,7 @@ go = "1.24.6"
 "npm:@anthropic-ai/claude-code" = "1.0.70"
 "npm:@playwright/mcp" = "0.0.32"
 "pnpm" = "10.14.0"
-"npm:wrangler" = "4.28.0"
+"npm:wrangler" = "4.28.1"
 
 [hooks]
 postinstall = "mise run install"
