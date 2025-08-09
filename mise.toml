@@ -10,7 +10,7 @@ go = "1.24.6"
 "cargo:mcp-proxy" = "latest"
 "node" = "24.5.0"
 "npm:@anthropic-ai/claude-code" = "1.0.72"
-"npm:@playwright/mcp" = "0.0.32"
+"npm:@playwright/mcp" = "0.0.33"
 "pnpm" = "10.14.0"
 "npm:wrangler" = "4.28.1"
 
