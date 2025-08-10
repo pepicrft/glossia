@@ -52,7 +52,7 @@ defmodule Glossia.MixProject do
   defp deps do
     [
       # Local dependencies
-      {:glossia_daemon, path: "../daemon", env: :dev},
+      {:glossia_daemon, path: "../daemon", only: [:dev, :test]},
 
       # Phoenix and related
       {:phoenix, "~> 1.8.0"},
