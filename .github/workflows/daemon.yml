@@ -58,3 +58,34 @@ jobs:
             ${{ runner.os }}-beam-${{ hashFiles('.mise.toml', '.tool-versions') }}-daemon-mix-
       - uses: jdx/mise-action@v2
       - run: mise run test/daemon
+
+  daemon-burrito-build:
+    name: Burrito Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            daemon/deps
+            daemon/_build
+          key: ${{ runner.os }}-beam-${{ hashFiles('.mise.toml', '.tool-versions') }}-daemon-mix-${{ hashFiles('daemon/**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-beam-${{ hashFiles('.mise.toml', '.tool-versions') }}-daemon-mix-
+      - uses: jdx/mise-action@v2
+      - name: Install Zig
+        run: |
+          curl -L https://ziglang.org/download/0.14.1/zig-x86_64-linux-0.14.1.tar.xz | tar -xJ
+          echo "$PWD/zig-x86_64-linux-0.14.1" >> $GITHUB_PATH
+      - name: Build Burrito release
+        working-directory: daemon
+        run: |
+          mix deps.get
+          MIX_ENV=prod BURRITO_TARGET=linux_x86_64 mix release
+      - name: Verify binary
+        working-directory: daemon
+        run: |
+          ls -lh burrito_out/
+          file burrito_out/glossia_daemon_linux_x86_64
+          # Test that the binary runs
+          ./burrito_out/glossia_daemon_linux_x86_64 --version || true

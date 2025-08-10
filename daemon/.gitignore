@@ -24,3 +24,6 @@ glossia_daemon-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# Burrito output directory
+/burrito_out/

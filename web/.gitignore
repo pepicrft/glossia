@@ -36,3 +36,6 @@ npm-debug.log
 /assets/node_modules/
 
 .DS_Store
+
+# Ignore daemon binary (generated during Docker build)
+/priv/static/bin/daemon.tar.gz
