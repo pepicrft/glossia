@@ -19,9 +19,9 @@ jobs:
           path: |
             daemon/deps
             daemon/_build
-          key: ${{ runner.os }}-daemon-mix-${{ hashFiles('daemon/**/mix.lock') }}
+          key: ${{ runner.os }}-beam-${{ hashFiles('.mise.toml', '.tool-versions') }}-daemon-mix-${{ hashFiles('daemon/**/mix.lock') }}
           restore-keys: |
-            ${{ runner.os }}-daemon-mix-
+            ${{ runner.os }}-beam-${{ hashFiles('.mise.toml', '.tool-versions') }}-daemon-mix-
       - uses: jdx/mise-action@v2
       - run: mise run lint/daemon
 
@@ -35,9 +35,9 @@ jobs:
           path: |
             daemon/deps
             daemon/_build
-          key: ${{ runner.os }}-daemon-mix-${{ hashFiles('daemon/**/mix.lock') }}
+          key: ${{ runner.os }}-beam-${{ hashFiles('.mise.toml', '.tool-versions') }}-daemon-mix-${{ hashFiles('daemon/**/mix.lock') }}
           restore-keys: |
-            ${{ runner.os }}-daemon-mix-
+            ${{ runner.os }}-beam-${{ hashFiles('.mise.toml', '.tool-versions') }}-daemon-mix-
       - uses: jdx/mise-action@v2
       - run: mise run build/daemon
 
@@ -53,8 +53,8 @@ jobs:
           path: |
             daemon/deps
             daemon/_build
-          key: ${{ runner.os }}-daemon-mix-test-${{ hashFiles('daemon/**/mix.lock') }}
+          key: ${{ runner.os }}-beam-${{ hashFiles('.mise.toml', '.tool-versions') }}-daemon-mix-${{ hashFiles('daemon/**/mix.lock') }}
           restore-keys: |
-            ${{ runner.os }}-daemon-mix-test-
+            ${{ runner.os }}-beam-${{ hashFiles('.mise.toml', '.tool-versions') }}-daemon-mix-
       - uses: jdx/mise-action@v2
       - run: mise run test/daemon
