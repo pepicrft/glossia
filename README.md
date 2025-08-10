@@ -27,6 +27,7 @@ This monorepo contains:
 
 - **`web/`** - 🌐 Phoenix web application (Elixir/Erlang)
 - **`cli/`** - 🛠️ Command-line interface (Go)
+- **`daemon/`** - 🔧 Daemon library for running operations in remote environments (Elixir)
 - **`docs/`** - 📖 Documentation site (VitePress)
 
 ## 🐳 Docker Image
