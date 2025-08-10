@@ -53,7 +53,7 @@ defmodule Glossia.MixProject do
     [
       # Local dependencies
       {:glossia_daemon, path: "../daemon", env: :dev},
-      
+
       # Phoenix and related
       {:phoenix, "~> 1.8.0"},
       {:phoenix_ecto, "~> 4.5"},
