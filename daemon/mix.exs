@@ -13,7 +13,8 @@ defmodule GlossiaDaemon.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
-      description: description()
+      description: description(),
+      releases: releases()
     ]
   end
 
@@ -33,7 +34,8 @@ defmodule GlossiaDaemon.MixProject do
 
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger],
+      mod: {GlossiaDaemon.Application, []}
     ]
   end
 
@@ -45,7 +47,23 @@ defmodule GlossiaDaemon.MixProject do
       {:quokka, "~> 2.10", only: [:dev, :test], runtime: false},
       {:jason, "~> 1.2"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:burrito, "~> 1.0"}
+    ]
+  end
+
+  defp releases do
+    [
+      glossia_daemon: [
+        steps: [:assemble, &Burrito.wrap/1],
+        burrito: [
+          targets: [
+            linux_x86_64: [os: :linux, cpu: :x86_64],
+            linux_aarch64: [os: :linux, cpu: :aarch64]
+          ],
+          arg: [GlossiaDaemon.CLI, :main, []]
+        ]
+      ]
     ]
   end
 end
