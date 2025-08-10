@@ -13,6 +13,12 @@ if [ -f "web/mix.exs" ]; then
     fi
 fi
 
+# Install daemon dependencies if daemon directory exists and has mix.exs
+if [ -f "daemon/mix.exs" ]; then
+    echo "📦 Installing daemon dependencies..."
+    (cd daemon && mix deps.get)
+fi
+
 # Install CLI dependencies if cli directory exists and has go.mod
 if [ -f "cli/go.mod" ]; then
     echo "📦 Installing CLI dependencies..."

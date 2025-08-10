@@ -36,7 +36,8 @@ All commands should be run from the `web/` directory.
 ### Setup and Dependencies
 ```bash
 mix setup                    # Full project setup (deps, db, assets)
-mix deps.get                # Install dependencies only
+# Note: Dependencies are automatically installed by `mise install`
+# You typically don't need to run `mix deps.get` manually
 ```
 
 ### Database Operations

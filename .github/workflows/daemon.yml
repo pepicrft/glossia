@@ -1,0 +1,60 @@
+name: Daemon
+on:
+  push:
+    branches:
+      - main
+  pull_request: {}
+
+env:
+  MISE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  daemon-check:
+    name: Static checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            daemon/deps
+            daemon/_build
+          key: ${{ runner.os }}-beam-${{ hashFiles('.mise.toml', '.tool-versions') }}-daemon-mix-${{ hashFiles('daemon/**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-beam-${{ hashFiles('.mise.toml', '.tool-versions') }}-daemon-mix-
+      - uses: jdx/mise-action@v2
+      - run: mise run lint/daemon
+
+  daemon-build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            daemon/deps
+            daemon/_build
+          key: ${{ runner.os }}-beam-${{ hashFiles('.mise.toml', '.tool-versions') }}-daemon-mix-${{ hashFiles('daemon/**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-beam-${{ hashFiles('.mise.toml', '.tool-versions') }}-daemon-mix-
+      - uses: jdx/mise-action@v2
+      - run: mise run build/daemon
+
+  daemon-test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      MIX_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            daemon/deps
+            daemon/_build
+          key: ${{ runner.os }}-beam-${{ hashFiles('.mise.toml', '.tool-versions') }}-daemon-mix-${{ hashFiles('daemon/**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-beam-${{ hashFiles('.mise.toml', '.tool-versions') }}-daemon-mix-
+      - uses: jdx/mise-action@v2
+      - run: mise run test/daemon
