@@ -5,5 +5,4 @@ set -eo pipefail
 
 cd daemon
 
-mix deps.get
 mix compile

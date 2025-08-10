@@ -9,7 +9,7 @@ env:
   MISE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  Check:
+  daemon-check:
     name: Static checks
     runs-on: ubuntu-latest
     steps:
@@ -23,17 +23,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-daemon-mix-
       - uses: jdx/mise-action@v2
-      - name: Install dependencies
-        working-directory: daemon
-        run: mix deps.get
-      - name: Format check
-        working-directory: daemon
-        run: mix format --check-formatted
-      - name: Run Credo
-        working-directory: daemon
-        run: mix credo --strict
+      - run: mise run lint/daemon
 
-  Build:
+  daemon-build:
     name: Build
     runs-on: ubuntu-latest
     steps:
@@ -47,14 +39,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-daemon-mix-
       - uses: jdx/mise-action@v2
-      - name: Install dependencies
-        working-directory: daemon
-        run: mix deps.get
-      - name: Compile
-        working-directory: daemon
-        run: mix compile --warnings-as-errors
+      - run: mise run build/daemon
 
-  Test:
+  daemon-test:
     name: Test
     runs-on: ubuntu-latest
     env:
@@ -70,9 +57,4 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-daemon-mix-test-
       - uses: jdx/mise-action@v2
-      - name: Install dependencies
-        working-directory: daemon
-        run: mix deps.get
-      - name: Run tests
-        working-directory: daemon
-        run: mix test
+      - run: mise run test/daemon

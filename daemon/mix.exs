@@ -42,11 +42,9 @@ defmodule GlossiaDaemon.MixProject do
 
   defp deps do
     [
+      {:quokka, "~> 2.10", only: [:dev, :test], runtime: false},
       {:jason, "~> 1.2"},
-      {:finch, "~> 0.13"},
-      {:telemetry, "~> 1.0"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:styler, "~> 1.4", only: [:dev, :test], runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
