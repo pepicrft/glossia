@@ -5,14 +5,14 @@ defmodule GlossiaDaemon.CLI do
 
   def main(args \\ []) do
     IO.puts("Glossia Daemon v#{Application.spec(:glossia_daemon, :vsn)}")
-    
+
     case args do
       ["--version" | _] ->
         IO.puts(Application.spec(:glossia_daemon, :vsn))
-        
+
       ["--help" | _] ->
         print_help()
-        
+
       _ ->
         IO.puts("Starting Glossia Daemon...")
         # Add daemon logic here
