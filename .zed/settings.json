@@ -1,0 +1,20 @@
+{
+  "languages": {
+    "Elixir": {
+      "language_servers": ["next-ls", "!elixir-ls", "..."],
+      "format_on_save": {
+        "external": {
+          "command": "mix",
+          "arguments": ["format", "--stdin-filename", "{buffer_path}", "-"]
+        }
+      }
+    }
+  },
+  "lsp": {
+    "elixir-ls": {
+      "settings": {
+        "dialyzerEnabled": false
+      }
+    }
+  }
+}

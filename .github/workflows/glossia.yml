@@ -1,0 +1,115 @@
+name: Glossia
+on:
+  push:
+    branches:
+      - main
+  pull_request: {}
+
+env:
+  MISE_GITHUB_TOKEN: ${{ secrets.MISE_GITHUB_TOKEN }}
+  MISE_SOPS_AGE_KEY: ${{ secrets.MISE_SOPS_AGE_KEY }}
+
+jobs:
+  build-image:
+    name: Build image
+    runs-on: ubuntu-latest
+    container:
+      image: node:20-bookworm
+      options: >-
+        --privileged
+      env:
+        DOCKER_HOST: "tcp://docker:2375"
+        DOCKER_TLS_CERTDIR: ""
+    services:
+      docker:
+        image: docker:24.0.5-dind
+        options: >-
+          --privileged
+        env:
+          DOCKER_TLS_CERTDIR: ""
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Docker
+        run: |
+          apt-get update
+          apt-get install -y ca-certificates curl gnupg
+          install -m 0755 -d /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+          chmod a+r /etc/apt/keyrings/docker.asc
+          # Add the repository to Apt sources:
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+            $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+            tee /etc/apt/sources.list.d/docker.list > /dev/null
+          apt-get update
+          apt-get install -y docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker
+      - name: Build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: glossia
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            web/deps
+            web/_build
+          key: ${{ runner.os }}-mix-${{ hashFiles('web/**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
+      - uses: https://github.com/jdx/mise-action@v3
+      - run: mise run lint
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            web/deps
+            web/_build
+          key: ${{ runner.os }}-mix-${{ hashFiles('web/**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
+      - uses: https://github.com/jdx/mise-action@v3
+      - run: mise run build
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      MIX_ENV: test
+    services:
+      postgres:
+        image: postgres:17
+        ports: ["5432:5432"]
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            web/deps
+            web/_build
+          key: ${{ runner.os }}-mix-test-${{ hashFiles('web/**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-test
+      - uses: https://github.com/jdx/mise-action@v3
+      - run: mise run test
+        env:
+          DATABASE_HOSTNAME: postgres

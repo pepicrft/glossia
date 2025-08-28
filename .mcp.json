@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "type": "stdio",
+      "command": "mise",
+      "args": ["x", "--", "mcp-server-playwright"],
+      "env": {}
+    },
+    "tidewave": {
+      "type": "stdio",
+      "command": "mise",
+      "args": ["x", "--", "mcp-proxy", "http://localhost:4000/tidewave/mcp"],
+      "env": {}
+    }
+  }
+}

@@ -1,0 +1,4 @@
+<h1>Commit {@commit[:sha]}</h1>
+<h2>{@selected_repository[:owner]}/{@selected_repository[:name]}</h2>
+
+<p :if={not is_nil(@configuration)}>{JSON.encode!(@configuration)}</p>

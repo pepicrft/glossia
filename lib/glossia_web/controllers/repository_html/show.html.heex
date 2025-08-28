@@ -1,0 +1,16 @@
+<h1>Repo: {@selected_repository[:name]}</h1>
+<p :if={not is_nil(Map.get(@selected_repository, :directory))}>
+  Directory: {@selected_repository[:directory]}
+</p>
+
+<h2>Configuration</h2>
+<p>{JSON.encode!(@configuration)}</p>
+
+<h2>Commits</h2>
+<ul :for={commit <- @commits}>
+  <li>
+    {commit[:message]}<.link href={
+      ~p"/#{@selected_repository[:forge]}/#{@selected_repository[:owner]}/#{@selected_repository[:name]}/commits/#{commit[:sha]}"
+    }>{commit[:sha]}</.link>
+  </li>
+</ul>

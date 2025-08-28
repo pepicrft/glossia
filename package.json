@@ -1,0 +1,7 @@
+{
+  "name": "@glossia/web",
+  "private": true,
+  "devDependencies": {
+    "@shoelace-style/shoelace": "^2.20.1"
+  }
+}

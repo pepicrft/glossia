@@ -1,0 +1,25 @@
+[tools]
+elixir = "1.18.4"
+erlang = "28.0.2"
+go = "1.24.6"
+"asdf:chessmango/asdf-flyctl" = "0.3.86"
+"sops" = "3.10.2"
+"age" = "1.2.1"
+"ubi:orhun/git-cliff" = "2.10.0"
+"jq" = "1.7.1"
+"node" = "24.5.0"
+"npm:@anthropic-ai/claude-code" = "1.0.72"
+"npm:@playwright/mcp" = "0.0.33"
+"pnpm" = "10.14.0"
+
+[hooks]
+postinstall = "mise run install"
+
+[env]
+_.file = ".env.json"
+ERL_AFLAGS = "-kernel shell_history enabled -kernel shell_history_file_bytes 1024000"
+
+[settings]
+experimental = true
+sops.strict = false
+sops.age_key_file = "~/.config/mise/glossia-age.txt"
