@@ -66,7 +66,7 @@ jobs:
           key: ${{ runner.os }}-mix-${{ hashFiles('web/**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-mix-
-      - uses: https://github.com/jdx/mise-action@v3
+      - uses: jdx/mise-action@v3
       - run: mise run lint
   build:
     name: Build
@@ -81,7 +81,7 @@ jobs:
           key: ${{ runner.os }}-mix-${{ hashFiles('web/**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-mix-
-      - uses: https://github.com/jdx/mise-action@v3
+      - uses: jdx/mise-action@v3
       - run: mise run build
   test:
     name: Test
@@ -109,7 +109,7 @@ jobs:
           key: ${{ runner.os }}-mix-test-${{ hashFiles('web/**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-mix-test
-      - uses: https://github.com/jdx/mise-action@v3
+      - uses: jdx/mise-action@v3
       - run: mise run test
         env:
           DATABASE_HOSTNAME: postgres
